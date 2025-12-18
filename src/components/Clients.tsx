@@ -1,13 +1,7 @@
 "use client";
 
-const clients = [
-    { name: "client-1", image: "/logo-1-color.png" },
-    { name: "client-2", image: "/logo-2-color.png" },
-    { name: "client-3", image: "/logo-3-color.png" },
-    { name: "client-4", image: "/logo-4-color.png" },
-    { name: "client-5", image: "/logo-5-color.png" },
-    { name: "client-6", image: "/logo-6-color.png" },
-];
+import Image from "next/image";
+import { clients } from "@/lib/data";
 
 export default function Clients() {
     return (
@@ -17,7 +11,13 @@ export default function Clients() {
                 {clients.map((client) => (
                     <li className="clients-item" key={client.name}>
                         <a href="#">
-                            <img src={client.image} alt={client.name} />
+                            <Image
+                                src={client.logo}
+                                alt={client.name}
+                                width={160}
+                                height={160}
+                                sizes="(max-width: 580px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            />
                         </a>
                     </li>
                 ))}
@@ -25,4 +25,3 @@ export default function Clients() {
         </section>
     );
 }
-

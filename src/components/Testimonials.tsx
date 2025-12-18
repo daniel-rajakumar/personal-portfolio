@@ -1,20 +1,35 @@
 "use client";
 
-import { testimonials } from "@/lib/data";
+import Image from "next/image";
+import { X } from "lucide-react";
 import { useState } from "react";
+import { testimonials } from "@/lib/data";
 
-const IonIcon = "ion-icon" as any;
+const quoteIcon = "/assets/images/icon-quote.svg";
+
+const formatDate = (value: string) => {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+    return new Intl.DateTimeFormat("en-GB", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+    }).format(date);
+};
 
 export default function Testimonials() {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalContent, setModalContent] = useState({
         avatar: "",
-        title: "",
+        name: "",
         text: "",
+        date: "",
     });
 
-    const openModal = (avatar: string, title: string, text: string) => {
-        setModalContent({ avatar, title, text });
+    const openModal = (avatar: string, name: string, text: string, date: string) => {
+        setModalContent({ avatar, name, text, date });
         setModalOpen(true);
     };
 
@@ -27,33 +42,32 @@ export default function Testimonials() {
             <h3 className="h3 testimonials-title">Testimonials</h3>
 
             <ul className="testimonials-list has-scrollbar">
-                {testimonials.map((testimonial: any) => (
+                {testimonials.map((testimonial) => (
                     <li
                         className="testimonials-item"
-                        key={testimonial.title}
+                        key={testimonial.name}
                         onClick={() =>
                             openModal(
                                 testimonial.avatar,
-                                testimonial.title,
-                                testimonial.text
+                                testimonial.name,
+                                testimonial.text,
+                                testimonial.date
                             )
                         }
                     >
                         <div className="content-card" data-testimonials-item>
                             <figure className="testimonials-avatar-box">
-                                <img
+                                <Image
                                     src={testimonial.avatar}
-                                    alt={testimonial.title}
-                                    width="60"
-                                    data-testimonials-avatar
+                                    alt={testimonial.name}
+                                    width={60}
+                                    height={60}
+                                    sizes="(min-width: 580px) 80px, 60px"
                                 />
                             </figure>
 
-                            <h4
-                                className="h4 testimonials-item-title"
-                                data-testimonials-title
-                            >
-                                {testimonial.title}
+                            <h4 className="h4 testimonials-item-title" data-testimonials-title>
+                                {testimonial.name}
                             </h4>
 
                             <div className="testimonials-text" data-testimonials-text>
@@ -70,28 +84,41 @@ export default function Testimonials() {
 
                     <section className="testimonials-modal">
                         <button
+                            type="button"
                             className="modal-close-btn"
                             data-modal-close-btn
                             onClick={closeModal}
                         >
-                            <IonIcon name="close-outline"></IonIcon>
+                            <X aria-hidden="true" />
                         </button>
 
                         <div className="modal-img-wrapper">
                             <figure className="modal-avatar-box">
-                                <img
+                                <Image
                                     src={modalContent.avatar}
-                                    alt={modalContent.title}
-                                    width="80"
-                                    data-modal-img
+                                    alt={modalContent.name}
+                                    width={80}
+                                    height={80}
+                                    sizes="80px"
                                 />
                             </figure>
+                            <Image
+                                src={quoteIcon}
+                                alt="Quote icon"
+                                width={32}
+                                height={32}
+                                className="quote-icon"
+                            />
                         </div>
 
                         <div className="modal-content">
                             <h4 className="h4 modal-title" data-modal-title>
-                                {modalContent.title}
+                                {modalContent.name}
                             </h4>
+
+                            {modalContent.date ? (
+                                <time dateTime={modalContent.date}>{formatDate(modalContent.date)}</time>
+                            ) : null}
 
                             <div data-modal-text>
                                 <p>{modalContent.text}</p>
@@ -103,4 +130,3 @@ export default function Testimonials() {
         </section>
     );
 }
-

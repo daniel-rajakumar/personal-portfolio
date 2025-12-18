@@ -2,79 +2,123 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Mail, MapPin, Phone, ChevronDown } from "lucide-react";
+import {
+    CalendarDays,
+    ChevronDown,
+    Github,
+    Instagram,
+    Linkedin,
+    Mail,
+    MapPin,
+    Phone,
+} from "lucide-react";
 import { profile, socials } from "@/lib/data";
+
+const socialIcons: Record<string, typeof Github> = {
+    GitHub: Github,
+    LinkedIn: Linkedin,
+    Instagram: Instagram,
+};
 
 export default function Sidebar() {
     const [open, setOpen] = useState(false);
 
     return (
-        <aside className="rounded-2xl border border-white/10 bg-[rgb(var(--card))] p-5 shadow-[0_20px_70px_rgba(0,0,0,.35)]">
-            <div className="flex items-center gap-4">
-                <div className="rounded-2xl bg-white/5 p-2">
+        <aside className={`sidebar${open ? " active" : ""}`} data-sidebar>
+            <div className="sidebar-info">
+                <figure className="avatar-box">
                     <Image
                         src={profile.avatar}
                         alt={profile.name}
-                        width={72}
-                        height={72}
-                        className="rounded-xl object-cover"
+                        width={80}
+                        height={80}
+                        sizes="(min-width: 1250px) 150px, (min-width: 580px) 120px, 80px"
                         priority
                     />
-                </div>
+                </figure>
 
-                <div className="min-w-0">
-                    <h1 className="truncate text-lg font-semibold">{profile.name}</h1>
-                    <p className="mt-1 inline-flex rounded-lg bg-white/5 px-3 py-1 text-xs text-white/80">
-                        {profile.role}
-                    </p>
+                <div className="info-content">
+                    <h1 className="name" title={profile.name}>
+                        {profile.name}
+                    </h1>
+                    <p className="title">{profile.role}</p>
                 </div>
 
                 <button
+                    type="button"
+                    className="info_more-btn"
+                    data-sidebar-btn
+                    aria-expanded={open}
                     onClick={() => setOpen((v) => !v)}
-                    className="ml-auto rounded-xl border border-white/10 bg-white/5 p-2 text-white/80 hover:bg-white/10"
-                    aria-label="Toggle contacts"
                 >
-                    <ChevronDown className={open ? "rotate-180 transition" : "transition"} size={18} />
+                    <span>Show Contacts</span>
+                    <ChevronDown size={16} aria-hidden="true" />
                 </button>
             </div>
 
-            <div className={open ? "mt-5 space-y-4" : "mt-5 hidden"}>
-                <div className="h-px w-full bg-white/10" />
+            <div className="sidebar-info_more">
+                <div className="separator"></div>
 
-                <ul className="space-y-3 text-sm">
-                    <li className="flex items-center gap-3 text-white/80">
-                        <Mail size={16} className="text-[rgb(var(--accent))]" />
-                        <a className="hover:underline" href={`mailto:${profile.email}`}>
-                            {profile.email}
-                        </a>
+                <ul className="contacts-list">
+                    <li className="contact-item">
+                        <div className="icon-box">
+                            <Mail aria-hidden="true" />
+                        </div>
+                        <div className="contact-info">
+                            <p className="contact-title">Email</p>
+                            <a href={`mailto:${profile.email}`} className="contact-link">
+                                {profile.email}
+                            </a>
+                        </div>
                     </li>
-                    <li className="flex items-center gap-3 text-white/80">
-                        <Phone size={16} className="text-[rgb(var(--accent))]" />
-                        <a className="hover:underline" href={`tel:${profile.phone}`}>
-                            {profile.phone}
-                        </a>
+
+                    <li className="contact-item">
+                        <div className="icon-box">
+                            <Phone aria-hidden="true" />
+                        </div>
+                        <div className="contact-info">
+                            <p className="contact-title">Phone</p>
+                            <a href={`tel:${profile.phone}`} className="contact-link">
+                                {profile.phone}
+                            </a>
+                        </div>
                     </li>
-                    <li className="flex items-center gap-3 text-white/80">
-                        <MapPin size={16} className="text-[rgb(var(--accent))]" />
-                        <span>{profile.location}</span>
+
+                    <li className="contact-item">
+                        <div className="icon-box">
+                            <CalendarDays aria-hidden="true" />
+                        </div>
+                        <div className="contact-info">
+                            <p className="contact-title">Birthday</p>
+                            <time dateTime={profile.birthday.datetime}>{profile.birthday.label}</time>
+                        </div>
+                    </li>
+
+                    <li className="contact-item">
+                        <div className="icon-box">
+                            <MapPin aria-hidden="true" />
+                        </div>
+                        <div className="contact-info">
+                            <p className="contact-title">Location</p>
+                            <address>{profile.location}</address>
+                        </div>
                     </li>
                 </ul>
 
-                <div className="h-px w-full bg-white/10" />
+                <div className="separator"></div>
 
-                <div className="flex flex-wrap gap-2">
-                    {socials.map((s) => (
-                        <a
-                            key={s.label}
-                            href={s.href}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80 hover:bg-white/10"
-                        >
-                            {s.label}
-                        </a>
-                    ))}
-                </div>
+                <ul className="social-list">
+                    {socials.map((s) => {
+                        const Icon = socialIcons[s.label] ?? Github;
+                        return (
+                            <li className="social-item" key={s.label}>
+                                <a className="social-link" href={s.href} target="_blank" rel="noreferrer">
+                                    <Icon aria-label={s.label} size={18} />
+                                </a>
+                            </li>
+                        );
+                    })}
+                </ul>
             </div>
         </aside>
     );

@@ -27,25 +27,38 @@ export default function Home() {
     function setTab(tab: TabKey) {
         const next = new URLSearchParams(sp.toString());
         next.set("tab", tab);
-        router.replace(`${pathname}?${next.toString()}`);
+        router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+        if (typeof window !== "undefined") {
+            window.scrollTo(0, 0);
+        }
     }
 
     return (
-        <main className="mx-auto max-w-6xl px-4 py-6 md:py-10">
-            <div className="grid gap-6 md:grid-cols-[320px_1fr]">
-                <Sidebar />
+        <main>
+            <Sidebar />
 
-                <section className="space-y-4">
-                    <Tabs active={active} onChange={setTab} />
+            <div className="main-content">
+                <Tabs active={active} onChange={setTab} />
 
-                    <div className="rounded-2xl border border-white/10 bg-[rgb(var(--card))] p-5 shadow-[0_20px_70px_rgba(0,0,0,.35)]">
-                        {active === "about" && <About />}
-                        {active === "resume" && <Resume />}
-                        {active === "portfolio" && <Portfolio />}
-                        {active === "blog" && <Blog />}
-                        {active === "contact" && <Contact />}
-                    </div>
-                </section>
+                <article className={`about${active === "about" ? " active" : ""}`} data-page="about">
+                    <About />
+                </article>
+
+                <article className={`resume${active === "resume" ? " active" : ""}`} data-page="resume">
+                    <Resume />
+                </article>
+
+                <article className={`portfolio${active === "portfolio" ? " active" : ""}`} data-page="portfolio">
+                    <Portfolio />
+                </article>
+
+                <article className={`blog${active === "blog" ? " active" : ""}`} data-page="blog">
+                    <Blog />
+                </article>
+
+                <article className={`contact${active === "contact" ? " active" : ""}`} data-page="contact">
+                    <Contact />
+                </article>
             </div>
         </main>
     );
