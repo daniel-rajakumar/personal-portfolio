@@ -539,6 +539,19 @@ main {
   transition: color var(--transition-1);
 }
 
+.navbar-item--quick {
+  display: inline-flex;
+}
+
+.navbar-link--icon {
+  padding: 18px 10px;
+}
+
+.navbar-link--icon svg {
+  width: 18px;
+  height: 18px;
+}
+
 .navbar-link:hover,
 .navbar-link:focus {
   color: var(--light-gray-70);
@@ -684,8 +697,8 @@ main {
 .command-palette__trigger {
   position: fixed;
   right: 16px;
-  bottom: 90px;
-  display: inline-flex;
+  bottom: 24px;
+  display: none;
   align-items: center;
   justify-content: center;
   width: 48px;
@@ -718,6 +731,11 @@ main {
 @media (min-width: 1024px) {
   .command-palette__trigger {
     bottom: 24px;
+    display: inline-flex;
+  }
+
+  .navbar-item--quick {
+    display: none;
   }
 }
 /*-----------------------------------*\

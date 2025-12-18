@@ -154,6 +154,12 @@ export default function CommandPalette({ onNavigate }: { onNavigate: (tab: TabKe
     }, []);
 
     useEffect(() => {
+        const handleOpen = () => setOpen(true);
+        window.addEventListener("open-command-palette", handleOpen);
+        return () => window.removeEventListener("open-command-palette", handleOpen);
+    }, []);
+
+    useEffect(() => {
         if (open) {
             setQuery("");
             setActiveIndex(0);
