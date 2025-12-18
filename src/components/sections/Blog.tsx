@@ -1,23 +1,57 @@
+"use client";
+
+import Image from "next/image";
 import { blogPosts } from "@/lib/data";
+
+const formatDate = (value: string) => {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+    return new Intl.DateTimeFormat("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+    }).format(date);
+};
 
 export default function Blog() {
     return (
-        <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Blog</h2>
-            <ul className="grid gap-3">
-                {blogPosts.map((p) => (
-                    <li key={p.title} className="rounded-xl bg-white/5 p-4">
-                        <div className="flex items-baseline justify-between gap-3">
-                            <p className="font-medium">{p.title}</p>
-                            <p className="text-xs text-white/60">{p.date}</p>
-                        </div>
-                        <p className="mt-2 text-sm text-white/75">{p.excerpt}</p>
-                    </li>
-                ))}
-            </ul>
-            <p className="text-xs text-white/50">
-                (Later we can upgrade this to MDX posts or a CMS — not needed for v1.)
-            </p>
-        </div>
+        <>
+            <header>
+                <h2 className="h2 article-title">Blog</h2>
+            </header>
+
+            <section className="blog-posts">
+                <ul className="blog-posts-list">
+                    {blogPosts.map((post) => (
+                        <li className="blog-post-item" key={post.title}>
+                            <a href="#">
+                                <figure className="blog-banner-box">
+                                    <Image
+                                        src={post.image}
+                                        alt={post.title}
+                                        width={640}
+                                        height={400}
+                                        sizes="(max-width: 768px) 100vw, 50vw"
+                                    />
+                                </figure>
+
+                                <div className="blog-content">
+                                    <div className="blog-meta">
+                                        <p className="blog-category">{post.category}</p>
+                                        <span className="dot"></span>
+                                        <time dateTime={post.date}>{formatDate(post.date)}</time>
+                                    </div>
+
+                                    <h3 className="h3 blog-item-title">{post.title}</h3>
+                                    <p className="blog-text">{post.excerpt}</p>
+                                </div>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+        </>
     );
 }

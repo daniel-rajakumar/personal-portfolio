@@ -1,14 +1,54 @@
-import { profile } from "@/lib/data";
+"use client";
+
+import { Brush, Camera, Code, Smartphone } from "lucide-react";
+import Clients from "@/components/Clients";
+import Testimonials from "@/components/Testimonials";
+import { profile, services } from "@/lib/data";
 
 export default function About() {
+    const icons = {
+        design: Brush,
+        dev: Code,
+        app: Smartphone,
+        photo: Camera,
+    } as const;
+
     return (
-        <div className="space-y-4">
-            <h2 className="text-xl font-semibold">About</h2>
-            <div className="space-y-3 text-sm text-white/80 leading-relaxed">
+        <>
+            <header>
+                <h2 className="h2 article-title">About me</h2>
+            </header>
+
+            <section className="about-text">
                 {profile.about.map((p) => (
                     <p key={p}>{p}</p>
                 ))}
-            </div>
-        </div>
+            </section>
+
+            <section className="service">
+                <h3 className="h3 service-title">What i'm doing</h3>
+
+                <ul className="service-list">
+                    {services.map((service) => {
+                        const Icon = icons[service.icon];
+                        return (
+                            <li className="service-item" key={service.title}>
+                                <div className="service-icon-box">
+                                    <Icon size={36} aria-hidden="true" />
+                                </div>
+
+                                <div className="service-content-box">
+                                    <h4 className="h4 service-item-title">{service.title}</h4>
+                                    <p className="service-item-text">{service.description}</p>
+                                </div>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </section>
+
+            <Testimonials />
+            <Clients />
+        </>
     );
 }
