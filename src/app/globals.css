@@ -870,6 +870,43 @@ main {
   margin-bottom: 25px;
 }
 
+.timeline-toggle {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+}
+
+.timeline-toggle .h3 {
+  flex: 1;
+}
+
+.timeline-chevron {
+  color: var(--light-gray-70);
+  transition: transform var(--transition-1), color var(--transition-1);
+}
+
+.timeline-chevron.is-open {
+  transform: rotate(180deg);
+  color: var(--orange-yellow-crayola);
+}
+
+.timeline-panel {
+  overflow: hidden;
+  max-height: 1200px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: max-height 0.45s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.timeline-panel.is-collapsed {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
 .timeline-list {
   font-size: var(--fs-6);
   margin-left: 45px;

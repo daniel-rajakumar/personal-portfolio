@@ -1,32 +1,107 @@
 "use client";
 
-import { BookOpen } from "lucide-react";
+import { useEffect, useState } from "react";
+import { BookOpen, ChevronDown } from "lucide-react";
 import { education, experience, profile, skills } from "@/lib/data";
 
-function Timeline({ title, items }: { title: string; items: typeof education }) {
+type SectionKey = "education" | "experience";
+
+const sections: Array<{
+    key: SectionKey;
+    title: string;
+    items: typeof education;
+}> = [
+    { key: "education", title: "Education", items: education },
+    { key: "experience", title: "Experience", items: experience },
+];
+
+function Timeline({
+    sectionKey,
+    title,
+    items,
+    open,
+    onToggle,
+}: {
+    sectionKey: SectionKey;
+    title: string;
+    items: typeof education;
+    open: boolean;
+    onToggle: (key: SectionKey) => void;
+}) {
+    const panelId = `${sectionKey}-panel`;
+
     return (
-        <section className="timeline">
+        <section className="timeline" id={sectionKey}>
             <div className="title-wrapper">
-                <div className="icon-box">
-                    <BookOpen aria-hidden="true" />
-                </div>
-                <h3 className="h3">{title}</h3>
+                <button
+                    type="button"
+                    className="timeline-toggle"
+                    onClick={() => onToggle(sectionKey)}
+                    aria-expanded={open}
+                    aria-controls={panelId}
+                >
+                    <div className="icon-box">
+                        <BookOpen aria-hidden="true" />
+                    </div>
+                    <h3 className="h3">{title}</h3>
+                    <ChevronDown
+                        className={`timeline-chevron${open ? " is-open" : ""}`}
+                        size={18}
+                        aria-hidden="true"
+                    />
+                </button>
             </div>
 
-            <ol className="timeline-list">
-                {items.map((it) => (
-                    <li className="timeline-item" key={it.title + it.org}>
-                        <h4 className="h4 timeline-item-title">{it.title}</h4>
-                        <span>{it.range}</span>
-                        <p className="timeline-text">{`${it.org} - ${it.details}`}</p>
-                    </li>
-                ))}
-            </ol>
+            <div className={`timeline-panel${open ? "" : " is-collapsed"}`} id={panelId}>
+                <ol className="timeline-list">
+                    {items.map((it) => (
+                        <li className="timeline-item" key={it.title + it.org}>
+                            <h4 className="h4 timeline-item-title">{it.title}</h4>
+                            <span>{it.range}</span>
+                            <p className="timeline-text">{`${it.org} - ${it.details}`}</p>
+                        </li>
+                    ))}
+                </ol>
+            </div>
         </section>
     );
 }
 
 export default function Resume() {
+    const [openSections, setOpenSections] = useState<Record<SectionKey, boolean>>({
+        education: true,
+        experience: true,
+    });
+
+    useEffect(() => {
+            const applyHash = () => {
+                const hash = window.location.hash.replace("#", "");
+                if (hash === "education" || hash === "experience") {
+                    setOpenSections((prev) => ({ ...prev, [hash]: true }));
+                    const el = document.getElementById(hash);
+                    if (el) {
+                        el.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }
+                }
+            };
+
+            applyHash();
+        window.addEventListener("hashchange", applyHash);
+        return () => window.removeEventListener("hashchange", applyHash);
+    }, []);
+
+    const toggleSection = (key: SectionKey) => {
+        setOpenSections((prev) => {
+            const next = { ...prev, [key]: !prev[key] };
+            if (next[key]) {
+                const url = new URL(window.location.href);
+                url.hash = key;
+                window.history.replaceState(null, "", url.toString());
+            }
+            return next;
+        });
+    };
+
     return (
         <>
             <header>
@@ -37,8 +112,16 @@ export default function Resume() {
                 Download Resume
             </a>
 
-            <Timeline title="Education" items={education} />
-            <Timeline title="Experience" items={experience} />
+            {sections.map((section) => (
+                <Timeline
+                    key={section.key}
+                    sectionKey={section.key}
+                    title={section.title}
+                    items={section.items}
+                    open={openSections[section.key]}
+                    onToggle={toggleSection}
+                />
+            ))}
 
             <section className="skill">
                 <h3 className="h3 skills-title">My skills</h3>
