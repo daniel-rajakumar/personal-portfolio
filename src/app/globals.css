@@ -165,12 +165,22 @@ textarea {
 
 html {
   font-family: var(--ff-poppins);
+  scrollbar-width: none;
 }
 
 body {
   background: var(--smoky-black);
   color: var(--white-2);
   min-height: 100%;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 /*-----------------------------------*\
@@ -874,6 +884,17 @@ main {
   scroll-behavior: smooth;
   overscroll-behavior-inline: contain;
   scroll-snap-type: inline mandatory;
+  scrollbar-width: none;
+}
+
+.testimonials-list::-webkit-scrollbar {
+  display: none;
+}
+
+.testimonials-list:focus-visible {
+  outline: 2px solid var(--orange-yellow-crayola);
+  outline-offset: 6px;
+  border-radius: 18px;
 }
 
 .testimonials-item {
@@ -905,6 +926,27 @@ main {
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.testimonials-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: -10px;
+}
+
+.testimonials-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--jet);
+  transition: var(--transition-1);
+}
+
+.testimonials-dot.is-active {
+  width: 18px;
+  background: var(--orange-yellow-crayola);
 }
 
 /**
