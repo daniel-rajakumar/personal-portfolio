@@ -1,7 +1,7 @@
 "use client";
 
 import { BookOpen } from "lucide-react";
-import { education, experience, skills } from "@/lib/data";
+import { education, experience, profile, skills } from "@/lib/data";
 
 function Timeline({ title, items }: { title: string; items: typeof education }) {
     return (
@@ -32,6 +32,10 @@ export default function Resume() {
             <header>
                 <h2 className="h2 article-title">Resume</h2>
             </header>
+
+            <a className="resume-btn resume-btn--spaced" href={profile.resumeUrl} download>
+                Download Resume
+            </a>
 
             <Timeline title="Education" items={education} />
             <Timeline title="Experience" items={experience} />
