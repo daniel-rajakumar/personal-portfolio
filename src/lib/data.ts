@@ -15,6 +15,7 @@ export const profile = {
     location: "New Jersey, USA",
     email: "daniel@example.com",
     phone: "+1 (000) 000-0000",
+    resumeUrl: "/resume.pdf",
     birthday: {
         label: "June 23, 1999",
         datetime: "1999-06-23",
