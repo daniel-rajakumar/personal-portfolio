@@ -194,6 +194,10 @@ article {
   margin: 16px 0;
 }
 
+.sidebar-info + .sidebar-info_more .separator {
+  margin-top: 16px;
+}
+
 .icon-box {
   position: relative;
   background: var(--border-gradient-onyx);
@@ -347,6 +351,11 @@ main {
   max-height: 405px;
 }
 
+.sidebar:not(.active) {
+  padding-bottom: 24px;
+  max-height: 128px;
+}
+
 .sidebar-info {
   position: relative;
   display: flex;
@@ -377,6 +386,31 @@ main {
   padding: 3px 12px;
   border-radius: 8px;
 }
+
+.status-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--bg-gradient-jet);
+  border: 1px solid var(--jet);
+  font-size: var(--fs-8);
+  color: var(--light-gray-70);
+}
+
+.status-chip.is-open {
+  color: var(--orange-yellow-crayola);
+}
+
+
 
 .info_more-btn {
   position: absolute;
@@ -1697,6 +1731,11 @@ textarea.form-input::-webkit-resizer {
     max-height: 584px;
   }
 
+  .sidebar:not(.active) {
+    max-height: 200px;
+    padding-bottom: 28px;
+  }
+
   .sidebar-info {
     gap: 25px;
   }
@@ -2240,11 +2279,25 @@ textarea.form-input::-webkit-resizer {
     height: 100%;
     margin-bottom: 0;
     padding-top: 60px;
+    padding-bottom: 32px;
     z-index: 1;
+  }
+
+  .sidebar:not(.active) {
+    max-height: max-content;
+    padding-bottom: 24px;
   }
 
   .sidebar-info {
     flex-direction: column;
+  }
+
+  .info-content {
+    text-align: center;
+  }
+
+  .status-row {
+    justify-content: center;
   }
 
   .avatar-box img {

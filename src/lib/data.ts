@@ -16,6 +16,10 @@ export const profile = {
     email: "daniel@example.com",
     phone: "+1 (000) 000-0000",
     resumeUrl: "/resume.pdf",
+    status: {
+        label: "Open to internships / Freelance",
+        available: true,
+    },
     birthday: {
         label: "June 23, 1999",
         datetime: "1999-06-23",

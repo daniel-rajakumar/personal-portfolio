@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
     CalendarDays,
     ChevronDown,
@@ -22,7 +22,7 @@ const socialIcons: Record<string, typeof Github> = {
 
 export default function Sidebar() {
     const [open, setOpen] = useState(false);
-
+    const available = useMemo(() => profile.status.available, []);
     return (
         <aside className={`sidebar${open ? " active" : ""}`} data-sidebar>
             <div className="sidebar-info">
@@ -42,6 +42,11 @@ export default function Sidebar() {
                         {profile.name}
                     </h1>
                     <p className="title">{profile.role}</p>
+                    <div className="status-row">
+                        <span className={`status-chip${available ? " is-open" : " is-closed"}`}>
+                            {profile.status.label}
+                        </span>
+                    </div>
                 </div>
 
                 <button
