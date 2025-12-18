@@ -550,8 +550,7 @@ main {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: hsla(240, 1%, 17%, 0.75);
-  backdrop-filter: blur(10px);
+  background: var(--eerie-black-2);
   border: 1px solid var(--jet);
   border-radius: 12px 12px 0 0;
   box-shadow: var(--shadow-2);
@@ -1732,8 +1731,8 @@ textarea.form-input::-webkit-resizer {
   }
 
   .sidebar:not(.active) {
-    max-height: 200px;
-    padding-bottom: 28px;
+    max-height: 180px;
+    padding-bottom: 16px;
   }
 
   .sidebar-info {
@@ -2298,6 +2297,7 @@ textarea.form-input::-webkit-resizer {
 
   .status-row {
     justify-content: center;
+    margin-top: 14px;
   }
 
   .avatar-box img {
