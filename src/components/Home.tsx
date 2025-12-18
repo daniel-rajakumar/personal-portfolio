@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { TabKey } from "@/lib/types";
 import Sidebar from "./Sidebar";
 import Tabs from "./Tabs";
+import CommandPalette from "./CommandPalette";
 
 import About from "@/components/sections/About";
 import Resume from "@/components/sections/Resume";
@@ -34,32 +35,36 @@ export default function Home() {
     }
 
     return (
-        <main>
-            <Sidebar />
+        <>
+            <main>
+                <Sidebar />
 
-            <div className="main-content">
-                <Tabs active={active} onChange={setTab} />
+                <div className="main-content">
+                    <Tabs active={active} onChange={setTab} />
 
-                <article className={`about${active === "about" ? " active" : ""}`} data-page="about">
-                    <About />
-                </article>
+                    <article className={`about${active === "about" ? " active" : ""}`} data-page="about">
+                        <About />
+                    </article>
 
-                <article className={`resume${active === "resume" ? " active" : ""}`} data-page="resume">
-                    <Resume />
-                </article>
+                    <article className={`resume${active === "resume" ? " active" : ""}`} data-page="resume">
+                        <Resume />
+                    </article>
 
-                <article className={`portfolio${active === "portfolio" ? " active" : ""}`} data-page="portfolio">
-                    <Portfolio />
-                </article>
+                    <article className={`portfolio${active === "portfolio" ? " active" : ""}`} data-page="portfolio">
+                        <Portfolio />
+                    </article>
 
-                <article className={`blog${active === "blog" ? " active" : ""}`} data-page="blog">
-                    <Blog />
-                </article>
+                    <article className={`blog${active === "blog" ? " active" : ""}`} data-page="blog">
+                        <Blog />
+                    </article>
 
-                <article className={`contact${active === "contact" ? " active" : ""}`} data-page="contact">
-                    <Contact />
-                </article>
-            </div>
-        </main>
+                    <article className={`contact${active === "contact" ? " active" : ""}`} data-page="contact">
+                        <Contact />
+                    </article>
+                </div>
+            </main>
+
+            <CommandPalette onNavigate={setTab} />
+        </>
     );
 }
