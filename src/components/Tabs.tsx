@@ -1,5 +1,6 @@
 "use client";
 
+import { Search } from "lucide-react";
 import type { TabKey } from "@/lib/types";
 
 const labels: Record<TabKey, string> = {
@@ -22,6 +23,16 @@ export default function Tabs({
     return (
         <nav className="navbar">
             <ul className="navbar-list">
+                <li className="navbar-item navbar-item--quick">
+                    <button
+                        type="button"
+                        className="navbar-link navbar-link--icon"
+                        onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
+                        aria-label="Quick actions"
+                    >
+                        <Search aria-hidden="true" />
+                    </button>
+                </li>
                 {items.map((t) => {
                     const isActive = t === active;
                     return (
