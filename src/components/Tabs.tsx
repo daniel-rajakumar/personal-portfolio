@@ -2,7 +2,7 @@
 
 import { Search } from "lucide-react";
 import type { TabKey } from "@/lib/types";
-import { blogPosts } from "@/lib/data";
+import { hasBlogPosts } from "@/lib/data";
 
 const labels: Record<TabKey, string> = {
     about: "About",
@@ -20,7 +20,7 @@ export default function Tabs({
     onChange: (t: TabKey) => void;
 }) {
     const items: TabKey[] = ["about", "resume", "portfolio", "blog", "contact"];
-    const visibleItems = blogPosts.length ? items : items.filter((item) => item !== "blog");
+    const visibleItems = hasBlogPosts ? items : items.filter((item) => item !== "blog");
 
     return (
         <nav className="navbar">

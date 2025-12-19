@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { TabKey } from "@/lib/types";
-import { blogPosts } from "@/lib/data";
+import { blogPosts, hasBlogPosts } from "@/lib/data";
 import Sidebar from "./Sidebar";
 import Tabs from "./Tabs";
 import CommandPalette from "./CommandPalette";
@@ -15,7 +15,7 @@ import Blog from "@/components/sections/Blog";
 import Contact from "@/components/sections/Contact";
 
 const BASE_TABS: TabKey[] = ["about", "resume", "portfolio", "blog", "contact"];
-const AVAILABLE_TABS: TabKey[] = blogPosts.length
+const AVAILABLE_TABS: TabKey[] = hasBlogPosts
     ? BASE_TABS
     : BASE_TABS.filter((tab) => tab !== "blog");
 
@@ -61,7 +61,7 @@ export default function Home() {
                         <Portfolio />
                     </article>
 
-                    {blogPosts.length ? (
+                    {hasBlogPosts ? (
                         <article className={`blog${active === "blog" ? " active" : ""}`} data-page="blog">
                             <Blog />
                         </article>

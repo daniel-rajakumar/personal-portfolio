@@ -18,7 +18,7 @@ import {
     UserCircle2,
 } from "lucide-react";
 import type { TabKey } from "@/lib/types";
-import { profile, socials } from "@/lib/data";
+import { hasBlogPosts, profile, socials } from "@/lib/data";
 
 type Action = {
     id: string;
@@ -32,8 +32,12 @@ const navItems: Array<{ key: TabKey; label: string }> = [
     { key: "about", label: "About" },
     { key: "resume", label: "Resume" },
     { key: "portfolio", label: "Portfolio" },
-    { key: "blog", label: "Blog" },
     { key: "contact", label: "Contact" },
+];
+
+const navItemsWithBlog: Array<{ key: TabKey; label: string }> = [
+    ...navItems,
+    { key: "blog", label: "Blog" },
 ];
 
 const navIcons: Record<TabKey, ComponentType<{ size?: number }>> = {
@@ -72,7 +76,8 @@ export default function CommandPalette({ onNavigate }: { onNavigate: (tab: TabKe
     };
 
     const actions = useMemo<Action[]>(() => {
-        const navActions = navItems.map((item) => ({
+        const visibleNavItems = hasBlogPosts ? navItemsWithBlog : navItems;
+        const navActions = visibleNavItems.map((item) => ({
             id: `nav-${item.key}`,
             label: `Go to ${item.label}`,
             hint: "Navigation",
