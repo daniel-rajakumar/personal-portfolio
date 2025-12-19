@@ -108,6 +108,11 @@ export const projects: Project[] = [
         description: "Campus assistant concept built with Next.js + TypeScript.",
         tech: ["Next.js", "TypeScript", "AI"],
         image: "/assets/images/project-1.svg",
+        screenshots: [
+            "/assets/images/project-1.svg",
+            "/assets/images/project-2.svg",
+            "/assets/images/project-3.svg",
+        ],
         links: [
             { label: "GitHub", href: "https://github.com/" },
             { label: "Live", href: "https://example.com" }
