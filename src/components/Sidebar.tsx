@@ -13,6 +13,7 @@ import {
     Phone,
 } from "lucide-react";
 import { profile, socials } from "@/lib/data";
+import { trackEvent } from "@/lib/analytics";
 
 const socialIcons: Record<string, typeof Github> = {
     GitHub: Github,
@@ -54,7 +55,10 @@ export default function Sidebar() {
                     className="info_more-btn"
                     data-sidebar-btn
                     aria-expanded={open}
-                    onClick={() => setOpen((v) => !v)}
+                    onClick={() => {
+                        trackEvent("sidebar_contacts_toggle", { open: !open });
+                        setOpen((v) => !v);
+                    }}
                 >
                     <span>Show Contacts</span>
                     <ChevronDown size={16} aria-hidden="true" />
@@ -71,7 +75,11 @@ export default function Sidebar() {
                         </div>
                         <div className="contact-info">
                             <p className="contact-title">Email</p>
-                            <a href={`mailto:${profile.email}`} className="contact-link">
+                            <a
+                                href={`mailto:${profile.email}`}
+                                className="contact-link"
+                                onClick={() => trackEvent("contact_email_click")}
+                            >
                                 {profile.email}
                             </a>
                         </div>
@@ -83,7 +91,11 @@ export default function Sidebar() {
                         </div>
                         <div className="contact-info">
                             <p className="contact-title">Phone</p>
-                            <a href={`tel:${profile.phone}`} className="contact-link">
+                            <a
+                                href={`tel:${profile.phone}`}
+                                className="contact-link"
+                                onClick={() => trackEvent("contact_phone_click")}
+                            >
                                 {profile.phone}
                             </a>
                         </div>
@@ -117,7 +129,13 @@ export default function Sidebar() {
                         const Icon = socialIcons[s.label] ?? Github;
                         return (
                             <li className="social-item" key={s.label}>
-                                <a className="social-link" href={s.href} target="_blank" rel="noreferrer">
+                                <a
+                                    className="social-link"
+                                    href={s.href}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    onClick={() => trackEvent("social_click", { network: s.label })}
+                                >
                                     <Icon aria-label={s.label} size={18} />
                                 </a>
                             </li>

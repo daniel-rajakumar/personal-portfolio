@@ -5,6 +5,7 @@ import { ChevronDown, Eye, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { projects } from "@/lib/data";
 import type { Project } from "@/lib/types";
+import { trackEvent } from "@/lib/analytics";
 
 const categories = ["All", "Web development", "Web design", "Applications", "Other"] as const;
 
@@ -15,11 +16,30 @@ export default function Portfolio() {
     const shots = selected?.screenshots?.length ? selected.screenshots : selected ? [selected.image] : [];
     const singleShot = shots.length === 1;
 
+    const handleCategory = (next: (typeof categories)[number]) => {
+        if (next !== cat) {
+            trackEvent("portfolio_filter", { category: next });
+        }
+        setCat(next);
+    };
+
+    const openProject = (project: Project) => {
+        trackEvent("project_modal_open", { project: project.title, category: project.category });
+        setSelected(project);
+    };
+
+    const closeProject = () => {
+        if (selected) {
+            trackEvent("project_modal_close", { project: selected.title });
+        }
+        setSelected(null);
+    };
+
     useEffect(() => {
         if (!selected) return;
         const handleKey = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
-                setSelected(null);
+                closeProject();
             }
         };
         window.addEventListener("keydown", handleKey);
@@ -40,7 +60,7 @@ export default function Portfolio() {
                                 type="button"
                                 data-filter-btn
                                 className={c === cat ? "active" : ""}
-                                onClick={() => setCat(c)}
+                                onClick={() => handleCategory(c)}
                             >
                                 {c}
                             </button>
@@ -71,7 +91,7 @@ export default function Portfolio() {
                                     type="button"
                                     data-select-item
                                     onClick={() => {
-                                        setCat(c);
+                                        handleCategory(c);
                                         setSelectOpen(false);
                                     }}
                                 >
@@ -95,7 +115,7 @@ export default function Portfolio() {
                                 <button
                                     type="button"
                                     className="project-card"
-                                    onClick={() => setSelected(p)}
+                                    onClick={() => openProject(p)}
                                     aria-label={`Open project details for ${p.title}`}
                                 >
                                     <figure className="project-img">
@@ -121,7 +141,7 @@ export default function Portfolio() {
 
             {selected ? (
                 <div className="project-modal-overlay" role="dialog" aria-modal="true">
-                    <div className="project-modal-backdrop" onClick={() => setSelected(null)} />
+                    <div className="project-modal-backdrop" onClick={closeProject} />
                     <div className="project-modal">
                         <header className="project-modal__header">
                             <div>
@@ -131,7 +151,7 @@ export default function Portfolio() {
                             <button
                                 type="button"
                                 className="project-modal__close"
-                                onClick={() => setSelected(null)}
+                                onClick={closeProject}
                                 aria-label="Close project details"
                             >
                                 <X aria-hidden="true" />
@@ -170,7 +190,19 @@ export default function Portfolio() {
                                     <div className="project-modal__links">
                                         {selected.links?.length ? (
                                             selected.links.map((l) => (
-                                                <a key={l.href} href={l.href} target="_blank" rel="noreferrer">
+                                                <a
+                                                    key={l.href}
+                                                    href={l.href}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    onClick={() =>
+                                                        trackEvent("project_link_click", {
+                                                            project: selected.title,
+                                                            label: l.label,
+                                                            href: l.href,
+                                                        })
+                                                    }
+                                                >
                                                     {l.label}
                                                 </a>
                                             ))

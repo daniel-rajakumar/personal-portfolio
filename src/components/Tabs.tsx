@@ -3,6 +3,7 @@
 import { Search } from "lucide-react";
 import type { TabKey } from "@/lib/types";
 import { hasBlogPosts } from "@/lib/data";
+import { trackEvent } from "@/lib/analytics";
 
 const labels: Record<TabKey, string> = {
     about: "About",
@@ -29,7 +30,10 @@ export default function Tabs({
                     <button
                         type="button"
                         className="navbar-link navbar-link--icon"
-                        onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
+                        onClick={() => {
+                            trackEvent("quick_actions_click");
+                            window.dispatchEvent(new Event("open-command-palette"));
+                        }}
                         aria-label="Quick actions"
                     >
                         <Search aria-hidden="true" />
@@ -42,7 +46,10 @@ export default function Tabs({
                             <button
                                 type="button"
                                 data-nav-link
-                                onClick={() => onChange(t)}
+                                onClick={() => {
+                                    trackEvent("tab_nav_click", { tab: t });
+                                    onChange(t);
+                                }}
                                 className={`navbar-link${isActive ? " active" : ""}`}
                             >
                                 {labels[t]}

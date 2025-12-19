@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { BookOpen, ChevronDown } from "lucide-react";
 import { education, experience, profile, skills } from "@/lib/data";
+import { trackEvent } from "@/lib/analytics";
 
 type SectionKey = "education" | "experience";
 
@@ -92,7 +93,9 @@ export default function Resume() {
 
     const toggleSection = (key: SectionKey) => {
         setOpenSections((prev) => {
-            const next = { ...prev, [key]: !prev[key] };
+            const nextOpen = !prev[key];
+            trackEvent("timeline_toggle", { section: key, open: nextOpen });
+            const next = { ...prev, [key]: nextOpen };
             if (next[key]) {
                 const url = new URL(window.location.href);
                 url.hash = key;
@@ -108,7 +111,12 @@ export default function Resume() {
                 <h2 className="h2 article-title">Resume</h2>
             </header>
 
-            <a className="resume-btn resume-btn--spaced" href={profile.resumeUrl} download>
+            <a
+                className="resume-btn resume-btn--spaced"
+                href={profile.resumeUrl}
+                download
+                onClick={() => trackEvent("resume_download")}
+            >
                 Download Resume
             </a>
 

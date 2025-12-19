@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import type { TabKey } from "@/lib/types";
 import { hasBlogPosts, profile, socials } from "@/lib/data";
+import { trackEvent } from "@/lib/analytics";
 
 type Action = {
     id: string;
@@ -169,6 +170,7 @@ export default function CommandPalette({ onNavigate }: { onNavigate: (tab: TabKe
             setQuery("");
             setActiveIndex(0);
             requestAnimationFrame(() => inputRef.current?.focus());
+            trackEvent("command_palette_open");
         }
     }, [open]);
 
@@ -179,6 +181,7 @@ export default function CommandPalette({ onNavigate }: { onNavigate: (tab: TabKe
     }, [activeIndex, filtered.length]);
 
     const runAction = (action: Action) => {
+        trackEvent("command_palette_action", { action: action.id, label: action.label });
         action.run();
         setOpen(false);
     };

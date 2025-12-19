@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { TabKey } from "@/lib/types";
 import { blogPosts, hasBlogPosts } from "@/lib/data";
+import { trackEvent } from "@/lib/analytics";
 import Sidebar from "./Sidebar";
 import Tabs from "./Tabs";
 import CommandPalette from "./CommandPalette";
@@ -28,6 +29,32 @@ export default function Home() {
         const t = sp.get("tab") as TabKey | null;
         return t && AVAILABLE_TABS.includes(t) ? t : "about";
     }, [sp]);
+
+    useEffect(() => {
+        trackEvent("tab_view", { tab: active });
+    }, [active]);
+
+    useEffect(() => {
+        const thresholds = [25, 50, 75, 100];
+        const fired = new Set<number>();
+
+        const handleScroll = () => {
+            const doc = document.documentElement;
+            const max = doc.scrollHeight - window.innerHeight;
+            const percent = max > 0 ? Math.min(100, Math.round((window.scrollY / max) * 100)) : 100;
+
+            thresholds.forEach((mark) => {
+                if (percent >= mark && !fired.has(mark)) {
+                    fired.add(mark);
+                    trackEvent("scroll_depth", { percent: mark, tab: active });
+                }
+            });
+        };
+
+        handleScroll();
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [active]);
 
     function setTab(tab: TabKey) {
         if (!AVAILABLE_TABS.includes(tab)) {

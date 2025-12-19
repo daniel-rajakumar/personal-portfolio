@@ -2,14 +2,23 @@
 
 import { useRef, useState } from "react";
 import { Send } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 export default function Contact() {
     const formRef = useRef<HTMLFormElement | null>(null);
+    const startedRef = useRef(false);
     const [isValid, setIsValid] = useState(false);
 
     const handleInput = () => {
         const valid = formRef.current?.checkValidity() ?? false;
         setIsValid(valid);
+    };
+
+    const handleStart = () => {
+        if (!startedRef.current) {
+            startedRef.current = true;
+            trackEvent("contact_form_start");
+        }
     };
 
     return (
@@ -35,7 +44,13 @@ export default function Contact() {
 
                 <form
                     ref={formRef}
-                    onSubmit={(event) => event.preventDefault()}
+                    onSubmit={(event) => {
+                        event.preventDefault();
+                        const valid = formRef.current?.checkValidity() ?? false;
+                        if (valid) {
+                            trackEvent("contact_form_submit");
+                        }
+                    }}
                     className="form"
                     data-form
                 >
@@ -48,6 +63,7 @@ export default function Contact() {
                             required
                             data-form-input
                             onInput={handleInput}
+                            onFocus={handleStart}
                         />
 
                         <input
@@ -58,6 +74,7 @@ export default function Contact() {
                             required
                             data-form-input
                             onInput={handleInput}
+                            onFocus={handleStart}
                         />
                     </div>
 
@@ -68,6 +85,7 @@ export default function Contact() {
                         required
                         data-form-input
                         onInput={handleInput}
+                        onFocus={handleStart}
                     ></textarea>
 
                     <button className="form-btn" type="submit" disabled={!isValid} data-form-btn>
