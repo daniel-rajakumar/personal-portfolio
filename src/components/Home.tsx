@@ -3,7 +3,7 @@
 import { useEffect, useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { TabKey } from "@/lib/types";
-import { blogPosts, hasBlogPosts } from "@/lib/data";
+import { hasBlogPosts } from "@/lib/data";
 import { trackEvent } from "@/lib/analytics";
 import Sidebar from "./Sidebar";
 import Tabs from "./Tabs";
