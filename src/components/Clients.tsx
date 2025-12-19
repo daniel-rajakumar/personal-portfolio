@@ -5,6 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { clients } from "@/lib/data";
 
 export default function Clients() {
+    if (clients.length === 0) {
+        return null;
+    }
+
     const [activeIndex, setActiveIndex] = useState(0);
     const listRef = useRef<HTMLUListElement | null>(null);
     const scrollRaf = useRef<number | null>(null);

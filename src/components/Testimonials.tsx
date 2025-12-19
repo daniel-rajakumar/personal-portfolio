@@ -20,6 +20,10 @@ const formatDate = (value: string) => {
 };
 
 export default function Testimonials() {
+    if (testimonials.length === 0) {
+        return null;
+    }
+
     const [modalOpen, setModalOpen] = useState(false);
     const [modalContent, setModalContent] = useState({
         avatar: "",

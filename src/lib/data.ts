@@ -86,39 +86,19 @@ export const services: Service[] = [
 ];
 
 export const testimonials: Testimonial[] = [
-    {
-        name: "Daniel Lewis",
-        avatar: "/assets/images/avatar-1.svg",
-        date: "2021-06-14",
-        text: "Daniel was hired to create a corporate identity. We were very pleased with the work done. He has a lot of experience and is very concerned about the needs of the client.",
-    },
-    {
-        name: "Jessica Miller",
-        avatar: "/assets/images/avatar-2.svg",
-        date: "2021-05-28",
-        text: "Daniel took a complex brief and turned it into a clean product experience. The process was collaborative and the outcome was better than expected.",
-    },
-    {
-        name: "Emily Evans",
-        avatar: "/assets/images/avatar-3.svg",
-        date: "2021-04-18",
-        text: "The attention to detail was impressive, and the final site loads fast while looking sharp on every screen.",
-    },
-    {
-        name: "Henry William",
-        avatar: "/assets/images/avatar-4.svg",
-        date: "2021-03-09",
-        text: "Reliable, organized, and thoughtful. Delivered on time and made the whole build feel smooth.",
-    },
+    // { name: "Daniel Lewis", avatar: "/assets/images/avatar-1.svg", date: "2021-06-14", text: "Daniel was hired to create a corporate identity. We were very pleased with the work done. He has a lot of experience and is very concerned about the needs of the client.", },
+    // { name: "Jessica Miller", avatar: "/assets/images/avatar-2.svg", date: "2021-05-28", text: "Daniel took a complex brief and turned it into a clean product experience. The process was collaborative and the outcome was better than expected.", },
+    // { name: "Emily Evans", avatar: "/assets/images/avatar-3.svg", date: "2021-04-18", text: "The attention to detail was impressive, and the final site loads fast while looking sharp on every screen.", },
+    // { name: "Henry William", avatar: "/assets/images/avatar-4.svg", date: "2021-03-09", text: "Reliable, organized, and thoughtful. Delivered on time and made the whole build feel smooth.", },
 ];
 
 export const clients: Client[] = [
-    { name: "client-1", logo: "/assets/images/logo-1.svg" },
-    { name: "client-2", logo: "/assets/images/logo-2.svg" },
-    { name: "client-3", logo: "/assets/images/logo-3.svg" },
-    { name: "client-4", logo: "/assets/images/logo-4.svg" },
-    { name: "client-5", logo: "/assets/images/logo-5.svg" },
-    { name: "client-6", logo: "/assets/images/logo-6.svg" },
+    // { name: "client-1", logo: "/assets/images/logo-1.svg" },
+    // { name: "client-2", logo: "/assets/images/logo-2.svg" },
+    // { name: "client-3", logo: "/assets/images/logo-3.svg" },
+    // { name: "client-4", logo: "/assets/images/logo-4.svg" },
+    // { name: "client-5", logo: "/assets/images/logo-5.svg" },
+    // { name: "client-6", logo: "/assets/images/logo-6.svg" },
 ];
 
 export const projects: Project[] = [
