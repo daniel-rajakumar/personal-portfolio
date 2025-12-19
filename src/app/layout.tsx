@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { profile } from "@/lib/data";
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -8,9 +9,25 @@ const poppins = Poppins({
     display: "swap",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const title = `${profile.name} | Portfolio`;
+const description = "Personal portfolio with projects, resume, and contact details.";
+
 export const metadata: Metadata = {
-    title: "vCard - Personal Portfolio",
-    description: "Personal portfolio inspired by the vCard UI.",
+    metadataBase: new URL(siteUrl),
+    title,
+    description,
+    openGraph: {
+        title,
+        description,
+        type: "website",
+        url: siteUrl,
+    },
+    twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+    },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
