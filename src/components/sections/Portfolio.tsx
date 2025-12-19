@@ -1,15 +1,30 @@
 "use client";
 
 import Image from "next/image";
-import { ChevronDown, Eye } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, Eye, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { projects } from "@/lib/data";
+import type { Project } from "@/lib/types";
 
 const categories = ["All", "Web development", "Web design", "Applications", "Other"] as const;
 
 export default function Portfolio() {
     const [cat, setCat] = useState<(typeof categories)[number]>("All");
     const [selectOpen, setSelectOpen] = useState(false);
+    const [selected, setSelected] = useState<Project | null>(null);
+    const shots = selected?.screenshots?.length ? selected.screenshots : selected ? [selected.image] : [];
+    const singleShot = shots.length === 1;
+
+    useEffect(() => {
+        if (!selected) return;
+        const handleKey = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                setSelected(null);
+            }
+        };
+        window.addEventListener("keydown", handleKey);
+        return () => window.removeEventListener("keydown", handleKey);
+    }, [selected]);
 
     return (
         <>
@@ -70,8 +85,6 @@ export default function Portfolio() {
                 <ul className="project-list">
                     {projects.map((p) => {
                         const isActive = cat === "All" || p.category === cat;
-                        const href = p.links?.[0]?.href ?? "#";
-                        const isExternal = href !== "#";
                         return (
                             <li
                                 className={`project-item${isActive ? " active" : ""}`}
@@ -79,7 +92,12 @@ export default function Portfolio() {
                                 data-filter-item
                                 data-category={p.category.toLowerCase()}
                             >
-                                <a href={href} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noreferrer" : undefined}>
+                                <button
+                                    type="button"
+                                    className="project-card"
+                                    onClick={() => setSelected(p)}
+                                    aria-label={`Open project details for ${p.title}`}
+                                >
                                     <figure className="project-img">
                                         <div className="project-item-icon-box">
                                             <Eye aria-hidden="true" />
@@ -94,12 +112,78 @@ export default function Portfolio() {
 
                                     <h3 className="project-title">{p.title}</h3>
                                     <p className="project-category">{p.category}</p>
-                                </a>
+                                </button>
                             </li>
                         );
                     })}
                 </ul>
             </section>
+
+            {selected ? (
+                <div className="project-modal-overlay" role="dialog" aria-modal="true">
+                    <div className="project-modal-backdrop" onClick={() => setSelected(null)} />
+                    <div className="project-modal">
+                        <header className="project-modal__header">
+                            <div>
+                                <h3 className="h3">{selected.title}</h3>
+                                <p className="project-modal__meta">{selected.category}</p>
+                            </div>
+                            <button
+                                type="button"
+                                className="project-modal__close"
+                                onClick={() => setSelected(null)}
+                                aria-label="Close project details"
+                            >
+                                <X aria-hidden="true" />
+                            </button>
+                        </header>
+
+                        <div className="project-modal__body">
+                            <p className="project-modal__description">{selected.description}</p>
+
+                            <div className={`project-modal__gallery${singleShot ? " is-single" : ""}`}>
+                                {shots.map((src, index) => (
+                                    <div className="project-modal__shot" key={`${src}-${index}`}>
+                                        <Image
+                                            src={src}
+                                            alt={`${selected.title} screenshot ${index + 1}`}
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, 50vw"
+                                            className="project-modal__img"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="project-modal__meta-row">
+                                <div>
+                                    <h4 className="h4">Tech stack</h4>
+                                    <ul className="project-modal__tech">
+                                        {selected.tech.map((t) => (
+                                            <li key={t}>{t}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 className="h4">Links</h4>
+                                    <div className="project-modal__links">
+                                        {selected.links?.length ? (
+                                            selected.links.map((l) => (
+                                                <a key={l.href} href={l.href} target="_blank" rel="noreferrer">
+                                                    {l.label}
+                                                </a>
+                                            ))
+                                        ) : (
+                                            <span className="project-modal__muted">Links coming soon</span>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : null}
         </>
     );
 }
