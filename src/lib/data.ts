@@ -156,25 +156,7 @@ export const projects: Project[] = [
 ];
 
 export const blogPosts: BlogPost[] = [
-    {
-        title: "Design conferences in 2025",
-        category: "Design",
-        date: "2025-02-23",
-        excerpt: "A quick rundown of the events I am tracking this year.",
-        image: "/assets/images/blog-1.svg",
-    },
-    {
-        title: "Best fonts every designer uses",
-        category: "Design",
-        date: "2025-02-16",
-        excerpt: "A short list of typefaces that work across web and print.",
-        image: "/assets/images/blog-2.svg",
-    },
-    {
-        title: "Building with intent",
-        category: "Product",
-        date: "2025-01-30",
-        excerpt: "How I keep projects tight, useful, and easy to ship.",
-        image: "/assets/images/blog-3.svg",
-    },
+    // { title: "Design conferences in 2025", category: "Design", date: "2025-02-23", excerpt: "A quick rundown of the events I am tracking this year.", image: "/assets/images/blog-1.svg", },
+    // { title: "Best fonts every designer uses", category: "Design", date: "2025-02-16", excerpt: "A short list of typefaces that work across web and print.", image: "/assets/images/blog-2.svg", },
+    // { title: "Building with intent", category: "Product", date: "2025-01-30", excerpt: "How I keep projects tight, useful, and easy to ship.", image: "/assets/images/blog-3.svg", },
 ];

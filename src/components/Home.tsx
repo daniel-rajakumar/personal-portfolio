@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { TabKey } from "@/lib/types";
+import { blogPosts } from "@/lib/data";
 import Sidebar from "./Sidebar";
 import Tabs from "./Tabs";
 import CommandPalette from "./CommandPalette";
@@ -13,7 +14,10 @@ import Portfolio from "@/components/sections/Portfolio";
 import Blog from "@/components/sections/Blog";
 import Contact from "@/components/sections/Contact";
 
-const TABS: TabKey[] = ["about", "resume", "portfolio", "blog", "contact"];
+const BASE_TABS: TabKey[] = ["about", "resume", "portfolio", "blog", "contact"];
+const AVAILABLE_TABS: TabKey[] = blogPosts.length
+    ? BASE_TABS
+    : BASE_TABS.filter((tab) => tab !== "blog");
 
 export default function Home() {
     const sp = useSearchParams();
@@ -22,10 +26,13 @@ export default function Home() {
 
     const active = useMemo<TabKey>(() => {
         const t = sp.get("tab") as TabKey | null;
-        return t && TABS.includes(t) ? t : "about";
+        return t && AVAILABLE_TABS.includes(t) ? t : "about";
     }, [sp]);
 
     function setTab(tab: TabKey) {
+        if (!AVAILABLE_TABS.includes(tab)) {
+            return;
+        }
         const next = new URLSearchParams(sp.toString());
         next.set("tab", tab);
         router.replace(`${pathname}?${next.toString()}`, { scroll: false });
@@ -54,9 +61,11 @@ export default function Home() {
                         <Portfolio />
                     </article>
 
-                    <article className={`blog${active === "blog" ? " active" : ""}`} data-page="blog">
-                        <Blog />
-                    </article>
+                    {blogPosts.length ? (
+                        <article className={`blog${active === "blog" ? " active" : ""}`} data-page="blog">
+                            <Blog />
+                        </article>
+                    ) : null}
 
                     <article className={`contact${active === "contact" ? " active" : ""}`} data-page="contact">
                         <Contact />

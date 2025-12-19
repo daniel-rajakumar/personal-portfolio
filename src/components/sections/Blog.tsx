@@ -16,6 +16,10 @@ const formatDate = (value: string) => {
 };
 
 export default function Blog() {
+    if (blogPosts.length === 0) {
+        return null;
+    }
+
     return (
         <>
             <header>
