@@ -13,6 +13,7 @@ export default function Portfolio() {
     const [cat, setCat] = useState<(typeof categories)[number]>("All");
     const [selectOpen, setSelectOpen] = useState(false);
     const [selected, setSelected] = useState<Project | null>(null);
+    const [loadedShots, setLoadedShots] = useState<Record<string, boolean>>({});
     const shots = selected?.screenshots?.length ? selected.screenshots : selected ? [selected.image] : [];
     const singleShot = shots.length === 1;
 
@@ -25,6 +26,7 @@ export default function Portfolio() {
 
     const openProject = (project: Project) => {
         trackEvent("project_modal_open", { project: project.title, category: project.category });
+        setLoadedShots({});
         setSelected(project);
     };
 
@@ -162,17 +164,30 @@ export default function Portfolio() {
                             <p className="project-modal__description">{selected.description}</p>
 
                             <div className={`project-modal__gallery${singleShot ? " is-single" : ""}`}>
-                                {shots.map((src, index) => (
-                                    <div className="project-modal__shot" key={`${src}-${index}`}>
-                                        <Image
-                                            src={src}
-                                            alt={`${selected.title} screenshot ${index + 1}`}
-                                            fill
-                                            sizes="(max-width: 768px) 100vw, 50vw"
-                                            className="project-modal__img"
-                                        />
-                                    </div>
-                                ))}
+                                {shots.map((src, index) => {
+                                    const shotKey = `${src}-${index}`;
+                                    const isLoaded = loadedShots[shotKey];
+                                    return (
+                                        <div
+                                            className={`project-modal__shot${isLoaded ? " is-loaded" : " is-loading"}`}
+                                            key={shotKey}
+                                        >
+                                            <Image
+                                                src={src}
+                                                alt={`${selected.title} screenshot ${index + 1}`}
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, 50vw"
+                                                className="project-modal__img"
+                                                onLoadingComplete={() =>
+                                                    setLoadedShots((prev) => ({ ...prev, [shotKey]: true }))
+                                                }
+                                                onError={() =>
+                                                    setLoadedShots((prev) => ({ ...prev, [shotKey]: true }))
+                                                }
+                                            />
+                                        </div>
+                                    );
+                                })}
                             </div>
 
                             <div className="project-modal__meta-row">

@@ -11,6 +11,7 @@ import {
     Mail,
     MapPin,
     Phone,
+    UserRound,
 } from "lucide-react";
 import { profile, socials } from "@/lib/data";
 import { trackEvent } from "@/lib/analytics";
@@ -60,8 +61,15 @@ export default function Sidebar() {
                         setOpen((v) => !v);
                     }}
                 >
-                    <span>Show Contacts</span>
-                    <ChevronDown size={16} aria-hidden="true" />
+                    <span className="info_more-btn__icon" aria-hidden="true">
+                        <UserRound size={16} />
+                    </span>
+                    <span className="info_more-btn__label">Show Contacts</span>
+                    <ChevronDown
+                        size={16}
+                        aria-hidden="true"
+                        className={`info_more-btn__chevron${open ? " is-open" : ""}`}
+                    />
                 </button>
             </div>
 
