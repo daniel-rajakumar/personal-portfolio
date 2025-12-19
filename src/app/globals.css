@@ -1095,6 +1095,11 @@ main {
   overscroll-behavior-inline: contain;
   scroll-snap-type: inline mandatory;
   scroll-padding-inline: 25px;
+  scrollbar-width: none;
+}
+
+.clients-list::-webkit-scrollbar {
+  display: none;
 }
 
 .clients-item {
@@ -1110,6 +1115,27 @@ main {
 
 .clients-item img:hover {
   filter: grayscale(0);
+}
+
+.clients-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: -5px;
+}
+
+.clients-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--jet);
+  transition: var(--transition-1);
+}
+
+.clients-dot.is-active {
+  width: 18px;
+  background: var(--orange-yellow-crayola);
 }
 
 /*-----------------------------------*\
