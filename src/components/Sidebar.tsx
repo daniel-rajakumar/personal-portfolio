@@ -25,7 +25,17 @@ export default function Sidebar() {
     const [open, setOpen] = useState(false);
     const available = useMemo(() => profile.status.available, []);
     return (
-        <aside className={`sidebar${open ? " active" : ""}`} data-sidebar>
+        <aside
+            className={`sidebar${open ? " active" : ""}`}
+            data-sidebar
+            onClick={(event) => {
+                const target = event.target as HTMLElement;
+                if (target.closest("a, button, input, textarea, select, [data-no-sidebar-toggle]")) {
+                    return;
+                }
+                setOpen((v) => !v);
+            }}
+        >
             <div className="sidebar-info">
                 <figure className="avatar-box">
                     <Image
@@ -55,7 +65,8 @@ export default function Sidebar() {
                     className="info_more-btn"
                     data-sidebar-btn
                     aria-expanded={open}
-                    onClick={() => {
+                    onClick={(event) => {
+                        event.stopPropagation();
                         trackEvent("sidebar_contacts_toggle", { open: !open });
                         setOpen((v) => !v);
                     }}
