@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 import {
     CalendarDays,
-    ChevronDown,
     Github,
     Instagram,
     Linkedin,
@@ -65,11 +64,6 @@ export default function Sidebar() {
                         <UserRound size={16} />
                     </span>
                     <span className="info_more-btn__label">Show Contacts</span>
-                    <ChevronDown
-                        size={16}
-                        aria-hidden="true"
-                        className={`info_more-btn__chevron${open ? " is-open" : ""}`}
-                    />
                 </button>
             </div>
 
