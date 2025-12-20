@@ -41,9 +41,9 @@ export default function Sidebar() {
                     <Image
                         src={profile.avatar}
                         alt={profile.name}
-                        width={80}
-                        height={80}
-                        sizes="(min-width: 1250px) 150px, (min-width: 580px) 120px, 80px"
+                        width={96}
+                        height={96}
+                        sizes="(min-width: 1250px) 160px, (min-width: 768px) 130px, (min-width: 580px) 104px, 96px"
                         priority
                     />
                 </figure>
