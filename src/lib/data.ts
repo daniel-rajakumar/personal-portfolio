@@ -24,7 +24,7 @@ export const profile = {
         label: "June 23, 1999",
         datetime: "1999-06-23",
     },
-    avatar: "/assets/images/profile-pic.png",
+    avatar: "/assets/images/profile-picture-11.png",
     about: [
         "Computer Science student with 7 years of programming experience and a strong background in software development and technical leadership.",
         "Founded the Google Developer Student Club on campus and led workshops in Android and web development to build real-world skills."
