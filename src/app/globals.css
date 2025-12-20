@@ -520,7 +520,7 @@ main {
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
-  padding: 0 60px 28px 15px;
+  padding: 0;
   transition: opacity 0.45s ease, max-height 0.7s ease;
   transition-delay: 0s, 0.2s;
 }
@@ -530,6 +530,10 @@ main {
   opacity: 1;
   pointer-events: auto;
   transition-delay: 0s, 0s;
+}
+
+.sidebar-info_more-inner {
+  padding: 0 60px 28px 15px;
 }
 
 .sidebar-info_more .separator:first-of-type {
@@ -2130,15 +2134,13 @@ textarea.form-input::-webkit-resizer {
 
     .sidebar:not(.active) {
       max-height: 128px;
-      justify-content: center;
-      padding-bottom: -20px;
-      padding-top: 20px;
-
+      padding-bottom: 0;
+      padding-top: 0;
     }
 
     .sidebar-info {
       gap: 12px;
-      padding: 8px 60px 8px 12px;
+      padding: 16px 60px 16px 12px;
     }
 
     .avatar-box img {
@@ -2164,13 +2166,7 @@ textarea.form-input::-webkit-resizer {
     }
 
     .sidebar-info_more {
-      padding: 0;
-      transition: opacity 0.6s ease, padding 0s linear 0.6s;
-    }
-
-    .sidebar.active .sidebar-info_more {
-      padding: 0 60px 28px 15px;
-      transition: opacity 0.6s ease, padding 0s linear 0s;
+      transition: opacity 0.6s ease, max-height 0.9s ease;
     }
   }
 
@@ -2402,6 +2398,10 @@ textarea.form-input::-webkit-resizer {
   }
 
   .sidebar-info {
+    padding: 0;
+  }
+
+  .sidebar-info_more-inner {
     padding: 0;
   }
 

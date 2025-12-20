@@ -79,83 +79,84 @@ export default function Sidebar() {
             </div>
 
             <div className="sidebar-info_more">
-                <div className="separator"></div>
+                <div className="sidebar-info_more-inner">
+                    <div className="separator"></div>
 
-                <ul className="contacts-list">
-                    <li className="contact-item">
-                        <div className="icon-box">
-                            <Mail aria-hidden="true" />
-                        </div>
-                        <div className="contact-info">
-                            <p className="contact-title">Email</p>
-                            <a
-                                href={`mailto:${profile.email}`}
-                                className="contact-link"
-                                onClick={() => trackEvent("contact_email_click")}
-                            >
-                                {profile.email}
-                            </a>
-                        </div>
-                    </li>
-
-                    <li className="contact-item">
-                        <div className="icon-box">
-                            <Phone aria-hidden="true" />
-                        </div>
-                        <div className="contact-info">
-                            <p className="contact-title">Phone</p>
-                            <a
-                                href={`tel:${profile.phone}`}
-                                className="contact-link"
-                                onClick={() => trackEvent("contact_phone_click")}
-                            >
-                                {profile.phone}
-                            </a>
-                        </div>
-                    </li>
-
-                    <li className="contact-item">
-                        <div className="icon-box">
-                            <CalendarDays aria-hidden="true" />
-                        </div>
-                        <div className="contact-info">
-                            <p className="contact-title">Birthday</p>
-                            <time dateTime={profile.birthday.datetime}>{profile.birthday.label}</time>
-                        </div>
-                    </li>
-
-                    <li className="contact-item">
-                        <div className="icon-box">
-                            <MapPin aria-hidden="true" />
-                        </div>
-                        <div className="contact-info">
-                            <p className="contact-title">Location</p>
-                            <address>{profile.location}</address>
-                        </div>
-                    </li>
-                </ul>
-
-                <div className="separator"></div>
-
-                <ul className="social-list">
-                    {socials.map((s) => {
-                        const Icon = socialIcons[s.label] ?? Github;
-                        return (
-                            <li className="social-item" key={s.label}>
+                    <ul className="contacts-list">
+                        <li className="contact-item">
+                            <div className="icon-box">
+                                <Mail aria-hidden="true" />
+                            </div>
+                            <div className="contact-info">
+                                <p className="contact-title">Email</p>
                                 <a
-                                    className="social-link"
-                                    href={s.href}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    onClick={() => trackEvent("social_click", { network: s.label })}
+                                    href={`mailto:${profile.email}`}
+                                    className="contact-link"
+                                    onClick={() => trackEvent("contact_email_click")}
                                 >
-                                    <Icon aria-label={s.label} size={18} />
+                                    {profile.email}
                                 </a>
-                            </li>
-                        );
-                    })}
-                </ul>
+                            </div>
+                        </li>
 
+                        <li className="contact-item">
+                            <div className="icon-box">
+                                <Phone aria-hidden="true" />
+                            </div>
+                            <div className="contact-info">
+                                <p className="contact-title">Phone</p>
+                                <a
+                                    href={`tel:${profile.phone}`}
+                                    className="contact-link"
+                                    onClick={() => trackEvent("contact_phone_click")}
+                                >
+                                    {profile.phone}
+                                </a>
+                            </div>
+                        </li>
+
+                        <li className="contact-item">
+                            <div className="icon-box">
+                                <CalendarDays aria-hidden="true" />
+                            </div>
+                            <div className="contact-info">
+                                <p className="contact-title">Birthday</p>
+                                <time dateTime={profile.birthday.datetime}>{profile.birthday.label}</time>
+                            </div>
+                        </li>
+
+                        <li className="contact-item">
+                            <div className="icon-box">
+                                <MapPin aria-hidden="true" />
+                            </div>
+                            <div className="contact-info">
+                                <p className="contact-title">Location</p>
+                                <address>{profile.location}</address>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div className="separator"></div>
+
+                    <ul className="social-list">
+                        {socials.map((s) => {
+                            const Icon = socialIcons[s.label] ?? Github;
+                            return (
+                                <li className="social-item" key={s.label}>
+                                    <a
+                                        className="social-link"
+                                        href={s.href}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        onClick={() => trackEvent("social_click", { network: s.label })}
+                                    >
+                                        <Icon aria-label={s.label} size={18} />
+                                    </a>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
             </div>
         </aside>
     );
