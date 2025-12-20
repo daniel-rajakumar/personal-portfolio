@@ -2125,11 +2125,15 @@ textarea.form-input::-webkit-resizer {
       display: flex;
       flex-direction: column;
       max-height: 128px;
+      transition: max-height 0.9s ease-in-out, padding 0.9s ease-in-out;
     }
 
     .sidebar:not(.active) {
       max-height: 128px;
       justify-content: center;
+      padding-bottom: -20px;
+      padding-top: 20px;
+
     }
 
     .sidebar-info {
@@ -2161,12 +2165,12 @@ textarea.form-input::-webkit-resizer {
 
     .sidebar-info_more {
       padding: 0;
-      transition: opacity 0.45s ease, padding 0s linear 0.45s;
+      transition: opacity 0.6s ease, padding 0s linear 0.6s;
     }
 
     .sidebar.active .sidebar-info_more {
       padding: 0 60px 28px 15px;
-      transition: opacity 0.45s ease, padding 0s linear 0s;
+      transition: opacity 0.6s ease, padding 0s linear 0s;
     }
   }
 
