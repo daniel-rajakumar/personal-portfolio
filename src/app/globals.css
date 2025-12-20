@@ -2399,7 +2399,7 @@ textarea.form-input::-webkit-resizer {
   }
 
   .sidebar-info_more-inner {
-    padding: 0;
+    padding: 1px 0;
   }
 
   .info_more-btn {

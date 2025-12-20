@@ -25,7 +25,6 @@ const socialIcons: Record<string, typeof Github> = {
 export default function Sidebar() {
     const sidebarRef = useRef<HTMLElement | null>(null);
     const infoRef = useRef<HTMLDivElement | null>(null);
-    const infoMoreRef = useRef<HTMLDivElement | null>(null);
     const infoMoreInnerRef = useRef<HTMLDivElement | null>(null);
     const openHeightRef = useRef<number | null>(null);
     const infoMoreHeightRef = useRef<number | null>(null);
@@ -80,10 +79,14 @@ export default function Sidebar() {
         if (!openHeight && !infoMoreHeight) {
             return undefined;
         }
-        return {
-            ["--sidebar-open-height" as string]: openHeight ? `${openHeight}px` : undefined,
-            ["--sidebar-info-more-height" as string]: infoMoreHeight ? `${infoMoreHeight}px` : undefined,
-        };
+        const style: CSSProperties = {};
+        if (openHeight) {
+            style["--sidebar-open-height" as string] = `${openHeight}px`;
+        }
+        if (infoMoreHeight) {
+            style["--sidebar-info-more-height" as string] = `${infoMoreHeight}px`;
+        }
+        return style;
     }, [openHeight, infoMoreHeight]);
     return (
         <aside
@@ -144,7 +147,7 @@ export default function Sidebar() {
                 </button>
             </div>
 
-            <div className="sidebar-info_more" ref={infoMoreRef}>
+            <div className="sidebar-info_more">
                 <div className="sidebar-info_more-inner" ref={infoMoreInnerRef}>
                     <div className="separator"></div>
 
