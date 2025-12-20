@@ -11,13 +11,13 @@ import type {
 
 export const profile = {
     name: "Daniel Rajakumar",
-    role: "Computer Science Student • SWE Intern",
+    role: "Computer Science Student",
     location: "Mahwah, NJ",
     email: "drajakum@ramapo.edu",
     phone: "+1 (732) 997-2480",
     resumeUrl: "/resume.pdf",
     status: {
-        label: "Seeking Winter/Spring 2025 SWE Internship",
+        label: "Seeking Spring Internship",
         available: true,
     },
     birthday: {
