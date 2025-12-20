@@ -13,16 +13,16 @@ export const profile = {
     name: "Daniel Rajakumar",
     role: "Computer Science Student",
     location: "Mahwah, NJ",
-    email: "drajakum@ramapo.edu",
+    email: "hello@danielrajakumar.com",
     phone: "+1 (609) 388-1811",
     resumeUrl: "/resume.pdf",
     status: {
         label: "Seeking Spring Internship",
         available: true,
     },
-    birthday: {
-        label: "June 23, 1999",
-        datetime: "1999-06-23",
+    graduation: {
+        label: "Expected May 2026",
+        datetime: "2027-05",
     },
     avatar: "/assets/images/profile-picture-11.png",
     about: [

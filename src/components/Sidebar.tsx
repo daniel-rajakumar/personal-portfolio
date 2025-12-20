@@ -202,8 +202,8 @@ export default function Sidebar() {
                                 <CalendarDays aria-hidden="true" />
                             </div>
                             <div className="contact-info">
-                                <p className="contact-title">Birthday</p>
-                                <time dateTime={profile.birthday.datetime}>{profile.birthday.label}</time>
+                                <p className="contact-title">Graduation</p>
+                                <time dateTime={profile.graduation.datetime}>{profile.graduation.label}</time>
                             </div>
                         </li>
 
