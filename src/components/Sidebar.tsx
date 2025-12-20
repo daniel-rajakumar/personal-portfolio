@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import {
     CalendarDays,
     Github,
@@ -22,13 +23,78 @@ const socialIcons: Record<string, typeof Github> = {
 };
 
 export default function Sidebar() {
+    const sidebarRef = useRef<HTMLElement | null>(null);
+    const infoRef = useRef<HTMLDivElement | null>(null);
+    const infoMoreRef = useRef<HTMLDivElement | null>(null);
+    const infoMoreInnerRef = useRef<HTMLDivElement | null>(null);
+    const openHeightRef = useRef<number | null>(null);
+    const infoMoreHeightRef = useRef<number | null>(null);
     const [open, setOpen] = useState(false);
+    const [openHeight, setOpenHeight] = useState<number | null>(null);
+    const [infoMoreHeight, setInfoMoreHeight] = useState<number | null>(null);
     const available = useMemo(() => profile.status.available, []);
+
+    const updateOpenHeight = useCallback(() => {
+        if (!sidebarRef.current || !infoRef.current || !infoMoreInnerRef.current) {
+            return;
+        }
+        const headerHeight = infoRef.current.getBoundingClientRect().height;
+        const moreHeight = infoMoreInnerRef.current.scrollHeight;
+        const styles = window.getComputedStyle(sidebarRef.current);
+        const paddingTop = Number.parseFloat(styles.paddingTop) || 0;
+        const paddingBottom = Number.parseFloat(styles.paddingBottom) || 0;
+        const next = Math.ceil(headerHeight + moreHeight + paddingTop + paddingBottom);
+        const nextMore = Math.ceil(moreHeight);
+        if (openHeightRef.current !== next) {
+            openHeightRef.current = next;
+            setOpenHeight(next);
+        }
+        if (infoMoreHeightRef.current !== nextMore) {
+            infoMoreHeightRef.current = nextMore;
+            setInfoMoreHeight(nextMore);
+        }
+    }, []);
+
+    useLayoutEffect(() => {
+        updateOpenHeight();
+        const resizeObserver =
+            typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateOpenHeight) : null;
+        if (resizeObserver) {
+            if (infoRef.current) {
+                resizeObserver.observe(infoRef.current);
+            }
+            if (infoMoreInnerRef.current) {
+                resizeObserver.observe(infoMoreInnerRef.current);
+            }
+        }
+        window.addEventListener("resize", updateOpenHeight);
+        return () => {
+            if (resizeObserver) {
+                resizeObserver.disconnect();
+            }
+            window.removeEventListener("resize", updateOpenHeight);
+        };
+    }, [updateOpenHeight]);
+
+    const sidebarStyle = useMemo<CSSProperties | undefined>(() => {
+        if (!openHeight && !infoMoreHeight) {
+            return undefined;
+        }
+        return {
+            ["--sidebar-open-height" as string]: openHeight ? `${openHeight}px` : undefined,
+            ["--sidebar-info-more-height" as string]: infoMoreHeight ? `${infoMoreHeight}px` : undefined,
+        };
+    }, [openHeight, infoMoreHeight]);
     return (
         <aside
             className={`sidebar${open ? " active" : ""}`}
             data-sidebar
+            style={sidebarStyle}
+            ref={sidebarRef}
             onClick={(event) => {
+                if (window.matchMedia("(min-width: 1250px)").matches) {
+                    return;
+                }
                 const target = event.target as HTMLElement;
                 if (target.closest("a, button, input, textarea, select, [data-no-sidebar-toggle]")) {
                     return;
@@ -36,7 +102,7 @@ export default function Sidebar() {
                 setOpen((v) => !v);
             }}
         >
-            <div className="sidebar-info">
+            <div className="sidebar-info" ref={infoRef}>
                 <figure className="avatar-box">
                     <Image
                         src={profile.avatar}
@@ -78,8 +144,8 @@ export default function Sidebar() {
                 </button>
             </div>
 
-            <div className="sidebar-info_more">
-                <div className="sidebar-info_more-inner">
+            <div className="sidebar-info_more" ref={infoMoreRef}>
+                <div className="sidebar-info_more-inner" ref={infoMoreInnerRef}>
                     <div className="separator"></div>
 
                     <ul className="contacts-list">
