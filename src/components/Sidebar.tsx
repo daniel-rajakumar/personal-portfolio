@@ -56,6 +56,11 @@ export default function Sidebar() {
 
     useLayoutEffect(() => {
         updateOpenHeight();
+        if (typeof document !== "undefined" && "fonts" in document) {
+            void (document as Document & { fonts?: FontFaceSet }).fonts?.ready?.then(() => {
+                updateOpenHeight();
+            });
+        }
         const resizeObserver =
             typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateOpenHeight) : null;
         if (resizeObserver) {
@@ -74,6 +79,12 @@ export default function Sidebar() {
             window.removeEventListener("resize", updateOpenHeight);
         };
     }, [updateOpenHeight]);
+
+    useLayoutEffect(() => {
+        updateOpenHeight();
+        const frame = window.requestAnimationFrame(updateOpenHeight);
+        return () => window.cancelAnimationFrame(frame);
+    }, [open, updateOpenHeight]);
 
     const sidebarStyle = useMemo<CSSProperties | undefined>(() => {
         if (!openHeight && !infoMoreHeight) {
