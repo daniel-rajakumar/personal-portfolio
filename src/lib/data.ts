@@ -14,7 +14,7 @@ export const profile = {
     role: "Computer Science Student",
     location: "Mahwah, NJ",
     email: "drajakum@ramapo.edu",
-    phone: "+1 (732) 997-2480",
+    phone: "+1 (609) 388-1811",
     resumeUrl: "/resume.pdf",
     status: {
         label: "Seeking Spring Internship",

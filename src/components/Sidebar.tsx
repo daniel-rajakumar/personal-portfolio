@@ -125,6 +125,8 @@ export default function Sidebar() {
                         height={96}
                         sizes="(min-width: 1250px) 160px, (min-width: 768px) 130px, (min-width: 580px) 104px, 96px"
                         priority
+                        quality={100}
+                        unoptimized
                     />
                 </figure>
 
