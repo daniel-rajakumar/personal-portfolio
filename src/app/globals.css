@@ -363,7 +363,7 @@ main {
 }
 
 .sidebar.active {
-  max-height: 420px;
+  max-height: var(--sidebar-open-height, max-content);
 }
 
 .sidebar:not(.active) {
@@ -526,7 +526,7 @@ main {
 }
 
 .sidebar.active .sidebar-info_more {
-  max-height: 800px;
+  max-height: var(--sidebar-info-more-height, max-content);
   opacity: 1;
   pointer-events: auto;
   transition-delay: 0s, 0s;
@@ -2083,7 +2083,7 @@ textarea.form-input::-webkit-resizer {
   }
 
   .sidebar.active {
-    max-height: 584px;
+    max-height: var(--sidebar-open-height, max-content);
   }
 
   .sidebar:not(.active) {
@@ -2129,7 +2129,7 @@ textarea.form-input::-webkit-resizer {
       display: flex;
       flex-direction: column;
       max-height: 128px;
-      transition: max-height 0.9s ease-in-out, padding 0.9s ease-in-out;
+      transition: max-height 0.7s ease-in-out, padding 0.7s ease-in-out;
     }
 
     .sidebar:not(.active) {
@@ -2165,9 +2165,6 @@ textarea.form-input::-webkit-resizer {
       font-size: 11px;
     }
 
-    .sidebar-info_more {
-      transition: opacity 0.6s ease, max-height 0.9s ease;
-    }
   }
 
   /**
