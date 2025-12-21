@@ -1751,6 +1751,7 @@ main {
 }
 
 .project-modal__dot.is-active {
+  width: 18px;
   background: var(--orange-yellow-crayola);
   border-color: var(--orange-yellow-crayola);
 }
