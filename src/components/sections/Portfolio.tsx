@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { ChevronDown, Eye, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChevronDown, ChevronLeft, ChevronRight, Eye, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { projects } from "@/lib/data";
 import type { Project } from "@/lib/types";
 import { trackEvent } from "@/lib/analytics";
@@ -14,8 +14,15 @@ export default function Portfolio() {
     const [selectOpen, setSelectOpen] = useState(false);
     const [selected, setSelected] = useState<Project | null>(null);
     const [loadedShots, setLoadedShots] = useState<Record<string, boolean>>({});
-    const shots = selected?.screenshots?.length ? selected.screenshots : selected ? [selected.image] : [];
-    const singleShot = shots.length === 1;
+    const [shotIndex, setShotIndex] = useState(0);
+    const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+    const touchDeltaRef = useRef(0);
+    const shots = useMemo(() => {
+        if (!selected) return [];
+        return selected.screenshots?.length ? selected.screenshots : [{ src: selected.image }];
+    }, [selected]);
+    const singleShot = shots.length <= 1;
+    const activeShot = shots[shotIndex];
 
     const handleCategory = (next: (typeof categories)[number]) => {
         if (next !== cat) {
@@ -27,6 +34,7 @@ export default function Portfolio() {
     const openProject = (project: Project) => {
         trackEvent("project_modal_open", { project: project.title, category: project.category });
         setLoadedShots({});
+        setShotIndex(0);
         setSelected(project);
     };
 
@@ -43,10 +51,25 @@ export default function Portfolio() {
             if (event.key === "Escape") {
                 closeProject();
             }
+            if (event.key === "ArrowRight" && shots.length > 1) {
+                setShotIndex((prev) => (prev + 1) % shots.length);
+            }
+            if (event.key === "ArrowLeft" && shots.length > 1) {
+                setShotIndex((prev) => (prev - 1 + shots.length) % shots.length);
+            }
         };
         window.addEventListener("keydown", handleKey);
         return () => window.removeEventListener("keydown", handleKey);
-    }, [selected]);
+    }, [selected, shots.length]);
+
+    useEffect(() => {
+        if (!shots.length) {
+            return;
+        }
+        if (shotIndex >= shots.length) {
+            setShotIndex(0);
+        }
+    }, [shots.length, shotIndex]);
 
     return (
         <>
@@ -164,30 +187,133 @@ export default function Portfolio() {
                             <p className="project-modal__description">{selected.description}</p>
 
                             <div className={`project-modal__gallery${singleShot ? " is-single" : ""}`}>
-                                {shots.map((src, index) => {
-                                    const shotKey = `${src}-${index}`;
-                                    const isLoaded = loadedShots[shotKey];
-                                    return (
-                                        <div
-                                            className={`project-modal__shot${isLoaded ? " is-loaded" : " is-loading"}`}
-                                            key={shotKey}
-                                        >
-                                            <Image
-                                                src={src}
-                                                alt={`${selected.title} screenshot ${index + 1}`}
-                                                fill
-                                                sizes="(max-width: 768px) 100vw, 50vw"
-                                                className="project-modal__img"
-                                                onLoadingComplete={() =>
-                                                    setLoadedShots((prev) => ({ ...prev, [shotKey]: true }))
+                                <div
+                                    className="project-modal__carousel"
+                                    onTouchStart={(event) => {
+                                        if (shots.length <= 1) {
+                                            return;
+                                        }
+                                        const touch = event.touches[0];
+                                        touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+                                        touchDeltaRef.current = 0;
+                                    }}
+                                    onTouchMove={(event) => {
+                                        if (!touchStartRef.current || shots.length <= 1) {
+                                            return;
+                                        }
+                                        const touch = event.touches[0];
+                                        const deltaX = touch.clientX - touchStartRef.current.x;
+                                        const deltaY = touch.clientY - touchStartRef.current.y;
+                                        touchDeltaRef.current = deltaX;
+                                        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 8) {
+                                            event.preventDefault();
+                                        }
+                                    }}
+                                    onTouchEnd={() => {
+                                        if (shots.length <= 1) {
+                                            touchStartRef.current = null;
+                                            touchDeltaRef.current = 0;
+                                            return;
+                                        }
+                                        const deltaX = touchDeltaRef.current;
+                                        if (Math.abs(deltaX) > 40) {
+                                            if (deltaX < 0) {
+                                                setShotIndex((prev) => (prev + 1) % shots.length);
+                                            } else {
+                                                setShotIndex((prev) => (prev - 1 + shots.length) % shots.length);
+                                            }
+                                        }
+                                        touchStartRef.current = null;
+                                        touchDeltaRef.current = 0;
+                                    }}
+                                    onTouchCancel={() => {
+                                        touchStartRef.current = null;
+                                        touchDeltaRef.current = 0;
+                                    }}
+                                >
+                                    <div
+                                        className="project-modal__track"
+                                        style={{ transform: `translateX(-${shotIndex * 100}%)` }}
+                                    >
+                                        {shots.map((shot, index) => {
+                                            const shotKey = `${shot.src}-${index}`;
+                                            const isLoaded = loadedShots[shotKey];
+                                            return (
+                                                <div className="project-modal__slide" key={shotKey}>
+                                                    <div
+                                                        className={`project-modal__shot${
+                                                            isLoaded ? " is-loaded" : " is-loading"
+                                                        }`}
+                                                    >
+                                                        <Image
+                                                            src={shot.src}
+                                                            alt={`${selected.title} screenshot ${index + 1}`}
+                                                            fill
+                                                            sizes="(max-width: 768px) 100vw, 50vw"
+                                                            className="project-modal__img"
+                                                            onLoadingComplete={() =>
+                                                                setLoadedShots((prev) => ({
+                                                                    ...prev,
+                                                                    [shotKey]: true,
+                                                                }))
+                                                            }
+                                                            onError={() =>
+                                                                setLoadedShots((prev) => ({
+                                                                    ...prev,
+                                                                    [shotKey]: true,
+                                                                }))
+                                                            }
+                                                        />
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+                                    {!singleShot ? (
+                                        <div className="project-modal__controls">
+                                            <button
+                                                type="button"
+                                                className="project-modal__nav project-modal__nav--prev"
+                                                onClick={() =>
+                                                    setShotIndex((prev) => (prev - 1 + shots.length) % shots.length)
                                                 }
-                                                onError={() =>
-                                                    setLoadedShots((prev) => ({ ...prev, [shotKey]: true }))
-                                                }
-                                            />
+                                                aria-label="Previous screenshot"
+                                            >
+                                                <ChevronLeft aria-hidden="true" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="project-modal__nav project-modal__nav--next"
+                                                onClick={() => setShotIndex((prev) => (prev + 1) % shots.length)}
+                                                aria-label="Next screenshot"
+                                            >
+                                                <ChevronRight aria-hidden="true" />
+                                            </button>
                                         </div>
-                                    );
-                                })}
+                                    ) : null}
+                                </div>
+
+                                {activeShot?.caption ? (
+                                    <p className="project-modal__caption">{activeShot.caption}</p>
+                                ) : null}
+
+                                {!singleShot ? (
+                                    <div className="project-modal__dots" role="tablist" aria-label="Screenshot slides">
+                                        {shots.map((shot, index) => (
+                                            <button
+                                                key={`${shot.src}-${index}`}
+                                                type="button"
+                                                className={`project-modal__dot${
+                                                    index === shotIndex ? " is-active" : ""
+                                                }`}
+                                                onClick={() => setShotIndex(index)}
+                                                aria-label={`Go to screenshot ${index + 1}`}
+                                                aria-current={index === shotIndex ? "true" : undefined}
+                                            />
+                                        ))}
+                                    </div>
+                                ) : null}
                             </div>
 
                             <div className="project-modal__meta-row">

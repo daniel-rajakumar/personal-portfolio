@@ -11,8 +11,13 @@ export type Project = {
     description: string;
     tech: string[];
     image: string;
-    screenshots?: string[];
+    screenshots?: ProjectScreenshot[];
     links?: { label: string; href: string }[];
+};
+
+export type ProjectScreenshot = {
+    src: string;
+    caption?: string;
 };
 
 export type TimelineItem = {

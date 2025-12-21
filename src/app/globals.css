@@ -1639,13 +1639,35 @@ main {
 }
 
 .project-modal__gallery {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .project-modal__gallery.is-single {
-  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.project-modal__carousel {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.project-modal__track {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100%;
+  transition: transform 0.45s ease;
+  will-change: transform;
+}
+
+.project-modal__slide {
+  flex: 0 0 100%;
+  min-width: 100%;
 }
 
 .project-modal__shot {
@@ -1674,6 +1696,71 @@ main {
 
 .project-modal__gallery.is-single .project-modal__shot {
   height: 260px;
+}
+
+.project-modal__controls {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  pointer-events: none;
+}
+
+.project-modal__nav {
+  pointer-events: auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--jet);
+  background: rgba(18, 18, 18, 0.78);
+  color: var(--white-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-1);
+}
+
+.project-modal__nav:hover,
+.project-modal__nav:focus-visible {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(18, 18, 18, 0.9);
+}
+
+.project-modal__nav {
+  display: inline-flex;
+}
+
+.project-modal__caption {
+  text-align: center;
+  color: var(--light-gray-70);
+  font-size: var(--fs-7);
+}
+
+.project-modal__dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.project-modal__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--jet);
+  border: 1px solid var(--jet);
+  transition: var(--transition-1);
+}
+
+.project-modal__dot.is-active {
+  background: var(--orange-yellow-crayola);
+  border-color: var(--orange-yellow-crayola);
+}
+
+.project-modal__gallery.is-single .project-modal__controls,
+.project-modal__gallery.is-single .project-modal__dots {
+  display: none;
 }
 
 .project-modal__img {
@@ -1745,6 +1832,12 @@ main {
 
   .project-modal__gallery.is-single .project-modal__shot {
     height: 320px;
+  }
+}
+
+@media (max-width: 767px) {
+  .project-modal__nav {
+    display: none;
   }
 }
 
