@@ -121,22 +121,22 @@ export const projects: Project[] = [
         description:
             "Built a VC407 assembler/emulator in C++ with a two-pass assembly process and modular design.",
         tech: ["C++", "Assembler", "Agile"],
-        image: "/assets/images/project-1.svg",
+        image: "/assets/images/projects/VC370Assem/one.png",
         screenshots: [
             {
                 src: "/assets/images/projects/VC370Assem/one.png",
                 caption: "Assembler output view",
             },
             {
-                src: "/assets/images/project-1.svg",
+                src: "/assets/images/projects/VC370Assem/two.png",
                 caption: "Emulator run results",
             },
             {
-                src: "/assets/images/project-1.svg",
+                src: "/assets/images/projects/VC370Assem/three.png",
                 caption: "Assembler output view",
             },
             {
-                src: "/assets/images/project-1.svg",
+                src: "/assets/images/projects/VC370Assem/four.png",
                 caption: "Emulator run results",
             },
         ],
