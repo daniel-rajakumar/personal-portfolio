@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { ChevronDown, ChevronLeft, ChevronRight, Eye, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { projects } from "@/lib/data";
 import type { Project } from "@/lib/types";
 import { trackEvent } from "@/lib/analytics";
@@ -16,6 +16,8 @@ export default function Portfolio() {
     const [loadedShots, setLoadedShots] = useState<Record<string, boolean>>({});
     const [shotIndex, setShotIndex] = useState(0);
     const [zoomedShotIndex, setZoomedShotIndex] = useState<number | null>(null);
+    const [zoomVisible, setZoomVisible] = useState(false);
+    const zoomCloseTimerRef = useRef<number | null>(null);
     const touchStartRef = useRef<{ x: number; y: number } | null>(null);
     const touchDeltaRef = useRef(0);
     const swipeClickSuppressRef = useRef(false);
@@ -50,6 +52,7 @@ export default function Portfolio() {
         setLoadedShots({});
         setShotIndex(0);
         setZoomedShotIndex(null);
+        setZoomVisible(false);
         setSelected(project);
     };
 
@@ -58,15 +61,41 @@ export default function Portfolio() {
             trackEvent("project_modal_close", { project: selected.title });
         }
         setZoomedShotIndex(null);
+        setZoomVisible(false);
         setSelected(null);
     };
+
+    const closeZoom = useCallback(() => {
+        if (zoomedShotIndex === null) {
+            return;
+        }
+        setZoomVisible(false);
+        if (zoomCloseTimerRef.current) {
+            window.clearTimeout(zoomCloseTimerRef.current);
+        }
+        zoomCloseTimerRef.current = window.setTimeout(() => {
+            setZoomedShotIndex(null);
+            setZoomVisible(false);
+        }, 560);
+    }, [zoomedShotIndex]);
+
+    const openZoom = useCallback((index: number) => {
+        if (zoomCloseTimerRef.current) {
+            window.clearTimeout(zoomCloseTimerRef.current);
+        }
+        setZoomedShotIndex(index);
+        setZoomVisible(false);
+        window.requestAnimationFrame(() => {
+            setZoomVisible(true);
+        });
+    }, []);
 
     useEffect(() => {
         if (!selected) return;
         const handleKey = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
                 if (zoomedShotIndex !== null) {
-                    setZoomedShotIndex(null);
+                    closeZoom();
                     return;
                 }
                 closeProject();
@@ -88,7 +117,7 @@ export default function Portfolio() {
         };
         window.addEventListener("keydown", handleKey);
         return () => window.removeEventListener("keydown", handleKey);
-    }, [selected, shots.length, zoomedShotIndex]);
+    }, [selected, shots.length, zoomedShotIndex, closeZoom]);
 
     useEffect(() => {
         if (!shots.length) {
@@ -98,6 +127,14 @@ export default function Portfolio() {
             setShotIndex(0);
         }
     }, [shots.length, shotIndex]);
+
+    useEffect(() => {
+        return () => {
+            if (zoomCloseTimerRef.current) {
+                window.clearTimeout(zoomCloseTimerRef.current);
+            }
+        };
+    }, []);
 
     return (
         <>
@@ -283,12 +320,12 @@ export default function Portfolio() {
                                                                 swipeClickSuppressRef.current = false;
                                                                 return;
                                                             }
-                                                            setZoomedShotIndex(index);
+                                                            openZoom(index);
                                                         }}
                                                         onKeyDown={(event) => {
                                                             if (event.key === "Enter" || event.key === " ") {
                                                                 event.preventDefault();
-                                                                setZoomedShotIndex(index);
+                                                                openZoom(index);
                                                             }
                                                         }}
                                                     >
@@ -402,22 +439,22 @@ export default function Portfolio() {
                     </div>
                     {zoomedShotIndex !== null && shots[zoomedShotIndex] ? (
                         <div
-                            className="project-modal__zoom-overlay"
+                            className={`project-modal__zoom-overlay${zoomVisible ? " is-open" : ""}`}
                             role="dialog"
                             aria-modal="true"
-                            onClick={() => setZoomedShotIndex(null)}
+                            onClick={() => closeZoom()}
                         >
                             <div className="project-modal__zoom-backdrop" />
                             <div
                                 className="project-modal__zoom"
-                                onClick={() => setZoomedShotIndex(null)}
+                                onClick={() => closeZoom()}
                             >
                                 <button
                                     type="button"
                                     className="project-modal__zoom-close"
                                     onClick={(event) => {
                                         event.stopPropagation();
-                                        setZoomedShotIndex(null);
+                                        closeZoom();
                                     }}
                                     aria-label="Close enlarged screenshot"
                                 >
