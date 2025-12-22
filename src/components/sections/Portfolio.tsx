@@ -15,14 +15,28 @@ export default function Portfolio() {
     const [selected, setSelected] = useState<Project | null>(null);
     const [loadedShots, setLoadedShots] = useState<Record<string, boolean>>({});
     const [shotIndex, setShotIndex] = useState(0);
+    const [zoomedShotIndex, setZoomedShotIndex] = useState<number | null>(null);
     const touchStartRef = useRef<{ x: number; y: number } | null>(null);
     const touchDeltaRef = useRef(0);
+    const swipeClickSuppressRef = useRef(false);
     const shots = useMemo(() => {
         if (!selected) return [];
         return selected.screenshots?.length ? selected.screenshots : [{ src: selected.image }];
     }, [selected]);
     const singleShot = shots.length <= 1;
     const activeShot = shots[shotIndex];
+    const advanceShot = (direction: -1 | 1, syncZoom = false) => {
+        if (shots.length <= 1) {
+            return;
+        }
+        setShotIndex((prev) => {
+            const next = (prev + direction + shots.length) % shots.length;
+            if (syncZoom) {
+                setZoomedShotIndex(next);
+            }
+            return next;
+        });
+    };
 
     const handleCategory = (next: (typeof categories)[number]) => {
         if (next !== cat) {
@@ -35,6 +49,7 @@ export default function Portfolio() {
         trackEvent("project_modal_open", { project: project.title, category: project.category });
         setLoadedShots({});
         setShotIndex(0);
+        setZoomedShotIndex(null);
         setSelected(project);
     };
 
@@ -42,6 +57,7 @@ export default function Portfolio() {
         if (selected) {
             trackEvent("project_modal_close", { project: selected.title });
         }
+        setZoomedShotIndex(null);
         setSelected(null);
     };
 
@@ -49,18 +65,30 @@ export default function Portfolio() {
         if (!selected) return;
         const handleKey = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
+                if (zoomedShotIndex !== null) {
+                    setZoomedShotIndex(null);
+                    return;
+                }
                 closeProject();
             }
             if (event.key === "ArrowRight" && shots.length > 1) {
-                setShotIndex((prev) => (prev + 1) % shots.length);
+                if (zoomedShotIndex !== null) {
+                    advanceShot(1, true);
+                    return;
+                }
+                advanceShot(1);
             }
             if (event.key === "ArrowLeft" && shots.length > 1) {
-                setShotIndex((prev) => (prev - 1 + shots.length) % shots.length);
+                if (zoomedShotIndex !== null) {
+                    advanceShot(-1, true);
+                    return;
+                }
+                advanceShot(-1);
             }
         };
         window.addEventListener("keydown", handleKey);
         return () => window.removeEventListener("keydown", handleKey);
-    }, [selected, shots.length]);
+    }, [selected, shots.length, zoomedShotIndex]);
 
     useEffect(() => {
         if (!shots.length) {
@@ -196,6 +224,7 @@ export default function Portfolio() {
                                         const touch = event.touches[0];
                                         touchStartRef.current = { x: touch.clientX, y: touch.clientY };
                                         touchDeltaRef.current = 0;
+                                        swipeClickSuppressRef.current = false;
                                     }}
                                     onTouchMove={(event) => {
                                         if (!touchStartRef.current || shots.length <= 1) {
@@ -205,6 +234,9 @@ export default function Portfolio() {
                                         const deltaX = touch.clientX - touchStartRef.current.x;
                                         const deltaY = touch.clientY - touchStartRef.current.y;
                                         touchDeltaRef.current = deltaX;
+                                        if (Math.abs(deltaX) > 10) {
+                                            swipeClickSuppressRef.current = true;
+                                        }
                                         if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 8) {
                                             event.preventDefault();
                                         }
@@ -244,6 +276,21 @@ export default function Portfolio() {
                                                         className={`project-modal__shot${
                                                             isLoaded ? " is-loaded" : " is-loading"
                                                         }`}
+                                                        role="button"
+                                                        tabIndex={0}
+                                                        onClick={() => {
+                                                            if (swipeClickSuppressRef.current) {
+                                                                swipeClickSuppressRef.current = false;
+                                                                return;
+                                                            }
+                                                            setZoomedShotIndex(index);
+                                                        }}
+                                                        onKeyDown={(event) => {
+                                                            if (event.key === "Enter" || event.key === " ") {
+                                                                event.preventDefault();
+                                                                setZoomedShotIndex(index);
+                                                            }
+                                                        }}
                                                     >
                                                         <Image
                                                             src={shot.src}
@@ -275,9 +322,7 @@ export default function Portfolio() {
                                             <button
                                                 type="button"
                                                 className="project-modal__nav project-modal__nav--prev"
-                                                onClick={() =>
-                                                    setShotIndex((prev) => (prev - 1 + shots.length) % shots.length)
-                                                }
+                                                onClick={() => advanceShot(-1)}
                                                 aria-label="Previous screenshot"
                                             >
                                                 <ChevronLeft aria-hidden="true" />
@@ -285,7 +330,7 @@ export default function Portfolio() {
                                             <button
                                                 type="button"
                                                 className="project-modal__nav project-modal__nav--next"
-                                                onClick={() => setShotIndex((prev) => (prev + 1) % shots.length)}
+                                                onClick={() => advanceShot(1)}
                                                 aria-label="Next screenshot"
                                             >
                                                 <ChevronRight aria-hidden="true" />
@@ -355,6 +400,46 @@ export default function Portfolio() {
                             </div>
                         </div>
                     </div>
+                    {zoomedShotIndex !== null && shots[zoomedShotIndex] ? (
+                        <div
+                            className="project-modal__zoom-overlay"
+                            role="dialog"
+                            aria-modal="true"
+                            onClick={() => setZoomedShotIndex(null)}
+                        >
+                            <div className="project-modal__zoom-backdrop" />
+                            <div
+                                className="project-modal__zoom"
+                                onClick={() => setZoomedShotIndex(null)}
+                            >
+                                <button
+                                    type="button"
+                                    className="project-modal__zoom-close"
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        setZoomedShotIndex(null);
+                                    }}
+                                    aria-label="Close enlarged screenshot"
+                                >
+                                    <X aria-hidden="true" />
+                                </button>
+                                <div className="project-modal__zoom-media">
+                                    <Image
+                                        src={shots[zoomedShotIndex].src}
+                                        alt={`${selected.title} screenshot ${zoomedShotIndex + 1}`}
+                                        fill
+                                        sizes="(max-width: 768px) 92vw, 80vw"
+                                        className="project-modal__zoom-img"
+                                    />
+                                </div>
+                                {shots[zoomedShotIndex].caption ? (
+                                    <p className="project-modal__caption">
+                                        {shots[zoomedShotIndex].caption}
+                                    </p>
+                                ) : null}
+                            </div>
+                        </div>
+                    ) : null}
                 </div>
             ) : null}
         </>

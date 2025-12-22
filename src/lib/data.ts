@@ -124,7 +124,7 @@ export const projects: Project[] = [
         image: "/assets/images/project-1.svg",
         screenshots: [
             {
-                src: "/assets/images/project-1.svg",
+                src: "/assets/images/projects/VC370Assem/one.png",
                 caption: "Assembler output view",
             },
             {
