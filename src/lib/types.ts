@@ -25,7 +25,7 @@ export type TimelineItem = {
     title: string;
     org: string;
     range: string;
-    details: string;
+    details: string | string[];
 };
 
 export type Skill = { name: string; level: number }; // 0-100

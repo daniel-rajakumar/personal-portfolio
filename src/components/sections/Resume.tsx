@@ -13,7 +13,7 @@ const sections: Array<{
     items: typeof education;
 }> = [
     { key: "education", title: "Education", items: education },
-    { key: "experience", title: "Experience", items: experience },
+    { key: "experience", title: "Leadership & Activities", items: experience },
 ];
 
 function Timeline({
@@ -59,7 +59,18 @@ function Timeline({
                         <li className="timeline-item" key={it.title + it.org}>
                             <h4 className="h4 timeline-item-title">{it.title}</h4>
                             <span>{it.range}</span>
-                            <p className="timeline-text">{`${it.org} - ${it.details}`}</p>
+                            {Array.isArray(it.details) ? (
+                                <>
+                                    <p className="timeline-text timeline-org">{it.org}</p>
+                                    <ul className="timeline-bullets">
+                                        {it.details.map((detail, index) => (
+                                            <li key={`${detail}-${index}`}>{detail}</li>
+                                        ))}
+                                    </ul>
+                                </>
+                            ) : (
+                                <p className="timeline-text">{`${it.org} - ${it.details}`}</p>
+                            )}
                         </li>
                     ))}
                 </ol>
