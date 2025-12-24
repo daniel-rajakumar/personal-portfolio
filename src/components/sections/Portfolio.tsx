@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import MarkdownIt from "markdown-it";
-import { ChevronDown, ChevronLeft, ChevronRight, Eye, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Eye, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { projects } from "@/lib/data";
 import type { Project } from "@/lib/types";
@@ -513,26 +513,38 @@ export default function Portfolio() {
                             </div>
                         </div>
                         {selected.caseStudyPath ? (
-                            <div className="project-modal__case-toggle-row">
+                            <div
+                                className={`project-modal__case-toggle-row${
+                                    caseStudyOpen ? " is-open" : ""
+                                }`}
+                            >
                                 <button
                                     type="button"
                                     className={`project-modal__case-toggle${caseStudyOpen ? " is-open" : ""}`}
                                     onClick={() => setCaseStudyOpen((prev) => !prev)}
                                     aria-expanded={caseStudyOpen}
                                     aria-controls="project-case-study-panel"
+                                    aria-label={caseStudyOpen ? "Collapse case study" : "Expand case study"}
                                 >
-                                    <span className="project-modal__case-toggle-content">
-                                        <span className="project-modal__case-toggle-title">Case Study</span>
-                                        <span className="project-modal__case-toggle-hint">
-                                            {caseStudyOpen ? "Click to collapse" : "Click to expand"}
-                                        </span>
-                                    </span>
-                                    <ChevronDown
-                                        className={`project-modal__case-toggle-icon${
-                                            caseStudyOpen ? " is-open" : ""
-                                        }`}
-                                        aria-hidden="true"
-                                    />
+                                    {caseStudyOpen ? (
+                                        <ChevronUp
+                                            className="project-modal__case-toggle-icon is-open"
+                                            aria-hidden="true"
+                                        />
+                                    ) : (
+                                        <>
+                                            <span className="project-modal__case-toggle-content">
+                                                <span className="project-modal__case-toggle-title">Case Study</span>
+                                                <span className="project-modal__case-toggle-hint">
+                                                    Click to expand
+                                                </span>
+                                            </span>
+                                            <ChevronDown
+                                                className="project-modal__case-toggle-icon"
+                                                aria-hidden="true"
+                                            />
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         ) : null}

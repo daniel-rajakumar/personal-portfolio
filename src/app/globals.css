@@ -1728,6 +1728,10 @@ main {
   flex-shrink: 0;
 }
 
+.project-modal__case-toggle-row.is-open {
+  justify-content: flex-end;
+}
+
 .project-modal__case-toggle {
   position: relative;
   display: inline-flex;
@@ -1749,6 +1753,11 @@ main {
 }
 
 .project-modal__case-toggle.is-open {
+  height: 46px;
+  width: 46px;
+  padding: 0;
+  border-radius: 16px 0 20px 0;
+  border: 1px solid var(--jet);
   background-color: #204633;
   color: var(--orange-yellow-crayola);
   border-top-color: rgba(61, 199, 108, 0.45);
@@ -1766,6 +1775,10 @@ main {
   gap: 2px;
   align-items: center;
   text-align: center;
+}
+
+.project-modal__case-toggle.is-open .project-modal__case-toggle-content {
+  display: none;
 }
 
 .project-modal__case-toggle-title {
@@ -1789,12 +1802,14 @@ main {
   width: 18px;
   height: 18px;
   color: var(--orange-yellow-crayola);
-  transition: transform 0.2s ease;
+  opacity: 0.9;
 }
 
 .project-modal__case-toggle-icon.is-open {
-  transform: rotate(180deg);
+  position: static;
+  opacity: 1;
 }
+
 
 .project-modal__case-panel {
   max-height: 0;
