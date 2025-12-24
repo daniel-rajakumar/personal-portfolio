@@ -13,7 +13,7 @@ export type Project = {
     image: string;
     screenshots?: ProjectScreenshot[];
     links?: { label: string; href: string }[];
-    status?: "on progress" | "Shipped" | "Paused";
+    status?: "On Progress" | "Shipped" | "Paused";
 };
 
 export type ProjectScreenshot = {
