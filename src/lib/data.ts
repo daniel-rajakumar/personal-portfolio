@@ -22,7 +22,7 @@ export const profile = {
   },
   graduation: {
     label: 'Expected May 2026',
-    datetime: '2027-05',
+    datetime: '2026-05',
   },
   avatar: '/assets/images/profile-picture-11.png',
   about: [
@@ -249,7 +249,7 @@ export const projects: Project[] = [
       "Developed RockyGPT, a chatbot for Ramapo College using OpenAI's GPT-3.5 API to assist students with campus-related queries.",
     tech: ['JavaScript', 'OpenAI API', 'HTML/CSS'],
     image: '/assets/images/projects/RockyGPT/thumbnail.png',
-    status: 'On Progress',
+    status: 'In Progress',
     screenshots: [
     //   {
     //       src: "/assets/images/projects/RockyGPT/one.png",
