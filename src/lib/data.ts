@@ -77,8 +77,13 @@ export const skills: Skill[] = [
   { name: 'C++', logo: '/assets/images/skills/cpp.svg' },
   { name: 'JavaScript', logo: '/assets/images/skills/javascript.svg' },
   { name: 'TypeScript', logo: '/assets/images/skills/typescript.svg' },
+  { name: 'HTML/CSS', logo: '/assets/images/skills/html-css.svg' },
   { name: 'Python', logo: '/assets/images/skills/python.svg' },
+  { name: 'Pandas', logo: '/assets/images/skills/pandas.svg' },
+  { name: 'Scikit-learn', logo: '/assets/images/skills/scikit-learn.svg' },
   { name: 'React.js', logo: '/assets/images/skills/react.svg' },
+  { name: 'OpenAI API', logo: '/assets/images/skills/openai.svg' },
+  { name: 'Netlify', logo: '/assets/images/skills/netlify.svg' },
   { name: 'SQL', logo: '/assets/images/skills/sql.svg' },
   { name: 'Google Cloud', logo: '/assets/images/skills/google-cloud.svg' },
 ]
