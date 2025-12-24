@@ -86,16 +86,25 @@ export default function Sidebar() {
         return () => window.cancelAnimationFrame(frame);
     }, [open, updateOpenHeight]);
 
-    const sidebarStyle = useMemo<CSSProperties | undefined>(() => {
+    const sidebarStyle = useMemo<
+        | (CSSProperties & {
+              "--sidebar-open-height"?: string;
+              "--sidebar-info-more-height"?: string;
+          })
+        | undefined
+    >(() => {
         if (!openHeight && !infoMoreHeight) {
             return undefined;
         }
-        const style: CSSProperties = {};
+        const style: CSSProperties & {
+            "--sidebar-open-height"?: string;
+            "--sidebar-info-more-height"?: string;
+        } = {};
         if (openHeight) {
-            style["--sidebar-open-height" as string] = `${openHeight}px`;
+            style["--sidebar-open-height"] = `${openHeight}px`;
         }
         if (infoMoreHeight) {
-            style["--sidebar-info-more-height" as string] = `${infoMoreHeight}px`;
+            style["--sidebar-info-more-height"] = `${infoMoreHeight}px`;
         }
         return style;
     }, [openHeight, infoMoreHeight]);
