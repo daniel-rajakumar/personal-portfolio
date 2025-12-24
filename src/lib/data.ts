@@ -233,7 +233,8 @@ export const projects: Project[] = [
     description:
       'Created a responsive website for the Ramapo International Street Food Festival 2025 using React.js and hosted on Netlify.',
     tech: ['React.js', 'CSS', 'Netlify'],
-    image: '/assets/images/projects/ISFF25/thumbnail.png',
+    // image: '/assets/images/projects/ISFF25/thumbnail.png',
+    image: '/assets/images/projects/RockyGPT/thumbnail.png',
     screenshots: [
       {
         src: '/assets/images/projects/ISFF25/one.png',
@@ -267,7 +268,7 @@ export const projects: Project[] = [
     status: 'In Progress',
     screenshots: [
     //   {
-    //       src: "/assets/images/projects/RockyGPT/one.png",
+    //       src: '/assets/images/projects/RockyGPT/thumbnail.png',
     //       caption: "Chat interface",
     //   },
       // {
