@@ -171,7 +171,7 @@ html {
 
 body {
   background: var(--smoky-black);
-  color: var(--white-2);
+  color: var(--smoky-black);
   min-height: 100%;
   scrollbar-width: none;
 }
@@ -1737,10 +1737,10 @@ main {
   width: 100%;
   border-radius: 0 0 20px 20px;
   border: none;
-  border-top: 1px solid var(--jet);
-  background-color: #1b3a2c;
-  color: var(--orange-yellow-crayola);
-  box-shadow: inset 0 0 0 1px rgba(61, 199, 108, 0.18);
+  border-top: 1px solid rgba(61, 199, 108, 0.55);
+  background: #2f8f5e;
+  color: var(--light-gray);
+  box-shadow: inset 0 0 0 1px rgba(61, 199, 108, 0.4);
   padding: 8px 44px;
 }
 
@@ -1768,6 +1768,7 @@ main {
   font-size: var(--fs-7);
   font-weight: var(--fw-600);
   white-space: nowrap;
+  color: inherit;
 }
 
 .project-modal__case-toggle-hint {
@@ -1782,7 +1783,7 @@ main {
   right: 16px;
   width: 18px;
   height: 18px;
-  color: var(--orange-yellow-crayola);
+  color: var(--light-gray);
   opacity: 0.9;
 }
 
