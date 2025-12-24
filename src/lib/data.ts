@@ -42,8 +42,10 @@ export const education: TimelineItem[] = [
     title: 'B.S. Computer Science',
     org: 'Ramapo College of New Jersey, Mahwah, NJ',
     range: 'Aug 2022 — Jun 2026',
-    details:
-      'Presidential Scholarship (full-tuition merit award). Relevant coursework: Software Design, Data Structures & Algorithms, Machine Learning, Web Application Development, Data Analysis & Visualization.',
+    details: [
+      'Presidential Scholarship (full-tuition merit award).',
+      'Relevant coursework: Software Design, Data Structures & Algorithms, Machine Learning, Web Application Development, Data Analysis & Visualization.',
+    ],
   },
 ]
 
@@ -52,15 +54,21 @@ export const experience: TimelineItem[] = [
     title: 'Lead',
     org: 'Google Developer Student Club, Ramapo College',
     range: 'Aug 2023 — May 2025',
-    details:
-      'Organized the first DevFest on campus for 50+ students, led Android workshops using Java, and directed a team of 8 to deliver hands-on technical events.',
+    details: [
+      'Organized first DevFest Event on campus, bringing together over 50 students for keynote and hands-on technical workshops.',
+      'Led a hands-on Android development workshop leveraging Java, teaching students how to develop and deploy apps using Android Studio',
+      'Directed a team of 8 to deliver diverse workshops and coding events, fostering a vibrant developer community',
+    ],
   },
   {
     title: 'Founding President',
     org: 'Computer Science Club',
     range: 'Apr 2022 — Jun 2024',
-    details:
-      'Established the CS Club, ran 10+ workshops on React and portfolio building, and built the club website for 150+ students.',
+    details: [
+      'Initiated and established the Computer Science Club, creating a student-led hub for campus tech community.',
+      'Organized and oversaw over 10 workshops on React.js, portfolio building, and collaborative software development practices.',
+      "Built and maintained club's website using HTML, CSS, and JS to showcase events and provide resources to over 150 students.",
+    ],
   },
 ]
 

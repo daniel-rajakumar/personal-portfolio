@@ -1327,6 +1327,29 @@ main {
   line-height: 1.6;
 }
 
+.timeline-org {
+  margin-top: 6px;
+  font-weight: var(--fw-400);
+}
+
+.timeline-bullets {
+  margin-top: 10px;
+  position: relative;
+  padding-left: 0;
+  display: grid;
+  gap: 8px;
+  list-style: none;
+}
+
+.timeline-bullets li {
+  position: relative;
+  padding-left: 0;
+  color: var(--light-gray);
+  font-weight: var(--fw-300);
+  line-height: 1.6;
+}
+
+
 /**
  * skills
  */
