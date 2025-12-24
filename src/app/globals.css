@@ -1730,6 +1730,11 @@ main {
 
 .project-modal__case-toggle-row.is-open {
   justify-content: flex-end;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  z-index: 2;
 }
 
 .project-modal__case-toggle {
@@ -1753,8 +1758,8 @@ main {
 }
 
 .project-modal__case-toggle.is-open {
-  height: 46px;
-  width: 46px;
+  height: 60px;
+  width: 60px;
   padding: 0;
   border-radius: 16px 0 20px 0;
   border: 1px solid var(--jet);
