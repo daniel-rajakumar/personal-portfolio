@@ -546,17 +546,6 @@ export default function Portfolio() {
                                 className="project-modal__zoom"
                                 onClick={() => closeZoom()}
                             >
-                                <button
-                                    type="button"
-                                    className="project-modal__zoom-close"
-                                    onClick={(event) => {
-                                        event.stopPropagation();
-                                        closeZoom();
-                                    }}
-                                    aria-label="Close enlarged screenshot"
-                                >
-                                    <X aria-hidden="true" />
-                                </button>
                                 <div className="project-modal__zoom-media">
                                     <Image
                                         src={shots[zoomedShotIndex].src}
