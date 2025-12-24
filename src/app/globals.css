@@ -1654,13 +1654,22 @@ main {
   position: relative;
   width: min(920px, 92vw);
   max-height: 85vh;
-  overflow: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   border-radius: 20px;
   background: linear-gradient(145deg, rgba(36, 36, 36, 0.95), rgba(18, 18, 18, 0.9));
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: var(--shadow-5);
-  padding: 24px;
+  padding: 0;
   z-index: 1;
+}
+
+.project-modal__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 24px;
 }
 
 .project-modal__header {
@@ -1714,8 +1723,9 @@ main {
 .project-modal__case-toggle-row {
   display: flex;
   align-items: stretch;
-  width: calc(100% + 48px);
-  margin: 0 -24px -24px;
+  width: 100%;
+  margin: 0;
+  flex-shrink: 0;
 }
 
 .project-modal__case-toggle {

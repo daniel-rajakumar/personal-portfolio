@@ -280,24 +280,25 @@ export default function Portfolio() {
             {selected ? (
                 <div className="project-modal-overlay" role="dialog" aria-modal="true">
                     <div className="project-modal-backdrop" onClick={closeProject} />
-                    <div className="project-modal">
-                        <header className="project-modal__header">
-                            <div>
-                                <h3 className="h3">{selected.title}</h3>
-                                <p className="project-modal__meta">{selected.category}</p>
-                            </div>
-                            <button
-                                type="button"
-                                className="project-modal__close"
-                                onClick={closeProject}
-                                aria-label="Close project details"
-                            >
-                                <X aria-hidden="true" />
-                            </button>
-                        </header>
+                    <div className={`project-modal${selected.caseStudyPath ? " has-case-study" : ""}`}>
+                        <div className="project-modal__scroll">
+                            <header className="project-modal__header">
+                                <div>
+                                    <h3 className="h3">{selected.title}</h3>
+                                    <p className="project-modal__meta">{selected.category}</p>
+                                </div>
+                                <button
+                                    type="button"
+                                    className="project-modal__close"
+                                    onClick={closeProject}
+                                    aria-label="Close project details"
+                                >
+                                    <X aria-hidden="true" />
+                                </button>
+                            </header>
 
-                        <div className="project-modal__body">
-                            <p className="project-modal__description">{selected.description}</p>
+                            <div className="project-modal__body">
+                                <p className="project-modal__description">{selected.description}</p>
 
                             <div className={`project-modal__gallery${singleShot ? " is-single" : ""}`}>
                                 <div
@@ -484,56 +485,57 @@ export default function Portfolio() {
                                 </div>
                             </div>
 
-                            {selected.caseStudyPath ? (
-                                <section className="project-modal__case-study">
-                                    <div
-                                        id="project-case-study-panel"
-                                        className={`project-modal__case-panel${
-                                            caseStudyOpen ? " is-open" : ""
-                                        }`}
-                                        hidden={!caseStudyOpen}
-                                        aria-hidden={!caseStudyOpen}
-                                    >
-                                        {caseStudyStatus === "ready" ? (
-                                            <div
-                                                className="project-modal__case-content"
-                                                dangerouslySetInnerHTML={{ __html: caseStudyHtml }}
-                                            />
-                                        ) : (
-                                            <p className="project-modal__case-muted">
-                                                {caseStudyStatus === "loading"
-                                                    ? "Loading case study..."
-                                                    : "Case study unavailable."}
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div className="project-modal__case-toggle-row">
-                                        <button
-                                            type="button"
-                                            className={`project-modal__case-toggle${
+                                {selected.caseStudyPath ? (
+                                    <section className="project-modal__case-study">
+                                        <div
+                                            id="project-case-study-panel"
+                                            className={`project-modal__case-panel${
                                                 caseStudyOpen ? " is-open" : ""
                                             }`}
-                                            onClick={() => setCaseStudyOpen((prev) => !prev)}
-                                            aria-expanded={caseStudyOpen}
-                                            aria-controls="project-case-study-panel"
+                                            hidden={!caseStudyOpen}
+                                            aria-hidden={!caseStudyOpen}
                                         >
-                                            <span className="project-modal__case-toggle-content">
-                                                <span className="project-modal__case-toggle-title">Case Study</span>
-                                                <span className="project-modal__case-toggle-hint">
-                                                    {caseStudyOpen ? "Click to collapse" : "Click to expand"}
-                                                </span>
-                                            </span>
-                                            <ChevronDown
-                                                className={`project-modal__case-toggle-icon${
-                                                    caseStudyOpen ? " is-open" : ""
-                                                }`}
-                                                aria-hidden="true"
-                                            />
-                                        </button>
-                                    </div>
-                                </section>
-                            ) : null}
+                                            {caseStudyStatus === "ready" ? (
+                                                <div
+                                                    className="project-modal__case-content"
+                                                    dangerouslySetInnerHTML={{ __html: caseStudyHtml }}
+                                                />
+                                            ) : (
+                                                <p className="project-modal__case-muted">
+                                                    {caseStudyStatus === "loading"
+                                                        ? "Loading case study..."
+                                                        : "Case study unavailable."}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </section>
+                                ) : null}
+                            </div>
                         </div>
+                        {selected.caseStudyPath ? (
+                            <div className="project-modal__case-toggle-row">
+                                <button
+                                    type="button"
+                                    className={`project-modal__case-toggle${caseStudyOpen ? " is-open" : ""}`}
+                                    onClick={() => setCaseStudyOpen((prev) => !prev)}
+                                    aria-expanded={caseStudyOpen}
+                                    aria-controls="project-case-study-panel"
+                                >
+                                    <span className="project-modal__case-toggle-content">
+                                        <span className="project-modal__case-toggle-title">Case Study</span>
+                                        <span className="project-modal__case-toggle-hint">
+                                            {caseStudyOpen ? "Click to collapse" : "Click to expand"}
+                                        </span>
+                                    </span>
+                                    <ChevronDown
+                                        className={`project-modal__case-toggle-icon${
+                                            caseStudyOpen ? " is-open" : ""
+                                        }`}
+                                        aria-hidden="true"
+                                    />
+                                </button>
+                            </div>
+                        ) : null}
                     </div>
                     {zoomedShotIndex !== null && shots[zoomedShotIndex] ? (
                         <div
