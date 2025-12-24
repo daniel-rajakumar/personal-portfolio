@@ -122,6 +122,7 @@ export const projects: Project[] = [
             "Built a VC407 assembler/emulator in C++ with a two-pass assembly process and modular design.",
         tech: ["C++", "Assembler", "Agile"],
         image: "/assets/images/projects/VC370Assem/thumbnail.png",
+        // image: "/assets/images/projects/VC370Assem/one.png",
         screenshots: [
             {
                 src: "/assets/images/projects/VC370Assem/one.png",
@@ -147,8 +148,65 @@ export const projects: Project[] = [
         description:
             "Analyzed 250+ Instagram posts with ML models, reaching up to 88% classification accuracy.",
         tech: ["Python", "Pandas", "Scikit-learn"],
-        image: "/assets/images/project-2.svg"
-    },
+        image: "/assets/images/projects/SocialMediaEngagementAnalysis/thumbnail.png",
+
+        screenshots: [
+            {
+                src: "/assets/images/projects/SocialMediaEngagementAnalysis/one.png",
+                caption: "Project screenshot",
+            },
+            {
+                src: "/assets/images/projects/SocialMediaEngagementAnalysis/two.png",
+                caption: "Data visualization example",
+            },
+            {
+                src: "/assets/images/projects/SocialMediaEngagementAnalysis/three.png",
+                caption: "Model accuracy results",
+            }, 
+            {
+                src: "/assets/images/projects/SocialMediaEngagementAnalysis/four.png",
+                caption: "Feature importance analysis",
+            }, 
+            {
+                src: "/assets/images/projects/SocialMediaEngagementAnalysis/five.png",
+                caption: "Engagement prediction results",
+            }
+        ],
+    }, 
+    {
+        title: "Canoga Game",
+        category: "Applications",
+        description:
+            "Developed a 2D Canoga game in Java with multiplayer support and AI opponent.",
+        tech: ["Java", "OOP", "Game Development"],
+        image: "/assets/images/projects/CanogaGame/thumbnail.png",
+        screenshots: [
+            {
+                src: "/assets/images/projects/CanogaGame/one.png",
+                caption: "Game board view",
+            },
+            {
+                src: "/assets/images/projects/CanogaGame/two.png",
+                caption: "Multiplayer mode",
+            },
+            {
+                src: "/assets/images/projects/CanogaGame/three.png",
+                caption: "Multiplayer mode",
+            },
+            {
+                src: "/assets/images/projects/CanogaGame/four.png",
+                caption: "Multiplayer mode",
+            },
+            {
+                src: "/assets/images/projects/CanogaGame/five.png",
+                caption: "Multiplayer mode",
+            },
+            {
+                src: "/assets/images/projects/CanogaGame/six.png",
+                caption: "Multiplayer mode",
+            },
+        ],
+    }
 ];
 
 export const blogPosts: BlogPost[] = [
