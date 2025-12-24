@@ -137,6 +137,17 @@ export const projects: Project[] = [
     category: 'Applications',
     description:
       'Built a VC407 assembler/emulator in C++ with a two-pass assembly process and modular design.',
+    caseStudy: `## Problem
+Build a full VC407 assembler/emulator that can translate assembly into machine code and execute it.
+
+## Approach
+- Implemented a two-pass assembler to resolve symbols/labels before encoding.
+- Designed a modular architecture so parsing, encoding, and execution are isolated.
+- Built an emulator loop to load machine code and execute instructions.
+
+## Results
+- Produced executable machine code and validated behavior with sample programs.
+- Made it easier to extend or debug instructions during development.`,
     tech: ['C++', 'Assembler', 'Agile'],
     image: '/assets/images/projects/VC370Assem/thumbnail.png',
     // image: "/assets/images/projects/VC370Assem/one.png",

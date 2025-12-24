@@ -9,6 +9,7 @@ export type Project = {
     title: string;
     category: "Web development" | "Web design" | "Applications" | "Other";
     description: string;
+    caseStudy?: string;
     tech: string[];
     image: string;
     screenshots?: ProjectScreenshot[];

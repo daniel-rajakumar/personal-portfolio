@@ -9,6 +9,67 @@ import { trackEvent } from "@/lib/analytics";
 
 const categories = ["All", "Web development", "Web design", "Applications", "Other"] as const;
 
+const renderCaseStudy = (markdown: string) => {
+    const nodes: JSX.Element[] = [];
+    const lines = markdown.split(/\r?\n/);
+    let paragraph: string[] = [];
+    let list: string[] = [];
+    let keyIndex = 0;
+
+    const flushParagraph = () => {
+        if (!paragraph.length) return;
+        const text = paragraph.join(" ");
+        nodes.push(
+            <p className="project-modal__case-text" key={`p-${keyIndex++}`}>
+                {text}
+            </p>
+        );
+        paragraph = [];
+    };
+
+    const flushList = () => {
+        if (!list.length) return;
+        nodes.push(
+            <ul className="project-modal__case-list" key={`ul-${keyIndex++}`}>
+                {list.map((item, index) => (
+                    <li key={`${item}-${index}`}>{item}</li>
+                ))}
+            </ul>
+        );
+        list = [];
+    };
+
+    lines.forEach((line) => {
+        const trimmed = line.trim();
+        if (!trimmed) {
+            flushParagraph();
+            flushList();
+            return;
+        }
+        if (/^#{1,3}\s+/.test(trimmed)) {
+            flushParagraph();
+            flushList();
+            nodes.push(
+                <h5 className="project-modal__case-heading" key={`h-${keyIndex++}`}>
+                    {trimmed.replace(/^#{1,3}\s+/, "")}
+                </h5>
+            );
+            return;
+        }
+        if (/^[-*]\s+/.test(trimmed)) {
+            flushParagraph();
+            list.push(trimmed.replace(/^[-*]\s+/, ""));
+            return;
+        }
+        paragraph.push(trimmed);
+    });
+
+    flushParagraph();
+    flushList();
+
+    return nodes;
+};
+
 export default function Portfolio() {
     const [cat, setCat] = useState<(typeof categories)[number]>("All");
     const [selectOpen, setSelectOpen] = useState(false);
@@ -390,11 +451,11 @@ export default function Portfolio() {
                                     <p className="project-modal__caption">{activeShot.caption}</p>
                                 ) : null}
 
-                                {!singleShot ? (
-                                    <div className="project-modal__dots" role="tablist" aria-label="Screenshot slides">
-                                        {shots.map((shot, index) => (
-                                            <button
-                                                key={`${shot.src}-${index}`}
+                            {!singleShot ? (
+                                <div className="project-modal__dots" role="tablist" aria-label="Screenshot slides">
+                                    {shots.map((shot, index) => (
+                                        <button
+                                            key={`${shot.src}-${index}`}
                                                 type="button"
                                                 className={`project-modal__dot${
                                                     index === shotIndex ? " is-active" : ""
@@ -407,6 +468,15 @@ export default function Portfolio() {
                                     </div>
                                 ) : null}
                             </div>
+
+                            {selected.caseStudy ? (
+                                <section className="project-modal__case-study">
+                                    <h4 className="h4">Case study</h4>
+                                    <div className="project-modal__case-content">
+                                        {renderCaseStudy(selected.caseStudy)}
+                                    </div>
+                                </section>
+                            ) : null}
 
                             <div className="project-modal__meta-row">
                                 <div>

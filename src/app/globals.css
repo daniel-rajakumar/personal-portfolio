@@ -1701,6 +1701,47 @@ main {
   line-height: 1.6;
 }
 
+.project-modal__case-study {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--eerie-black-2);
+  border: 1px solid var(--jet);
+}
+
+.project-modal__case-content {
+  display: grid;
+  gap: 10px;
+}
+
+.project-modal__case-heading {
+  color: var(--white-2);
+  font-size: var(--fs-6);
+  font-weight: var(--fw-500);
+  text-transform: none;
+}
+
+.project-modal__case-text {
+  color: var(--light-gray);
+  font-size: var(--fs-6);
+  line-height: 1.6;
+}
+
+.project-modal__case-list {
+  display: grid;
+  gap: 6px;
+  margin-left: 18px;
+  list-style: disc;
+  color: var(--light-gray);
+  font-size: var(--fs-6);
+  line-height: 1.6;
+}
+
+.project-modal__case-list li::marker {
+  color: var(--orange-yellow-crayola);
+}
+
 .project-modal__gallery {
   display: flex;
   flex-direction: column;
