@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import MarkdownIt from "markdown-it";
 import { ChevronDown, ChevronLeft, ChevronRight, Eye, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { projects } from "@/lib/data";
@@ -8,67 +9,7 @@ import type { Project } from "@/lib/types";
 import { trackEvent } from "@/lib/analytics";
 
 const categories = ["All", "Web development", "Web design", "Applications", "Other"] as const;
-
-const renderCaseStudy = (markdown: string) => {
-    const nodes: JSX.Element[] = [];
-    const lines = markdown.split(/\r?\n/);
-    let paragraph: string[] = [];
-    let list: string[] = [];
-    let keyIndex = 0;
-
-    const flushParagraph = () => {
-        if (!paragraph.length) return;
-        const text = paragraph.join(" ");
-        nodes.push(
-            <p className="project-modal__case-text" key={`p-${keyIndex++}`}>
-                {text}
-            </p>
-        );
-        paragraph = [];
-    };
-
-    const flushList = () => {
-        if (!list.length) return;
-        nodes.push(
-            <ul className="project-modal__case-list" key={`ul-${keyIndex++}`}>
-                {list.map((item, index) => (
-                    <li key={`${item}-${index}`}>{item}</li>
-                ))}
-            </ul>
-        );
-        list = [];
-    };
-
-    lines.forEach((line) => {
-        const trimmed = line.trim();
-        if (!trimmed) {
-            flushParagraph();
-            flushList();
-            return;
-        }
-        if (/^#{1,3}\s+/.test(trimmed)) {
-            flushParagraph();
-            flushList();
-            nodes.push(
-                <h5 className="project-modal__case-heading" key={`h-${keyIndex++}`}>
-                    {trimmed.replace(/^#{1,3}\s+/, "")}
-                </h5>
-            );
-            return;
-        }
-        if (/^[-*]\s+/.test(trimmed)) {
-            flushParagraph();
-            list.push(trimmed.replace(/^[-*]\s+/, ""));
-            return;
-        }
-        paragraph.push(trimmed);
-    });
-
-    flushParagraph();
-    flushList();
-
-    return nodes;
-};
+const markdown = new MarkdownIt({ html: true, linkify: true, typographer: true });
 
 export default function Portfolio() {
     const [cat, setCat] = useState<(typeof categories)[number]>("All");
@@ -78,6 +19,8 @@ export default function Portfolio() {
     const [shotIndex, setShotIndex] = useState(0);
     const [zoomedShotIndex, setZoomedShotIndex] = useState<number | null>(null);
     const [zoomVisible, setZoomVisible] = useState(false);
+    const [caseStudyHtml, setCaseStudyHtml] = useState("");
+    const [caseStudyStatus, setCaseStudyStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
     const zoomCloseTimerRef = useRef<number | null>(null);
     const touchStartRef = useRef<{ x: number; y: number } | null>(null);
     const touchDeltaRef = useRef(0);
@@ -179,6 +122,37 @@ export default function Portfolio() {
         window.addEventListener("keydown", handleKey);
         return () => window.removeEventListener("keydown", handleKey);
     }, [selected, shots.length, zoomedShotIndex, closeZoom]);
+
+    useEffect(() => {
+        const path = selected?.caseStudyPath;
+        if (!path) {
+            setCaseStudyHtml("");
+            setCaseStudyStatus("idle");
+            return;
+        }
+        let active = true;
+        setCaseStudyStatus("loading");
+        fetch(path)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Failed to load case study");
+                }
+                return res.text();
+            })
+            .then((text) => {
+                if (!active) return;
+                setCaseStudyHtml(markdown.render(text));
+                setCaseStudyStatus("ready");
+            })
+            .catch(() => {
+                if (!active) return;
+                setCaseStudyHtml("");
+                setCaseStudyStatus("error");
+            });
+        return () => {
+            active = false;
+        };
+    }, [selected?.caseStudyPath]);
 
     useEffect(() => {
         if (!shots.length) {
@@ -469,12 +443,21 @@ export default function Portfolio() {
                                 ) : null}
                             </div>
 
-                            {selected.caseStudy ? (
+                            {selected.caseStudyPath ? (
                                 <section className="project-modal__case-study">
                                     <h4 className="h4">Case study</h4>
-                                    <div className="project-modal__case-content">
-                                        {renderCaseStudy(selected.caseStudy)}
-                                    </div>
+                                    {caseStudyStatus === "ready" ? (
+                                        <div
+                                            className="project-modal__case-content"
+                                            dangerouslySetInnerHTML={{ __html: caseStudyHtml }}
+                                        />
+                                    ) : (
+                                        <p className="project-modal__case-muted">
+                                            {caseStudyStatus === "loading"
+                                                ? "Loading case study..."
+                                                : "Case study unavailable."}
+                                        </p>
+                                    )}
                                 </section>
                             ) : null}
 
