@@ -1728,15 +1728,6 @@ main {
   flex-shrink: 0;
 }
 
-.project-modal__case-toggle-row.is-open {
-  justify-content: flex-end;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: auto;
-  z-index: 2;
-}
-
 .project-modal__case-toggle {
   position: relative;
   display: inline-flex;
@@ -1757,18 +1748,6 @@ main {
   content: none;
 }
 
-.project-modal__case-toggle.is-open {
-  height: 60px;
-  width: 60px;
-  padding: 0;
-  border-radius: 16px 0 20px 0;
-  border: 1px solid var(--jet);
-  background-color: #204633;
-  color: var(--orange-yellow-crayola);
-  border-top-color: rgba(61, 199, 108, 0.45);
-  box-shadow: inset 0 0 0 1px rgba(61, 199, 108, 0.35);
-}
-
 .project-modal__case-toggle:focus-visible {
   outline: 2px solid var(--orange-yellow-crayola);
   outline-offset: 4px;
@@ -1782,9 +1761,6 @@ main {
   text-align: center;
 }
 
-.project-modal__case-toggle.is-open .project-modal__case-toggle-content {
-  display: none;
-}
 
 .project-modal__case-toggle-title {
   letter-spacing: 0.32em;
@@ -1808,11 +1784,6 @@ main {
   height: 18px;
   color: var(--orange-yellow-crayola);
   opacity: 0.9;
-}
-
-.project-modal__case-toggle-icon.is-open {
-  position: static;
-  opacity: 1;
 }
 
 
