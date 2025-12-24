@@ -233,8 +233,7 @@ export const projects: Project[] = [
     description:
       'Created a responsive website for the Ramapo International Street Food Festival 2025 using React.js and hosted on Netlify.',
     tech: ['React.js', 'CSS', 'Netlify'],
-    // image: '/assets/images/projects/ISFF25/thumbnail.png',
-    image: '/assets/images/projects/RockyGPT/thumbnail.png',
+    image: '/assets/images/projects/ISFF25/thumbnail.png',
     screenshots: [
       {
         src: '/assets/images/projects/ISFF25/one.png',
@@ -264,7 +263,7 @@ export const projects: Project[] = [
     description:
       "Developed RockyGPT, a chatbot for Ramapo College using OpenAI's GPT-3.5 API to assist students with campus-related queries.",
     tech: ['JavaScript', 'OpenAI API', 'HTML/CSS'],
-    image: '/assets/images/projects/RockyGPT/thumbnail.png',
+    image: '/assets/images/projects/RockyGPT/thumbnail copy.png',
     status: 'In Progress',
     screenshots: [
     //   {
