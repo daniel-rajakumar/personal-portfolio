@@ -257,6 +257,11 @@ export default function Portfolio() {
                                                 {p.status}
                                             </span>
                                         ) : null}
+                                        {p.caseStudyPath ? (
+                                            <span className="project-badge project-badge--case-study">
+                                                Case Study
+                                            </span>
+                                        ) : null}
                                         <div className="project-item-icon-box">
                                             <Eye aria-hidden="true" />
                                         </div>
