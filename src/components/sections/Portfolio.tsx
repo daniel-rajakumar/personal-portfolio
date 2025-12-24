@@ -517,7 +517,18 @@ export default function Portfolio() {
                                             aria-expanded={caseStudyOpen}
                                             aria-controls="project-case-study-panel"
                                         >
-                                            <span className="project-modal__case-toggle-text">Case Study</span>
+                                            <span className="project-modal__case-toggle-content">
+                                                <span className="project-modal__case-toggle-title">Case Study</span>
+                                                <span className="project-modal__case-toggle-hint">
+                                                    {caseStudyOpen ? "Click to collapse" : "Click to expand"}
+                                                </span>
+                                            </span>
+                                            <ChevronDown
+                                                className={`project-modal__case-toggle-icon${
+                                                    caseStudyOpen ? " is-open" : ""
+                                                }`}
+                                                aria-hidden="true"
+                                            />
                                         </button>
                                     </div>
                                 </section>
