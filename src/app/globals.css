@@ -1486,6 +1486,37 @@ main {
   margin-bottom: 15px;
 }
 
+.project-badge {
+  position: absolute;
+  top: 22px;
+  left: -64px;
+  z-index: 2;
+  width: 190px;
+  padding: 8px 0;
+  background: var(--text-gradient-yellow);
+  color: var(--smoky-black);
+  font-size: var(--fs-8);
+  font-weight: var(--fw-600);
+  letter-spacing: 0.15px;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+.project-badge[data-status="paused"] {
+  background: linear-gradient(135deg, rgba(217, 94, 94, 0.95), rgba(153, 45, 45, 0.95));
+  color: var(--white-1);
+}
+
+.project-badge[data-status="shipped"] {
+  background: linear-gradient(135deg, rgba(56, 184, 93, 0.95), rgba(24, 122, 55, 0.95));
+  color: var(--white-1);
+}
+
 .project-img::before {
   content: "";
   position: absolute;

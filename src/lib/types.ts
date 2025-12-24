@@ -13,6 +13,7 @@ export type Project = {
     image: string;
     screenshots?: ProjectScreenshot[];
     links?: { label: string; href: string }[];
+    status?: "on progress" | "Shipped" | "Paused";
 };
 
 export type ProjectScreenshot = {
