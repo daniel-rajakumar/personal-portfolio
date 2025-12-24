@@ -249,7 +249,7 @@ export const projects: Project[] = [
       "Developed RockyGPT, a chatbot for Ramapo College using OpenAI's GPT-3.5 API to assist students with campus-related queries.",
     tech: ['JavaScript', 'OpenAI API', 'HTML/CSS'],
     image: '/assets/images/projects/RockyGPT/thumbnail.png',
-    status: 'on progress',
+    status: 'On Progress',
     screenshots: [
     //   {
     //       src: "/assets/images/projects/RockyGPT/one.png",
