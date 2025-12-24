@@ -21,6 +21,7 @@ export default function Portfolio() {
     const [zoomVisible, setZoomVisible] = useState(false);
     const [caseStudyHtml, setCaseStudyHtml] = useState("");
     const [caseStudyStatus, setCaseStudyStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
+    const [caseStudyOpen, setCaseStudyOpen] = useState(false);
     const zoomCloseTimerRef = useRef<number | null>(null);
     const touchStartRef = useRef<{ x: number; y: number } | null>(null);
     const touchDeltaRef = useRef(0);
@@ -57,6 +58,7 @@ export default function Portfolio() {
         setShotIndex(0);
         setZoomedShotIndex(null);
         setZoomVisible(false);
+        setCaseStudyOpen(false);
         setSelected(project);
     };
 
@@ -66,6 +68,7 @@ export default function Portfolio() {
         }
         setZoomedShotIndex(null);
         setZoomVisible(false);
+        setCaseStudyOpen(false);
         setSelected(null);
     };
 
@@ -443,24 +446,6 @@ export default function Portfolio() {
                                 ) : null}
                             </div>
 
-                            {selected.caseStudyPath ? (
-                                <section className="project-modal__case-study">
-                                    <h4 className="h4">Case study</h4>
-                                    {caseStudyStatus === "ready" ? (
-                                        <div
-                                            className="project-modal__case-content"
-                                            dangerouslySetInnerHTML={{ __html: caseStudyHtml }}
-                                        />
-                                    ) : (
-                                        <p className="project-modal__case-muted">
-                                            {caseStudyStatus === "loading"
-                                                ? "Loading case study..."
-                                                : "Case study unavailable."}
-                                        </p>
-                                    )}
-                                </section>
-                            ) : null}
-
                             <div className="project-modal__meta-row">
                                 <div>
                                     <h4 className="h4">Tech stack</h4>
@@ -498,6 +483,45 @@ export default function Portfolio() {
                                     </div>
                                 </div>
                             </div>
+
+                            {selected.caseStudyPath ? (
+                                <section className="project-modal__case-study">
+                                    <div
+                                        id="project-case-study-panel"
+                                        className={`project-modal__case-panel${
+                                            caseStudyOpen ? " is-open" : ""
+                                        }`}
+                                        hidden={!caseStudyOpen}
+                                        aria-hidden={!caseStudyOpen}
+                                    >
+                                        {caseStudyStatus === "ready" ? (
+                                            <div
+                                                className="project-modal__case-content"
+                                                dangerouslySetInnerHTML={{ __html: caseStudyHtml }}
+                                            />
+                                        ) : (
+                                            <p className="project-modal__case-muted">
+                                                {caseStudyStatus === "loading"
+                                                    ? "Loading case study..."
+                                                    : "Case study unavailable."}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div className="project-modal__case-toggle-row">
+                                        <button
+                                            type="button"
+                                            className={`project-modal__case-toggle${
+                                                caseStudyOpen ? " is-open" : ""
+                                            }`}
+                                            onClick={() => setCaseStudyOpen((prev) => !prev)}
+                                            aria-expanded={caseStudyOpen}
+                                            aria-controls="project-case-study-panel"
+                                        >
+                                            <span className="project-modal__case-toggle-text">Case Study</span>
+                                        </button>
+                                    </div>
+                                </section>
+                            ) : null}
                         </div>
                     </div>
                     {zoomedShotIndex !== null && shots[zoomedShotIndex] ? (
