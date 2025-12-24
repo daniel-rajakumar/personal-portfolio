@@ -206,6 +206,36 @@ export const projects: Project[] = [
                 caption: "Multiplayer mode",
             },
         ],
+    },
+    {
+        title: "Ramapo International Street Food Festival 2025 Website",
+        category: "Web development",
+        description: 
+            "Created a responsive website for the Ramapo International Street Food Festival 2025 using React.js and hosted on Netlify.",
+        tech: ["React.js", "CSS", "Netlify"],
+        image: "/assets/images/projects/ISFF25/thumbnail.png",
+        screenshots: [
+            {
+                src: "/assets/images/projects/ISFF25/one.png",
+                caption: "Homepage view",
+            },
+            {
+                src: "/assets/images/projects/ISFF25/two.png",
+                caption: "Event schedule section",
+            },
+            {
+                src: "/assets/images/projects/ISFF25/three.png",
+                caption: "Vendor information page",
+            },
+            {
+                src: "/assets/images/projects/ISFF25/four.png",
+                caption: "Contact form view",
+            },
+            {
+                src: "/assets/images/projects/ISFF25/five.png",
+                caption: "Responsive design on mobile",
+            }
+        ],
     }
 ];
 
