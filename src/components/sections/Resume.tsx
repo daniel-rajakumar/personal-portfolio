@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { BookOpen, ChevronDown } from "lucide-react";
 import { education, experience, profile, skills } from "@/lib/data";
@@ -147,16 +148,10 @@ export default function Resume() {
                 <ul className="skills-list content-card">
                     {skills.map((s) => (
                         <li key={s.name} className="skills-item">
-                            <div className="title-wrapper">
-                                <h5 className="h5">{s.name}</h5>
-                                <data value={s.level}>{s.level}%</data>
+                            <div className="skills-logo">
+                                <Image src={s.logo} alt={`${s.name} logo`} width={36} height={36} />
                             </div>
-                            <div className="skill-progress-bg">
-                                <div
-                                    className="skill-progress-fill"
-                                    style={{ width: `${Math.max(0, Math.min(100, s.level))}%` }}
-                                />
-                            </div>
+                            <span className="skills-name">{s.name}</span>
                         </li>
                     ))}
                 </ul>

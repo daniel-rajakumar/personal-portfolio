@@ -1360,36 +1360,43 @@ main {
 
 .skills-list {
   padding: 20px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  cursor: default;
 }
 
-.skills-item:not(:last-child) {
-  margin-bottom: 15px;
-}
-
-.skill .title-wrapper {
+.skills-item {
   display: flex;
   align-items: center;
-  gap: 5px;
-  margin-bottom: 8px;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--jet);
+  background: var(--eerie-black-2);
 }
 
-.skill .title-wrapper data {
-  color: var(--light-gray);
-  font-size: var(--fs-7);
-  font-weight: var(--fw-300);
-}
-
-.skill-progress-bg {
-  background: var(--jet);
-  width: 100%;
-  height: 8px;
+.skills-logo {
+  width: 38px;
+  height: 38px;
   border-radius: 10px;
+  background: var(--eerie-black-1);
+  border: 1px solid var(--jet);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
 }
 
-.skill-progress-fill {
-  background: var(--text-gradient-yellow);
-  height: 100%;
-  border-radius: inherit;
+.skills-logo img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+.skills-name {
+  color: var(--white-2);
+  font-size: var(--fs-6);
+  font-weight: var(--fw-400);
 }
 
 /*-----------------------------------*\
@@ -2549,10 +2556,6 @@ textarea.form-input::-webkit-resizer {
     height: 8px;
     width: 8px;
     left: -43px;
-  }
-
-  .skills-item:not(:last-child) {
-    margin-bottom: 25px;
   }
 
   /**

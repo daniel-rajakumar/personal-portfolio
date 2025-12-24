@@ -73,14 +73,14 @@ export const experience: TimelineItem[] = [
 ]
 
 export const skills: Skill[] = [
-  { name: 'Java', level: 85 },
-  { name: 'C++', level: 80 },
-  { name: 'JavaScript', level: 82 },
-  { name: 'TypeScript', level: 78 },
-  { name: 'Python', level: 84 },
-  { name: 'React.js', level: 82 },
-  { name: 'SQL', level: 76 },
-  { name: 'Google Cloud', level: 70 },
+  { name: 'Java', logo: '/assets/images/skills/java.svg' },
+  { name: 'C++', logo: '/assets/images/skills/cpp.svg' },
+  { name: 'JavaScript', logo: '/assets/images/skills/javascript.svg' },
+  { name: 'TypeScript', logo: '/assets/images/skills/typescript.svg' },
+  { name: 'Python', logo: '/assets/images/skills/python.svg' },
+  { name: 'React.js', logo: '/assets/images/skills/react.svg' },
+  { name: 'SQL', logo: '/assets/images/skills/sql.svg' },
+  { name: 'Google Cloud', logo: '/assets/images/skills/google-cloud.svg' },
 ]
 
 export const services: Service[] = [

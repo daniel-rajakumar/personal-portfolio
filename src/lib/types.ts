@@ -28,7 +28,7 @@ export type TimelineItem = {
     details: string | string[];
 };
 
-export type Skill = { name: string; level: number }; // 0-100
+export type Skill = { name: string; logo: string };
 
 export type Service = {
     title: string;
