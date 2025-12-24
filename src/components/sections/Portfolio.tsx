@@ -209,6 +209,16 @@ export default function Portfolio() {
                                     aria-label={`Open project details for ${p.title}`}
                                 >
                                     <figure className="project-img">
+                                        {p.status ? (
+                                            <span
+                                                className="project-badge"
+                                                data-status={p.status
+                                                    .toLowerCase()
+                                                    .replace(/\s+/g, "-")}
+                                            >
+                                                {p.status}
+                                            </span>
+                                        ) : null}
                                         <div className="project-item-icon-box">
                                             <Eye aria-hidden="true" />
                                         </div>
