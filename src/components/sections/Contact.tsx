@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Send } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { getContactSendEnabled } from "@/lib/contact-settings";
 
 type FormStatus = "idle" | "sending" | "success" | "error";
 
@@ -45,6 +46,15 @@ export default function Contact() {
             message: String(formData.get("message") || "").trim(),
             company: String(formData.get("company") || "").trim(),
         };
+
+        if (!getContactSendEnabled()) {
+            trackEvent("contact_form_dry_run");
+            setStatus("success");
+            setStatusMessage("Email sending is disabled (dry run).");
+            form.reset();
+            setIsValid(false);
+            return;
+        }
 
         setStatus("sending");
         setStatusMessage(null);
