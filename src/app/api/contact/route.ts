@@ -18,6 +18,47 @@ const escapeHtml = (value: string) =>
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#39;");
 
+const sendResendEmail = async ({
+    apiKey,
+    from,
+    to,
+    subject,
+    text,
+    html,
+    replyTo,
+}: {
+    apiKey: string;
+    from: string;
+    to: string | string[];
+    subject: string;
+    text: string;
+    html: string;
+    replyTo?: string;
+}) => {
+    const response = await fetch(RESEND_API_URL, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            from,
+            to: Array.isArray(to) ? to : [to],
+            subject,
+            text,
+            html,
+            ...(replyTo ? { reply_to: replyTo } : {}),
+        }),
+    });
+
+    if (!response.ok) {
+        const error = await response.json().catch(() => null);
+        return { ok: false, message: error?.message || "Failed to send message." };
+    }
+
+    return { ok: true };
+};
+
 export async function POST(request: Request) {
     try {
         const payload = (await request.json()) as ContactPayload;
@@ -63,31 +104,40 @@ export async function POST(request: Request) {
 <p><strong>Message:</strong></p>
 <p>${safeMessage}</p>`;
 
-        const response = await fetch(RESEND_API_URL, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${apiKey}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                from,
-                to: [to],
-                subject,
-                text,
-                html,
-                reply_to: email,
-            }),
+        const primaryResult = await sendResendEmail({
+            apiKey,
+            from,
+            to,
+            subject,
+            text,
+            html,
+            replyTo: email,
         });
 
-        if (!response.ok) {
-            const error = await response.json().catch(() => null);
+        if (!primaryResult.ok) {
             return NextResponse.json(
-                { message: error?.message || "Failed to send message." },
+                { message: primaryResult.message || "Failed to send message." },
                 { status: 502 }
             );
         }
 
-        return NextResponse.json({ ok: true });
+        const replySubject = "Thanks for reaching out!";
+        const replyText = `Hi ${name},\n\nThanks for your message — I received it and will get back to you soon.\n\nDaniel`;
+        const replyHtml = `<p>Hi ${safeName},</p>
+<p>Thanks for your message — I received it and will get back to you soon.</p>
+<p>Daniel</p>`;
+
+        const autoReplyResult = await sendResendEmail({
+            apiKey,
+            from,
+            to: email,
+            subject: replySubject,
+            text: replyText,
+            html: replyHtml,
+            replyTo: to,
+        });
+
+        return NextResponse.json({ ok: true, autoReplySent: autoReplyResult.ok });
     } catch {
         return NextResponse.json({ message: "Invalid request." }, { status: 400 });
     }
