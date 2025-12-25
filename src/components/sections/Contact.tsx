@@ -1,17 +1,26 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Send } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+
+type FormStatus = "idle" | "sending" | "success" | "error";
 
 export default function Contact() {
     const formRef = useRef<HTMLFormElement | null>(null);
     const startedRef = useRef(false);
     const [isValid, setIsValid] = useState(false);
+    const [status, setStatus] = useState<FormStatus>("idle");
+    const [statusMessage, setStatusMessage] = useState<string | null>(null);
+    const toastTimerRef = useRef<number | null>(null);
 
     const handleInput = () => {
         const valid = formRef.current?.checkValidity() ?? false;
         setIsValid(valid);
+        if (status !== "idle" && status !== "sending") {
+            setStatus("idle");
+            setStatusMessage(null);
+        }
     };
 
     const handleStart = () => {
@@ -20,6 +29,67 @@ export default function Contact() {
             trackEvent("contact_form_start");
         }
     };
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const form = formRef.current;
+        if (!form) return;
+        const valid = form.checkValidity();
+        setIsValid(valid);
+        if (!valid || status === "sending") return;
+
+        const formData = new FormData(form);
+        const payload = {
+            name: String(formData.get("fullname") || "").trim(),
+            email: String(formData.get("email") || "").trim(),
+            message: String(formData.get("message") || "").trim(),
+            company: String(formData.get("company") || "").trim(),
+        };
+
+        setStatus("sending");
+        setStatusMessage(null);
+
+        try {
+            const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const data = await response.json().catch(() => null);
+                throw new Error(data?.message || "Something went wrong. Please try again.");
+            }
+
+            trackEvent("contact_form_submit");
+            setStatus("success");
+            setStatusMessage("I'll get back to you soon.");
+            form.reset();
+            setIsValid(false);
+        } catch (error) {
+            const message = error instanceof Error ? error.message : "Something went wrong.";
+            trackEvent("contact_form_error");
+            setStatus("error");
+            setStatusMessage(message);
+        }
+    };
+
+    useEffect(() => {
+        if (status !== "success" && status !== "error") return;
+        if (toastTimerRef.current) {
+            window.clearTimeout(toastTimerRef.current);
+        }
+        toastTimerRef.current = window.setTimeout(() => {
+            setStatus("idle");
+            setStatusMessage(null);
+        }, 4000);
+
+        return () => {
+            if (toastTimerRef.current) {
+                window.clearTimeout(toastTimerRef.current);
+            }
+        };
+    }, [status]);
 
     return (
         <>
@@ -44,15 +114,10 @@ export default function Contact() {
 
                 <form
                     ref={formRef}
-                    onSubmit={(event) => {
-                        event.preventDefault();
-                        const valid = formRef.current?.checkValidity() ?? false;
-                        if (valid) {
-                            trackEvent("contact_form_submit");
-                        }
-                    }}
+                    onSubmit={handleSubmit}
                     className="form"
                     data-form
+                    aria-busy={status === "sending"}
                 >
                     <div className="input-wrapper">
                         <input
@@ -64,6 +129,7 @@ export default function Contact() {
                             data-form-input
                             onInput={handleInput}
                             onFocus={handleStart}
+                            autoComplete="name"
                         />
 
                         <input
@@ -75,8 +141,18 @@ export default function Contact() {
                             data-form-input
                             onInput={handleInput}
                             onFocus={handleStart}
+                            autoComplete="email"
                         />
                     </div>
+
+                    <input
+                        type="text"
+                        name="company"
+                        className="form-input form-input--hidden"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        aria-hidden="true"
+                    />
 
                     <textarea
                         name="message"
@@ -86,14 +162,30 @@ export default function Contact() {
                         data-form-input
                         onInput={handleInput}
                         onFocus={handleStart}
+                        autoComplete="off"
                     ></textarea>
 
-                    <button className="form-btn" type="submit" disabled={!isValid} data-form-btn>
+                    <button
+                        className="form-btn"
+                        type="submit"
+                        disabled={!isValid || status === "sending"}
+                        data-form-btn
+                    >
                         <Send aria-hidden="true" />
-                        <span>Send Message</span>
+                        <span>{status === "sending" ? "Sending..." : "Send Message"}</span>
                     </button>
+
                 </form>
             </section>
+
+            {statusMessage && (status === "success" || status === "error") ? (
+                <div className={`contact-toast contact-toast--${status}`} role="status" aria-live="polite">
+                    <span className="contact-toast__title">
+                        {status === "success" ? "Message sent" : "Message failed"}
+                    </span>
+                    <span className="contact-toast__message">{statusMessage}</span>
+                </div>
+            ) : null}
         </>
     );
 }
