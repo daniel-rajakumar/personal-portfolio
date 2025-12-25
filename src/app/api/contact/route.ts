@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 const RESEND_API_URL = "https://api.resend.com/emails";
+const EMAIL_PATTERN = /^[A-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9-]+(?:\.[A-Z0-9-]+)+$/i;
 
 type ContactPayload = {
     name: string;
@@ -31,6 +32,10 @@ export async function POST(request: Request) {
 
         if (!name || !email || !message) {
             return NextResponse.json({ message: "Missing required fields." }, { status: 400 });
+        }
+
+        if (!EMAIL_PATTERN.test(email)) {
+            return NextResponse.json({ message: "Invalid email address." }, { status: 400 });
         }
 
         if (message.length > 5000) {
