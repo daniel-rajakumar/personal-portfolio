@@ -25,6 +25,7 @@ export const profile = {
     datetime: '2026-05',
   },
   avatar: '/assets/images/profile-picture-11.png',
+  ogAvatar: '/assets/images/profile-picture-11-og.png',
   about: [
     'Computer Science student with 7 years of programming experience and a strong background in software development and technical leadership.',
     'Founded the Google Developer Student Club on campus and led workshops in Android and web development to build real-world skills.',
