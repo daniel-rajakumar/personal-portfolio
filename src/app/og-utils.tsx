@@ -59,7 +59,6 @@ export const createOgImage = async (baseUrl?: string) => {
     }
 
     const highlights = services.slice(0, 3).map((service) => service.title);
-    const statusLabel = profile.status?.label;
     const domain = getDomain();
 
     return new ImageResponse(
@@ -83,141 +82,111 @@ export const createOgImage = async (baseUrl?: string) => {
                         position: "relative",
                         width: "100%",
                         height: "100%",
-                        padding: "56px 56px 48px 64px",
-                        borderRadius: "36px",
+                        padding: "0px",
+                        borderRadius: "0px",
                         backgroundColor: CARD_BG,
                         border: `1px solid ${CARD_BORDER}`,
                         boxShadow: "0 30px 70px rgba(0,0,0,0.45)",
                         display: "flex",
-                        flexDirection: "column",
-                        gap: "28px",
                         color: TEXT_PRIMARY,
                     }}
                 >
                     <div
                         style={{
-                            position: "absolute",
-                            left: "24px",
-                            top: "24px",
-                            bottom: "24px",
-                            width: "6px",
-                            borderRadius: "999px",
-                            backgroundColor: ACCENT,
-                            opacity: 0.9,
+                            width: "38%",
+                            height: "100%",
+                            backgroundColor: "#111111",
+                            borderRight: `1px solid ${CARD_BORDER}`,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            overflow: "hidden",
                         }}
-                    />
+                    >
+                        {avatarData ? (
+                            <img
+                                src={avatarData}
+                                width={420}
+                                height={502}
+                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                            />
+                        ) : (
+                            <span
+                                style={{
+                                    fontSize: "76px",
+                                    fontWeight: 700,
+                                    color: ACCENT,
+                                }}
+                            >
+                                {initials}
+                            </span>
+                        )}
+                    </div>
 
                     <div
                         style={{
                             display: "flex",
-                            alignItems: "center",
-                            gap: "28px",
+                            flexDirection: "column",
+                            flex: 1,
+                            padding: "56px",
+                            gap: "22px",
                         }}
                     >
                         <div
                             style={{
-                                width: "120px",
-                                height: "120px",
-                                borderRadius: "28px",
-                                backgroundColor: "#1c1c1c",
-                                border: `2px solid ${ACCENT}`,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                boxShadow: "0 18px 40px rgba(0,0,0,0.35)",
-                                overflow: "hidden",
+                                fontSize: "14px",
+                                letterSpacing: "0.35em",
+                                textTransform: "uppercase",
+                                color: ACCENT,
                             }}
                         >
-                            {avatarData ? (
-                                <img
-                                    src={avatarData}
-                                    width={120}
-                                    height={120}
-                                    style={{ objectFit: "cover" }}
-                                />
-                            ) : (
-                                <span
+                            Portfolio
+                        </div>
+                        <div style={{ fontSize: "64px", fontWeight: 700, lineHeight: 1.05 }}>
+                            {profile.name}
+                        </div>
+                        <div style={{ fontSize: "28px", color: TEXT_MUTED }}>{profile.role}</div>
+
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                            {highlights.map((title) => (
+                                <div
+                                    key={title}
                                     style={{
-                                        fontSize: "40px",
-                                        fontWeight: 700,
-                                        color: ACCENT,
+                                        padding: "8px 14px",
+                                        borderRadius: "999px",
+                                        border: `1px solid ${CHIP_BORDER}`,
+                                        backgroundColor: CHIP_BG,
+                                        color: TEXT_MUTED,
+                                        fontSize: "16px",
                                     }}
                                 >
-                                    {initials}
-                                </span>
-                            )}
+                                    {title}
+                                </div>
+                            ))}
                         </div>
 
-                        <div style={{ display: "flex", flexDirection: "column", gap: "10px", flex: 1 }}>
-                            <div
-                                style={{
-                                    fontSize: "18px",
-                                    letterSpacing: "0.32em",
-                                    textTransform: "uppercase",
-                                    color: ACCENT,
-                                }}
-                            >
-                                Portfolio
-                            </div>
-                            <div style={{ fontSize: "62px", fontWeight: 700, lineHeight: 1.05 }}>
-                                {profile.name}
-                            </div>
-                            <div style={{ fontSize: "28px", color: TEXT_MUTED }}>{profile.role}</div>
-                            <div style={{ fontSize: "20px", color: TEXT_SOFT }}>{profile.location}</div>
-                        </div>
-
-                        {statusLabel ? (
-                            <div
-                                style={{
-                                    padding: "10px 16px",
-                                    borderRadius: "999px",
-                                    border: `1px solid ${ACCENT}`,
-                                    color: ACCENT,
-                                    fontSize: "18px",
-                                    fontWeight: 600,
-                                    whiteSpace: "nowrap",
-                                }}
-                            >
-                                {statusLabel}
-                            </div>
-                        ) : null}
-                    </div>
-
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
-                        {highlights.map((title) => (
-                            <div
-                                key={title}
-                                style={{
-                                    padding: "10px 16px",
-                                    borderRadius: "999px",
-                                    border: `1px solid ${CHIP_BORDER}`,
-                                    backgroundColor: CHIP_BG,
-                                    color: TEXT_MUTED,
-                                    fontSize: "18px",
-                                }}
-                            >
-                                {title}
-                            </div>
-                        ))}
-                    </div>
-
-                    <div
-                        style={{
-                            marginTop: "auto",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "16px",
-                        }}
-                    >
                         <div
                             style={{
-                                width: "140px",
-                                height: "6px",
-                                backgroundColor: ACCENT,
-                                borderRadius: "999px",
+                                marginTop: "auto",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                gap: "24px",
                             }}
-                        />
-                        <div style={{ fontSize: "22px", color: ACCENT }}>{domain}</div>
+                        >
+                            <div style={{ fontSize: "20px", color: TEXT_MUTED }}>{profile.location}</div>
+                            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                <div
+                                    style={{
+                                        width: "80px",
+                                        height: "6px",
+                                        backgroundColor: ACCENT,
+                                        borderRadius: "999px",
+                                    }}
+                                />
+                                <div style={{ fontSize: "16px", color: ACCENT }}>{domain}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
