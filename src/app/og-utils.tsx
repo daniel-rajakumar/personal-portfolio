@@ -13,6 +13,17 @@ const CARD_BORDER = "#2b2b2b";
 const CHIP_BG = "#1f1f1f";
 const CHIP_BORDER = "#343434";
 
+const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
+    let binary = "";
+    const bytes = new Uint8Array(buffer);
+    const chunkSize = 8192;
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+        const chunk = bytes.subarray(i, i + chunkSize);
+        binary += String.fromCharCode(...chunk);
+    }
+    return btoa(binary);
+};
+
 const resolveBaseUrl = (override?: string) => {
     if (override) {
         return override.startsWith("http") ? override : `https://${override}`;
@@ -46,16 +57,18 @@ export const createOgImage = async (baseUrl?: string) => {
         .toUpperCase();
 
     const avatarPath = profile.ogAvatar ?? profile.avatar;
-    let avatarData: ArrayBuffer | null = null;
+    let avatarSrc: string | null = null;
     try {
         const avatarUrl = new URL(avatarPath, resolveBaseUrl(baseUrl));
         const response = await fetch(avatarUrl);
         const contentType = response.headers.get("content-type") ?? "";
         if (response.ok && contentType.startsWith("image/")) {
-            avatarData = await response.arrayBuffer();
+            const buffer = await response.arrayBuffer();
+            const base64 = arrayBufferToBase64(buffer);
+            avatarSrc = `data:${contentType};base64,${base64}`;
         }
     } catch {
-        avatarData = null;
+        avatarSrc = null;
     }
 
     const highlights = services.slice(0, 3).map((service) => service.title);
@@ -114,9 +127,9 @@ export const createOgImage = async (baseUrl?: string) => {
                                 overflow: "hidden",
                             }}
                         >
-                            {avatarData ? (
+                            {avatarSrc ? (
                                 <img
-                                    src={avatarData}
+                                    src={avatarSrc}
                                     width={480}
                                     height={600}
                                     style={{ width: "100%", height: "100%", objectFit: "cover" }}
