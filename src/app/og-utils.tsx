@@ -95,32 +95,44 @@ export const createOgImage = async (baseUrl?: string) => {
                         style={{
                             width: "38%",
                             height: "100%",
-                            backgroundColor: "#111111",
-                            borderRight: `1px solid ${CARD_BORDER}`,
+                            backgroundColor: CARD_BG,
                             display: "flex",
-                            alignItems: "center",
+                            alignItems: "stretch",
                             justifyContent: "center",
-                            overflow: "hidden",
+                            padding: "28px",
                         }}
                     >
-                        {avatarData ? (
-                            <img
-                                src={avatarData}
-                                width={420}
-                                height={502}
-                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                            />
-                        ) : (
-                            <span
-                                style={{
-                                    fontSize: "76px",
-                                    fontWeight: 700,
-                                    color: ACCENT,
-                                }}
-                            >
-                                {initials}
-                            </span>
-                        )}
+                        <div
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                borderRadius: "20px",
+                                backgroundColor: CARD_BG,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                overflow: "hidden",
+                            }}
+                        >
+                            {avatarData ? (
+                                <img
+                                    src={avatarData}
+                                    width={480}
+                                    height={600}
+                                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                />
+                            ) : (
+                                <span
+                                    style={{
+                                        fontSize: "76px",
+                                        fontWeight: 700,
+                                        color: ACCENT,
+                                    }}
+                                >
+                                    {initials}
+                                </span>
+                            )}
+                        </div>
                     </div>
 
                     <div
@@ -128,24 +140,25 @@ export const createOgImage = async (baseUrl?: string) => {
                             display: "flex",
                             flexDirection: "column",
                             flex: 1,
-                            padding: "56px",
-                            gap: "22px",
+                            padding: "40px",
+                            gap: "16px",
+                            justifyContent: "center",
                         }}
                     >
                         <div
                             style={{
-                                fontSize: "14px",
-                                letterSpacing: "0.35em",
+                                fontSize: "33px",
+                                letterSpacing: "0.3em",
                                 textTransform: "uppercase",
                                 color: ACCENT,
                             }}
                         >
                             Portfolio
                         </div>
-                        <div style={{ fontSize: "64px", fontWeight: 700, lineHeight: 1.05 }}>
+                        <div style={{ fontSize: "56px", fontWeight: 700, lineHeight: 1.05 }}>
                             {profile.name}
                         </div>
-                        <div style={{ fontSize: "28px", color: TEXT_MUTED }}>{profile.role}</div>
+                        <div style={{ fontSize: "24px", color: TEXT_MUTED }}>{profile.role}</div>
 
                         <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
                             {highlights.map((title) => (
@@ -157,7 +170,7 @@ export const createOgImage = async (baseUrl?: string) => {
                                         border: `1px solid ${CHIP_BORDER}`,
                                         backgroundColor: CHIP_BG,
                                         color: TEXT_MUTED,
-                                        fontSize: "16px",
+                                        fontSize: "15px",
                                     }}
                                 >
                                     {title}
@@ -167,24 +180,23 @@ export const createOgImage = async (baseUrl?: string) => {
 
                         <div
                             style={{
-                                marginTop: "auto",
                                 display: "flex",
                                 alignItems: "center",
-                                justifyContent: "space-between",
-                                gap: "24px",
+                                gap: "12px",
+                                flexWrap: "nowrap",
                             }}
                         >
-                            <div style={{ fontSize: "20px", color: TEXT_MUTED }}>{profile.location}</div>
-                            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                                <div
-                                    style={{
-                                        width: "80px",
-                                        height: "6px",
-                                        backgroundColor: ACCENT,
-                                        borderRadius: "999px",
-                                    }}
-                                />
-                                <div style={{ fontSize: "16px", color: ACCENT }}>{domain}</div>
+                            <div style={{ fontSize: "18px", color: TEXT_MUTED }}>{profile.location}</div>
+                            <div
+                                style={{
+                                    flex: 1,
+                                    height: "6px",
+                                    backgroundColor: ACCENT,
+                                    borderRadius: "999px",
+                                }}
+                            />
+                            <div style={{ fontSize: "16px", color: ACCENT, whiteSpace: "nowrap" }}>
+                                {domain}
                             </div>
                         </div>
                     </div>
