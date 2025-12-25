@@ -266,10 +266,10 @@ export const projects: Project[] = [
     image: '/assets/images/projects/RockyGPT/thumbnail.png',
     status: 'In Progress',
     screenshots: [
-    //   {
-    //       src: '/assets/images/projects/RockyGPT/thumbnail.png',
-    //       caption: "Chat interface",
-    //   },
+      // {
+      //     src: '/assets/images/projects/RockyGPT/thumbnail.png',
+      //     caption: "Chat interface",
+      // },
       // {
       //     src: "/assets/images/projects/RockyGPT/two.png",
       //     caption: "Sample conversation",
