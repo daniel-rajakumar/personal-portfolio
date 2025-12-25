@@ -148,6 +148,8 @@ export default function Contact() {
                             className="form-input"
                             placeholder="Email address"
                             required
+                            pattern="^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)+$"
+                            title="Enter a valid email address (example@domain.com)"
                             data-form-input
                             onInput={handleInput}
                             onFocus={handleStart}
