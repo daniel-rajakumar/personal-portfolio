@@ -46,9 +46,16 @@ export const education: TimelineItem[] = [
     range: 'Aug 2022 — Jun 2026',
     details: [
       'Presidential Scholarship (full-tuition merit award).',
-      'Relevant coursework: Software Design, Data Structures & Algorithms, Machine Learning, Web Application Development, Data Analysis & Visualization.',
     ],
   },
+]
+
+export const coursework: string[] = [
+  'Software Design',
+  'Data Structures & Algorithms',
+  'Machine Learning',
+  'Web Application Development',
+  'Data Analysis & Visualization',
 ]
 
 export const experience: TimelineItem[] = [
