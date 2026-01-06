@@ -17,7 +17,7 @@ export const profile = {
   phone: '+1 (609) 388-1811',
   resumeUrl: '/resume.pdf',
   status: {
-    label: 'Seeking Spring Internship',
+    label: 'Software Developer',
     available: true,
   },
   graduation: {
@@ -29,21 +29,20 @@ export const profile = {
   about: [
     'Hi there! I am a Computer Science undergraduate with 7 years of programming experience, building practical and real-world applications.',
     "I have experience working on full-stack applications, software and mobile projects, and data-focused work through hackathons and coursework. As the founder of my college's Google Developer Student Club and a leader in the Computer Science Club, I organized workshops. I led teams that helped students complete hands-on development projects.",
-    'I am looking for software engineering opportunities that will let me work with teams that practice strong technical principles while building real-world products.',
+    'I am looking for software developer opportunities that will let me work with teams that practice strong technical principles while building real-world products.',
   ],
 }
 
 export const socials: SocialLink[] = [
-  { label: 'GitHub', href: 'https://github.com/' },
+  { label: 'GitHub', href: 'https://github.com/daniel-rajakumar' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/daniel-rajakumar/' },
-  { label: 'Instagram', href: 'https://instagram.com/' },
 ]
 
 export const education: TimelineItem[] = [
   {
     title: 'B.S. Computer Science',
     org: 'Ramapo College of New Jersey, Mahwah, NJ',
-    range: 'Aug 2022 — Jun 2026',
+    range: 'Aug 2022 — May 2026',
     details: [
       'Presidential Scholarship (full-tuition merit award).',
     ],
