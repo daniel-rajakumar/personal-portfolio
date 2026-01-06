@@ -1350,6 +1350,25 @@ main {
   line-height: 1.6;
 }
 
+.coursework-inline {
+  margin-top: 12px;
+  color: var(--light-gray);
+  font-size: var(--fs-7);
+  font-weight: var(--fw-300);
+  line-height: 1.6;
+}
+
+.coursework-inline .coursework-label {
+  display: inline;
+  color: var(--white-2);
+  font-weight: var(--fw-400);
+}
+
+.coursework-inline .coursework-courses {
+  display: inline;
+  color: var(--light-gray-70);
+}
+
 
 /**
  * skills
