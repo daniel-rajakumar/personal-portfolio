@@ -1,6 +1,6 @@
 "use client";
 
-import { Brush, Camera, Code, Smartphone } from "lucide-react";
+import { Brush, Camera, Code, Database, Smartphone, Users } from "lucide-react";
 import Clients from "@/components/Clients";
 import Testimonials from "@/components/Testimonials";
 import { profile, services } from "@/lib/data";
@@ -11,6 +11,8 @@ export default function About() {
         dev: Code,
         app: Smartphone,
         photo: Camera,
+        data: Database,
+        leadership: Users,
     } as const;
 
     return (
