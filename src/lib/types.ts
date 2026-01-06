@@ -27,6 +27,7 @@ export type TimelineItem = {
     org: string;
     range: string;
     details: string | string[];
+    coursework?: string[];
 };
 
 export type Skill = { name: string; logo: string };

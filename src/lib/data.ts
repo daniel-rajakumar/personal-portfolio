@@ -47,15 +47,14 @@ export const education: TimelineItem[] = [
     details: [
       'Presidential Scholarship (full-tuition merit award).',
     ],
+    coursework: [
+      'Software Design',
+      'Data Structures & Algorithms',
+      'Machine Learning',
+      'Web Application Development',
+      'Data Analysis & Visualization',
+    ],
   },
-]
-
-export const coursework: string[] = [
-  'Software Design',
-  'Data Structures & Algorithms',
-  'Machine Learning',
-  'Web Application Development',
-  'Data Analysis & Visualization',
 ]
 
 export const experience: TimelineItem[] = [

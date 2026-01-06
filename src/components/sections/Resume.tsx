@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { BookOpen, ChevronDown } from "lucide-react";
-import { coursework, education, experience, profile, skills } from "@/lib/data";
+import { education, experience, profile, skills } from "@/lib/data";
 import { trackEvent } from "@/lib/analytics";
 
 type SectionKey = "education" | "experience";
@@ -68,6 +68,14 @@ function Timeline({
                                             <li key={`${detail}-${index}`}>{detail}</li>
                                         ))}
                                     </ul>
+                                    {it.coursework?.length ? (
+                                        <p className="timeline-text coursework-inline">
+                                            <strong className="coursework-label">Relevant coursework:</strong>{" "}
+                                            <span className="coursework-courses">
+                                                {it.coursework.join(" | ")}
+                                            </span>
+                                        </p>
+                                    ) : null}
                                 </>
                             ) : (
                                 <p className="timeline-text">{`${it.org} - ${it.details}`}</p>
@@ -142,17 +150,6 @@ export default function Resume() {
                     onToggle={toggleSection}
                 />
             ))}
-
-            <section className="coursework">
-                <h3 className="h3 skills-title">Relevant coursework</h3>
-                <ul className="skills-list content-card">
-                    {coursework.map((course) => (
-                        <li key={course} className="skills-item">
-                            <span className="skills-name">{course}</span>
-                        </li>
-                    ))}
-                </ul>
-            </section>
 
             <section className="skill">
                 <h3 className="h3 skills-title">My skills</h3>
