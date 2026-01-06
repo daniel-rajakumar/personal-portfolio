@@ -107,13 +107,13 @@ export const services: Service[] = [
     title: 'Data-driven systems',
     description:
       'ETL, analytics, and ML prototypes using Python, SQL, Pandas, and scikit-learn.',
-    icon: 'design',
+    icon: 'data',
   },
   {
     title: 'Technical leadership',
     description:
       'Workshops, mentoring, and leading student dev teams with clear communication and collaboration.',
-    icon: 'photo',
+    icon: 'leadership',
   },
 ]
 

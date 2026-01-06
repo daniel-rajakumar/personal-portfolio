@@ -34,7 +34,7 @@ export type Skill = { name: string; logo: string };
 export type Service = {
     title: string;
     description: string;
-    icon: "design" | "dev" | "app" | "photo";
+    icon: "design" | "dev" | "app" | "photo" | "data" | "leadership";
 };
 
 export type Testimonial = {
