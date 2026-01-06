@@ -68,6 +68,14 @@ function Timeline({
                                             <li key={`${detail}-${index}`}>{detail}</li>
                                         ))}
                                     </ul>
+                                    {it.coursework?.length ? (
+                                        <p className="timeline-text coursework-inline">
+                                            <strong className="coursework-label">Relevant coursework:</strong>{" "}
+                                            <span className="coursework-courses">
+                                                {it.coursework.join(" | ")}
+                                            </span>
+                                        </p>
+                                    ) : null}
                                 </>
                             ) : (
                                 <p className="timeline-text">{`${it.org} - ${it.details}`}</p>

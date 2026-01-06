@@ -17,7 +17,7 @@ export const profile = {
   phone: '+1 (609) 388-1811',
   resumeUrl: '/resume.pdf',
   status: {
-    label: 'Seeking Spring Internship',
+    label: 'Software Developer',
     available: true,
   },
   graduation: {
@@ -27,25 +27,31 @@ export const profile = {
   avatar: '/assets/images/profile-picture-11.png',
   ogAvatar: '/assets/images/profile-picture-11-og.png',
   about: [
-    'Computer Science student with 7 years of programming experience and a strong background in software development and technical leadership.',
-    'Founded the Google Developer Student Club on campus and led workshops in Android and web development to build real-world skills.',
+    'Hi there! I am a Computer Science undergraduate with 7 years of programming experience, building practical and real-world applications.',
+    "I have experience working on full-stack applications, software and mobile projects, and data-focused work through hackathons and coursework. As the founder of my college's Google Developer Student Club and a leader in the Computer Science Club, I organized workshops. I led teams that helped students complete hands-on development projects.",
+    'I am looking for software developer opportunities that will let me work with teams that practice strong technical principles while building real-world products.',
   ],
 }
 
 export const socials: SocialLink[] = [
-  { label: 'GitHub', href: 'https://github.com/' },
+  { label: 'GitHub', href: 'https://github.com/daniel-rajakumar' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/daniel-rajakumar/' },
-  { label: 'Instagram', href: 'https://instagram.com/' },
 ]
 
 export const education: TimelineItem[] = [
   {
     title: 'B.S. Computer Science',
     org: 'Ramapo College of New Jersey, Mahwah, NJ',
-    range: 'Aug 2022 — Jun 2026',
+    range: 'Aug 2022 — May 2026',
     details: [
       'Presidential Scholarship (full-tuition merit award).',
-      'Relevant coursework: Software Design, Data Structures & Algorithms, Machine Learning, Web Application Development, Data Analysis & Visualization.',
+    ],
+    coursework: [
+      'Software Design',
+      'Data Structures & Algorithms',
+      'Machine Learning',
+      'Web Application Development',
+      'Data Analysis & Visualization',
     ],
   },
 ]
@@ -91,28 +97,28 @@ export const skills: Skill[] = [
 
 export const services: Service[] = [
   {
-    title: 'Software engineering',
+    title: 'Full-stack engineering',
     description:
-      'Build scalable apps with clean architecture and solid engineering practices.',
+      'Design and build web apps end-to-end with clean architecture, tested code, and reliable deployments.',
     icon: 'dev',
   },
   {
     title: 'Mobile development',
     description:
-      'Android and Flutter experience from real workshops and hands-on builds.',
+      'Android-first development in Kotlin/Java, from prototypes to production features.',
     icon: 'app',
   },
   {
-    title: 'Data & ML',
+    title: 'Data-driven systems',
     description:
-      'Data pipelines, ML models, and insights using Python and Pandas.',
-    icon: 'design',
+      'ETL, analytics, and ML prototypes using Python, SQL, Pandas, and scikit-learn.',
+    icon: 'data',
   },
   {
     title: 'Technical leadership',
     description:
-      'Led student developer communities and large-scale campus workshops.',
-    icon: 'photo',
+      'Workshops, mentoring, and leading student dev teams with clear communication and collaboration.',
+    icon: 'leadership',
   },
 ]
 
