@@ -3524,20 +3524,29 @@ textarea.form-input::-webkit-resizer {
 
 @media (max-width: 1023px) {
   .navbar {
+    --nav-compact: 0;
+    --nav-open: calc(1 - var(--nav-compact));
     left: 50%;
     right: auto;
     width: max-content;
     max-width: calc(100% - 24px);
     bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
     border-radius: 999px;
-    padding: 4px 6px;
-    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 2px);
+    padding: calc(2px + 2px * var(--nav-open)) calc(4px + 2px * var(--nav-open));
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1px + 1px * var(--nav-open));
     transform: translateX(-50%) translateZ(0);
+    transition:
+      padding var(--nav-speed, 0.5s) cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow var(--nav-speed, 0.5s) cubic-bezier(0.22, 1, 0.36, 1),
+      border-color var(--nav-speed, 0.5s) cubic-bezier(0.22, 1, 0.36, 1),
+      background-color var(--nav-speed, 0.5s) cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .navbar-link {
     color: var(--white-2);
-    padding: 12px 8px;
+    padding: calc(10px + 2px * var(--nav-open))
+      calc(6px + 2px * var(--nav-open));
+    font-size: calc(11px + 2px * var(--nav-open));
   }
 
   .navbar-link:hover,
@@ -3546,44 +3555,42 @@ textarea.form-input::-webkit-resizer {
   }
 
   .navbar-list {
-    gap: 12px;
-    transition: gap 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-      padding 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    gap: calc(4px + 8px * var(--nav-open));
+    padding: 0 calc(6px + 6px * var(--nav-open));
+    transition: gap var(--nav-speed, 0.5s) cubic-bezier(0.22, 1, 0.36, 1),
+      padding var(--nav-speed, 0.5s) cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .navbar-item {
+    min-width: 0;
     max-width: 200px;
     overflow: hidden;
     opacity: 1;
     transform: translateY(0) scale(1);
     transition:
-      max-width 0.38s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+      max-width var(--nav-speed, 0.5s) cubic-bezier(0.22, 1, 0.36, 1),
+      opacity var(--nav-speed-fast, 0.35s) cubic-bezier(0.22, 1, 0.36, 1),
+      transform var(--nav-speed, 0.5s) cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: 0s;
+    will-change: max-width, opacity, transform;
   }
 
-  .navbar--compact .navbar-list {
-    gap: 6px;
-    padding: 0 8px;
+  .navbar-item:not(.is-active) {
+    max-width: calc(200px * var(--nav-open));
+    opacity: var(--nav-open);
+    transform: translateY(calc(8px * var(--nav-compact)))
+      scale(calc(0.95 + 0.05 * var(--nav-open)));
   }
 
-  .navbar--compact .navbar-item:not(.is-active) {
-    max-width: 0;
-    opacity: 0;
-    transform: translateY(8px) scale(0.95);
-  }
-
-  .navbar--compact .navbar-item:not(.is-active) .navbar-link {
-    padding: 0;
-  }
-
-  .navbar--compact .navbar-item.is-active .navbar-link {
-    padding: 12px 14px;
-    font-size: var(--fs-7);
+  .navbar-link {
+    transition:
+      padding var(--nav-speed, 0.5s) cubic-bezier(0.22, 1, 0.36, 1),
+      font-size var(--nav-speed, 0.5s) cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .navbar-link--icon {
-    padding: 10px 12px;
+    padding: calc(8px + 2px * var(--nav-open))
+      calc(10px + 2px * var(--nav-open));
   }
 
   main {
