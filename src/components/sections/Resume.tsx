@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { BookOpen, ChevronDown } from "lucide-react";
-import { education, experience, profile, skills } from "@/lib/data";
+import { coursework, education, experience, profile, skills } from "@/lib/data";
 import { trackEvent } from "@/lib/analytics";
 
 type SectionKey = "education" | "experience";
@@ -142,6 +142,17 @@ export default function Resume() {
                     onToggle={toggleSection}
                 />
             ))}
+
+            <section className="coursework">
+                <h3 className="h3 skills-title">Relevant coursework</h3>
+                <ul className="skills-list content-card">
+                    {coursework.map((course) => (
+                        <li key={course} className="skills-item">
+                            <span className="skills-name">{course}</span>
+                        </li>
+                    ))}
+                </ul>
+            </section>
 
             <section className="skill">
                 <h3 className="h3 skills-title">My skills</h3>
