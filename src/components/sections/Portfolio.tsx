@@ -487,11 +487,13 @@ export default function Portfolio() {
                                                         })
                                                     }
                                                 >
-                                                    <LinkIcon
-                                                        aria-hidden="true"
-                                                        className="project-modal__link-icon"
-                                                    />
-                                                    {l.label}
+                                                    <span className="project-modal__link-icon-wrap">
+                                                        <LinkIcon
+                                                            aria-hidden="true"
+                                                            className="project-modal__link-icon"
+                                                        />
+                                                    </span>
+                                                    <span className="project-modal__link-label">{l.label}</span>
                                                 </a>
                                             ))
                                         ) : (

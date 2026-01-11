@@ -2199,15 +2199,29 @@ main {
 
 .project-modal__links a {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 6px 10px;
+  align-items: stretch;
   border-radius: 10px;
   border: 1px solid var(--jet);
   background: var(--eerie-black-1);
   color: var(--white-2);
   font-size: var(--fs-7);
+  overflow: hidden;
+}
+
+.project-modal__link-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;
+  background: var(--orange-yellow-crayola);
+  color: var(--smoky-black);
+  border-radius: 9px 0 0 9px;
+}
+
+.project-modal__link-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px 6px 8px;
 }
 
 .project-modal__link-icon {
