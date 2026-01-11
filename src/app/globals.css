@@ -2211,6 +2211,13 @@ main {
   stroke-width: 2.2px;
 }
 
+@media (min-width: 1024px) {
+  .project-modal__tech-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 
 .project-modal__links {
   display: flex;
