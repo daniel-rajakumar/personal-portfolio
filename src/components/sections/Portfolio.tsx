@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import MarkdownIt from "markdown-it";
-import { ChevronDown, ChevronLeft, ChevronRight, Eye, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Eye, Link as LinkIcon, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { projects } from "@/lib/data";
 import type { Project } from "@/lib/types";
@@ -487,6 +487,10 @@ export default function Portfolio() {
                                                         })
                                                     }
                                                 >
+                                                    <LinkIcon
+                                                        aria-hidden="true"
+                                                        className="project-modal__link-icon"
+                                                    />
                                                     {l.label}
                                                 </a>
                                             ))

@@ -2201,14 +2201,19 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   padding: 6px 10px;
   border-radius: 10px;
   border: 1px solid var(--jet);
-  background: var(--orange-yellow-crayola);
-  color: var(--smoky-black);
+  background: var(--eerie-black-1);
+  color: var(--white-2);
   font-size: var(--fs-7);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+}
+
+.project-modal__link-icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.2px;
 }
 
 .project-modal__links a:focus-visible {
