@@ -241,6 +241,16 @@ export const projects: Project[] = [
       'Created a responsive website for the Ramapo International Street Food Festival 2025 using React.js and hosted on Netlify.',
     tech: ['React.js', 'CSS', 'Netlify'],
     image: '/assets/images/projects/ISFF25/thumbnail.png',
+    links: [
+      {
+        label: 'Live site',
+        href: 'https://projects.isff25.danielrajakumar.com/',
+      },
+      {
+        label: 'Source code',
+        href: 'https://github.com/RCNJ-Computer-Science-Club/ISFF25',
+      },
+    ],
     screenshots: [
       {
         src: '/assets/images/projects/ISFF25/one.png',
