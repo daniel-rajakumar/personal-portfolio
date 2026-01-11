@@ -127,6 +127,13 @@ export default function Portfolio() {
     }, [selected, shots.length, zoomedShotIndex, closeZoom]);
 
     useEffect(() => {
+        if (!selected) return;
+        const { body } = document;
+        body.classList.add("is-project-modal-open");
+        return () => body.classList.remove("is-project-modal-open");
+    }, [selected]);
+
+    useEffect(() => {
         const path = selected?.caseStudyPath;
         if (!path) {
             setCaseStudyHtml("");
