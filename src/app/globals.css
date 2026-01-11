@@ -2194,12 +2194,22 @@ main {
 }
 
 .project-modal__links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 6px 10px;
   border-radius: 10px;
   border: 1px solid var(--jet);
-  background: var(--bg-gradient-jet);
-  color: var(--white-2);
+  background: var(--orange-yellow-crayola);
+  color: var(--smoky-black);
   font-size: var(--fs-7);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.project-modal__links a:focus-visible {
+  outline: 2px solid var(--smoky-black);
+  outline-offset: 2px;
 }
 
 .project-modal__muted {
