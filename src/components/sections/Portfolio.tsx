@@ -4,12 +4,56 @@ import Image from "next/image";
 import MarkdownIt from "markdown-it";
 import { ChevronDown, ChevronLeft, ChevronRight, Eye, Link as LinkIcon, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+    IconAssembly,
+    IconBoxModel,
+    IconBrain,
+    IconBrandCpp,
+    IconBrandCss3,
+    IconBrandHtml5,
+    IconBrandJavascript,
+    IconBrandOpenai,
+    IconBrandPython,
+    IconBrandReact,
+    IconChartBar,
+    IconCloudUpload,
+    IconCoffee,
+    IconCode,
+    IconDeviceGamepad2,
+    IconRefresh,
+    IconSql,
+    IconTable,
+    type TablerIcon,
+} from "@tabler/icons-react";
 import { projects } from "@/lib/data";
 import type { Project } from "@/lib/types";
 import { trackEvent } from "@/lib/analytics";
 
 const categories = ["All", "Web development", "Web design", "Applications", "Other"] as const;
 const markdown = new MarkdownIt({ html: true, linkify: true, typographer: true });
+const techIconRules: Array<{ test: RegExp; Icon: TablerIcon }> = [
+    { test: /react/i, Icon: IconBrandReact },
+    { test: /javascript|js\b/i, Icon: IconBrandJavascript },
+    { test: /html\/css|html/i, Icon: IconBrandHtml5 },
+    { test: /\bcss\b/i, Icon: IconBrandCss3 },
+    { test: /\bjava\b/i, Icon: IconCoffee },
+    { test: /c\+\+|cplusplus/i, Icon: IconBrandCpp },
+    { test: /python/i, Icon: IconBrandPython },
+    { test: /pandas/i, Icon: IconTable },
+    { test: /scikit|sklearn/i, Icon: IconBrain },
+    { test: /openai|gpt/i, Icon: IconBrandOpenai },
+    { test: /netlify/i, Icon: IconCloudUpload },
+    { test: /sql/i, Icon: IconSql },
+    { test: /assembler/i, Icon: IconAssembly },
+    { test: /agile/i, Icon: IconRefresh },
+    { test: /oop|object/i, Icon: IconBoxModel },
+    { test: /game/i, Icon: IconDeviceGamepad2 },
+    { test: /data|analysis|analytics/i, Icon: IconChartBar },
+];
+const getTechIcon = (label: string): TablerIcon => {
+    const rule = techIconRules.find((item) => item.test.test(label));
+    return rule ? rule.Icon : IconCode;
+};
 
 export default function Portfolio() {
     const [cat, setCat] = useState<(typeof categories)[number]>("All");
@@ -463,9 +507,20 @@ export default function Portfolio() {
                                 <div>
                                     <h4 className="h4">Tech stack</h4>
                                     <ul className="project-modal__tech">
-                                        {selected.tech.map((t) => (
-                                            <li key={t}>{t}</li>
-                                        ))}
+                                        {selected.tech.map((t) => {
+                                            const Icon = getTechIcon(t);
+                                            return (
+                                                <li key={t}>
+                                                    <span className="project-modal__tech-icon-wrap">
+                                                        <Icon
+                                                            aria-hidden="true"
+                                                            className="project-modal__tech-icon"
+                                                        />
+                                                    </span>
+                                                    <span className="project-modal__tech-label">{t}</span>
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
                                 </div>
 

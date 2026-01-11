@@ -2182,6 +2182,9 @@ main {
 }
 
 .project-modal__tech li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 6px 10px;
   border-radius: 10px;
   border: 1px solid var(--jet);
@@ -2189,6 +2192,25 @@ main {
   color: var(--white-2);
   font-size: var(--fs-7);
 }
+
+.project-modal__tech-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--orange-yellow-crayola);
+}
+
+.project-modal__tech-label {
+  display: inline-flex;
+  align-items: center;
+}
+
+.project-modal__tech-icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.2px;
+}
+
 
 .project-modal__links {
   display: flex;
