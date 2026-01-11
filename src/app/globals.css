@@ -176,6 +176,10 @@ body {
   scrollbar-width: none;
 }
 
+body.is-project-modal-open {
+  overflow: hidden;
+}
+
 html::-webkit-scrollbar {
   display: none;
 }
