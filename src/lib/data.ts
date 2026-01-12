@@ -149,6 +149,12 @@ export const projects: Project[] = [
     tech: ['C++', 'Assembler', 'Agile'],
     image: '/assets/images/projects/VC370Assem/thumbnail.png',
     // image: "/assets/images/projects/VC370Assem/one.png",
+    links: [
+      {
+        label: 'Source code',
+        href: 'https://github.com/daniel-rajakumar/VC407',
+      },
+    ],
     screenshots: [
       {
         src: '/assets/images/projects/VC370Assem/one.png',
@@ -177,6 +183,12 @@ export const projects: Project[] = [
     image:
       '/assets/images/projects/SocialMediaEngagementAnalysis/thumbnail.png',
 
+    links: [
+      {
+        label: 'Jupyter Notebook',
+        href: 'https://colab.research.google.com/drive/1hl8U_H2wvaPor3S9I9ANfC1QrbbEEJK-?usp=sharing'
+      }
+    ],
     screenshots: [
       {
         src: '/assets/images/projects/SocialMediaEngagementAnalysis/one.png',
@@ -207,6 +219,16 @@ export const projects: Project[] = [
       'Developed a 2D Canoga game in Java with multiplayer support and AI opponent.',
     tech: ['Java', 'OOP', 'Game Development'],
     image: '/assets/images/projects/CanogaGame/thumbnail.png',
+    links: [
+      {
+        label: 'Live site',
+        href: 'https://projects.canogagame.danielrajakumar.com/',
+      },
+      {
+        label: 'Source code',
+        href: 'https://github.com/daniel-rajakumar/CanogaGame',
+      },
+    ],
     screenshots: [
       {
         src: '/assets/images/projects/CanogaGame/one.png',
