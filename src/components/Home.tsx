@@ -36,8 +36,8 @@ const BASE_TABS: TabKey[] = ["about", "resume", "portfolio", "blog", "contact"];
 const AVAILABLE_TABS: TabKey[] = hasBlogPosts
     ? BASE_TABS
     : BASE_TABS.filter((tab) => tab !== "blog");
-const SNAP_DISTANCE_RATIO = 0.5;
-const SNAP_VELOCITY_THRESHOLD = 900;
+const SNAP_DISTANCE_RATIO = 0.25;
+const SNAP_VELOCITY_THRESHOLD = 600;
 const SNAP_TRANSITION = {
     type: "spring",
     stiffness: 320,
