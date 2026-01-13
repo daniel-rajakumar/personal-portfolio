@@ -5,6 +5,7 @@ import {
     useLayoutEffect,
     useMemo,
     useCallback,
+    memo,
     useRef,
     useState,
     type CSSProperties,
@@ -49,6 +50,12 @@ const SNAP_TRANSITION = {
 type TransitionDirection = -1 | 0 | 1;
 
 type TransitionSource = "click" | "drag";
+
+const MemoAbout = memo(About);
+const MemoResume = memo(Resume);
+const MemoPortfolio = memo(Portfolio);
+const MemoBlog = memo(Blog);
+const MemoContact = memo(Contact);
 
 const shouldIgnoreSwipeTarget = (target: EventTarget | null) => {
     if (!(target instanceof Element)) {
@@ -225,9 +232,6 @@ export default function Home() {
         dragX.set(0);
         isTransitioningRef.current = false;
         updateUrl(tab);
-        if (typeof window !== "undefined" && source !== "drag") {
-            window.scrollTo(0, 0);
-        }
         if (source === "drag") {
             trackEvent("tab_swipe", { from, to: tab });
         }
@@ -414,15 +418,15 @@ export default function Home() {
                             const backZ = dragDirection === -1 ? 2 : 1;
                             const content =
                                 tab === "about" ? (
-                                    <About />
+                                    <MemoAbout />
                                 ) : tab === "resume" ? (
-                                    <Resume />
+                                    <MemoResume />
                                 ) : tab === "portfolio" ? (
-                                    <Portfolio />
+                                    <MemoPortfolio />
                                 ) : tab === "blog" ? (
-                                    <Blog />
+                                    <MemoBlog />
                                 ) : (
-                                    <Contact />
+                                    <MemoContact />
                                 );
                             const baseStyle: CSSProperties = {
                                 display: isVisible ? "block" : "none",
@@ -430,6 +434,7 @@ export default function Home() {
                                 inset: isFront ? undefined : 0,
                                 pointerEvents: isFront ? "auto" : "none",
                                 zIndex: isFront ? frontZ : isBack ? backZ : 0,
+                                willChange: isVisible ? "transform" : "auto",
                             };
                             const motionProps = isFront
                                 ? {
