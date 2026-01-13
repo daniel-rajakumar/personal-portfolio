@@ -1,6 +1,15 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import {
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState,
+    type CSSProperties,
+    type PointerEvent as ReactPointerEvent,
+} from "react";
+import { animate, motion, type PanInfo, useDragControls, useMotionValue } from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { TabKey } from "@/lib/types";
 import { hasBlogPosts } from "@/lib/data";
@@ -19,20 +28,131 @@ const BASE_TABS: TabKey[] = ["about", "resume", "portfolio", "blog", "contact"];
 const AVAILABLE_TABS: TabKey[] = hasBlogPosts
     ? BASE_TABS
     : BASE_TABS.filter((tab) => tab !== "blog");
+const SWIPE_COMMIT_RATIO = 0.22;
+const SWIPE_VELOCITY_THRESHOLD = 700;
+const PAGE_TRANSITION = {
+    duration: 0.4,
+    ease: [0.22, 1, 0.36, 1],
+};
+
+type TransitionDirection = -1 | 0 | 1;
+
+type TransitionSource = "click" | "drag";
+
+const shouldIgnoreSwipeTarget = (target: EventTarget | null) => {
+    if (!(target instanceof Element)) {
+        return true;
+    }
+    return Boolean(
+        target.closest(
+            "a, button, input, textarea, select, iframe, [data-no-swipe], .navbar, .has-scrollbar, .project-modal, .project-modal-overlay"
+        )
+    );
+};
 
 export default function Home() {
     const sp = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
+    const dragX = useMotionValue(0);
+    const dragControls = useDragControls();
+    const panelsRef = useRef<HTMLDivElement | null>(null);
+    const isTransitioningRef = useRef(false);
+    const dragActiveRef = useRef(false);
+    const dragDirectionRef = useRef<TransitionDirection>(0);
+    const pendingUrlTabRef = useRef<TabKey | null>(null);
 
-    const active = useMemo<TabKey>(() => {
+    const urlTab = useMemo<TabKey>(() => {
         const t = sp.get("tab") as TabKey | null;
         return t && AVAILABLE_TABS.includes(t) ? t : "about";
     }, [sp]);
 
+    const [currentTab, setCurrentTab] = useState<TabKey>(urlTab);
+    const [backTab, setBackTab] = useState<TabKey | null>(null);
+    const [dragTab, setDragTab] = useState<TabKey | null>(null);
+    const [panelWidth, setPanelWidth] = useState(0);
+    const [isMobile, setIsMobile] = useState(false);
+
+    const currentIndex = AVAILABLE_TABS.indexOf(currentTab);
+    const prevTab = currentIndex > 0 ? AVAILABLE_TABS[currentIndex - 1] : null;
+    const nextTab = currentIndex < AVAILABLE_TABS.length - 1 ? AVAILABLE_TABS[currentIndex + 1] : null;
+    const frontTab = dragTab ?? currentTab;
+
+    useLayoutEffect(() => {
+        if (!panelsRef.current) {
+            return;
+        }
+        const updateWidth = () => {
+            if (!panelsRef.current) {
+                return;
+            }
+            const nextWidth = panelsRef.current.getBoundingClientRect().width;
+            setPanelWidth(nextWidth);
+        };
+        updateWidth();
+
+        const resizeObserver =
+            typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateWidth) : null;
+        if (resizeObserver) {
+            resizeObserver.observe(panelsRef.current);
+        }
+        window.addEventListener("resize", updateWidth);
+        return () => {
+            if (resizeObserver) {
+                resizeObserver.disconnect();
+            }
+            window.removeEventListener("resize", updateWidth);
+        };
+    }, []);
+
     useEffect(() => {
-        trackEvent("tab_view", { tab: active });
-    }, [active]);
+        if (typeof window === "undefined") {
+            return;
+        }
+        const media = window.matchMedia("(max-width: 1023px)");
+        const update = () => setIsMobile(media.matches);
+        update();
+        media.addEventListener("change", update);
+        return () => media.removeEventListener("change", update);
+    }, []);
+
+    useEffect(() => {
+        if (isMobile) {
+            return;
+        }
+        dragX.set(0);
+        setBackTab(null);
+        setDragTab(null);
+        dragActiveRef.current = false;
+        dragDirectionRef.current = 0;
+    }, [isMobile, dragX]);
+
+    useEffect(() => {
+        const pending = pendingUrlTabRef.current;
+        if (pending) {
+            if (urlTab === pending) {
+                pendingUrlTabRef.current = null;
+            } else if (currentTab === pending) {
+                return;
+            } else {
+                pendingUrlTabRef.current = null;
+            }
+        }
+        if (isTransitioningRef.current) {
+            return;
+        }
+        if (urlTab !== currentTab) {
+            setCurrentTab(urlTab);
+            setBackTab(null);
+            setDragTab(null);
+            dragX.set(0);
+            dragActiveRef.current = false;
+        }
+    }, [urlTab, currentTab, dragX]);
+
+    useEffect(() => {
+        trackEvent("tab_view", { tab: currentTab });
+    }, [currentTab]);
 
     useEffect(() => {
         const thresholds = [25, 50, 75, 100];
@@ -46,7 +166,7 @@ export default function Home() {
             thresholds.forEach((mark) => {
                 if (percent >= mark && !fired.has(mark)) {
                     fired.add(mark);
-                    trackEvent("scroll_depth", { percent: mark, tab: active });
+                    trackEvent("scroll_depth", { percent: mark, tab: currentTab });
                 }
             });
         };
@@ -54,19 +174,141 @@ export default function Home() {
         handleScroll();
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [active]);
+    }, [currentTab]);
 
-    function setTab(tab: TabKey) {
-        if (!AVAILABLE_TABS.includes(tab)) {
-            return;
-        }
+    const updateUrl = (tab: TabKey) => {
+        pendingUrlTabRef.current = tab;
         const next = new URLSearchParams(sp.toString());
         next.set("tab", tab);
         router.replace(`${pathname}?${next.toString()}`, { scroll: false });
         if (typeof window !== "undefined") {
             window.scrollTo(0, 0);
         }
-    }
+    };
+
+    const finalizeTab = (tab: TabKey, from: TabKey, source: TransitionSource) => {
+        setCurrentTab(tab);
+        setBackTab(null);
+        setDragTab(null);
+        dragDirectionRef.current = 0;
+        dragX.set(0);
+        isTransitioningRef.current = false;
+        updateUrl(tab);
+        if (source === "drag") {
+            trackEvent("tab_swipe", { from, to: tab });
+        }
+    };
+
+    const startTransition = (tab: TabKey, source: TransitionSource) => {
+        if (!AVAILABLE_TABS.includes(tab)) {
+            return;
+        }
+        if (tab === currentTab) {
+            return;
+        }
+        if (isTransitioningRef.current) {
+            return;
+        }
+        const from = currentTab;
+        const fromIndex = AVAILABLE_TABS.indexOf(from);
+        const toIndex = AVAILABLE_TABS.indexOf(tab);
+        if (fromIndex === -1 || toIndex === -1) {
+            finalizeTab(tab, from, source);
+            return;
+        }
+        const direction: TransitionDirection = toIndex > fromIndex ? 1 : -1;
+        if (!isMobile || panelWidth <= 0) {
+            finalizeTab(tab, from, source);
+            return;
+        }
+        setDragTab(from);
+        setBackTab(tab);
+        dragDirectionRef.current = direction;
+        isTransitioningRef.current = true;
+        const targetX = direction > 0 ? -panelWidth : panelWidth;
+        const controls = animate(dragX, targetX, PAGE_TRANSITION);
+        controls.then(() => finalizeTab(tab, from, source));
+    };
+
+    const handlePointerDown = (event: ReactPointerEvent<HTMLElement>) => {
+        if (!isMobile) {
+            return;
+        }
+        if (event.pointerType === "mouse") {
+            return;
+        }
+        if (shouldIgnoreSwipeTarget(event.target)) {
+            return;
+        }
+        if (!prevTab && !nextTab) {
+            return;
+        }
+        if (isTransitioningRef.current) {
+            return;
+        }
+        dragDirectionRef.current = 0;
+        dragActiveRef.current = true;
+        setDragTab(currentTab);
+        setBackTab(null);
+        dragControls.start(event.nativeEvent);
+    };
+
+    const handleDrag = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+        if (!dragActiveRef.current) {
+            return;
+        }
+        const offsetX = info.offset.x;
+        const direction = offsetX < 0 ? 1 : offsetX > 0 ? -1 : 0;
+        const nextDirection: TransitionDirection =
+            direction === 1 && nextTab
+                ? 1
+                : direction === -1 && prevTab
+                  ? -1
+                  : 0;
+        if (nextDirection === dragDirectionRef.current) {
+            return;
+        }
+        dragDirectionRef.current = nextDirection;
+        if (nextDirection === 1) {
+            setBackTab(nextTab ?? null);
+        } else if (nextDirection === -1) {
+            setBackTab(prevTab ?? null);
+        } else {
+            setBackTab(null);
+        }
+    };
+
+    const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+        if (!dragActiveRef.current) {
+            return;
+        }
+        dragActiveRef.current = false;
+        const offsetX = info.offset.x;
+        const velocityX = info.velocity.x;
+        const direction = offsetX < 0 ? 1 : offsetX > 0 ? -1 : 0;
+        const targetTab = direction === 1 ? nextTab : direction === -1 ? prevTab : null;
+        const threshold = panelWidth * SWIPE_COMMIT_RATIO;
+        const shouldCommit =
+            Boolean(targetTab) &&
+            (Math.abs(offsetX) > threshold || Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD);
+
+        if (shouldCommit && targetTab) {
+            isTransitioningRef.current = true;
+            setBackTab(targetTab);
+            const targetX = direction > 0 ? -panelWidth : panelWidth;
+            const from = currentTab;
+            const controls = animate(dragX, targetX, PAGE_TRANSITION);
+            controls.then(() => finalizeTab(targetTab, from, "drag"));
+            return;
+        }
+
+        const controls = animate(dragX, 0, PAGE_TRANSITION);
+        controls.then(() => {
+            setBackTab(null);
+            setDragTab(null);
+            dragDirectionRef.current = 0;
+        });
+    };
 
     return (
         <>
@@ -74,33 +316,71 @@ export default function Home() {
                 <Sidebar />
 
                 <div className="main-content">
-                    <Tabs active={active} onChange={setTab} />
+                    <Tabs active={currentTab} onChange={(tab) => startTransition(tab, "click")} />
 
-                    <article className={`about${active === "about" ? " active" : ""}`} data-page="about">
-                        <About />
-                    </article>
+                    <div className="tab-panels" ref={panelsRef}>
+                        {AVAILABLE_TABS.map((tab) => {
+                            const isFront = tab === frontTab;
+                            const isBack = tab === backTab;
+                            const isVisible = isFront || isBack;
+                            const content =
+                                tab === "about" ? (
+                                    <About />
+                                ) : tab === "resume" ? (
+                                    <Resume />
+                                ) : tab === "portfolio" ? (
+                                    <Portfolio />
+                                ) : tab === "blog" ? (
+                                    <Blog />
+                                ) : (
+                                    <Contact />
+                                );
+                            const baseStyle: CSSProperties = {
+                                display: isVisible ? "block" : "none",
+                                position: isFront ? "relative" : "absolute",
+                                inset: isFront ? undefined : 0,
+                                pointerEvents: isFront ? "auto" : "none",
+                                zIndex: isFront ? 1 : 0,
+                            };
+                            const dragProps = isFront
+                                ? {
+                                      drag: isMobile ? "x" : false,
+                                      dragControls,
+                                      dragListener: false,
+                                      dragConstraints: {
+                                          left: nextTab ? -panelWidth : 0,
+                                          right: prevTab ? panelWidth : 0,
+                                      },
+                                      dragElastic: 0.12,
+                                      dragMomentum: false,
+                                      onPointerDown: handlePointerDown,
+                                      onDrag: handleDrag,
+                                      onDragEnd: handleDragEnd,
+                                      style: {
+                                          ...baseStyle,
+                                          x: dragX,
+                                          touchAction: "pan-y",
+                                      } as CSSProperties,
+                                  }
+                                : { style: baseStyle };
 
-                    <article className={`resume${active === "resume" ? " active" : ""}`} data-page="resume">
-                        <Resume />
-                    </article>
-
-                    <article className={`portfolio${active === "portfolio" ? " active" : ""}`} data-page="portfolio">
-                        <Portfolio />
-                    </article>
-
-                    {hasBlogPosts ? (
-                        <article className={`blog${active === "blog" ? " active" : ""}`} data-page="blog">
-                            <Blog />
-                        </article>
-                    ) : null}
-
-                    <article className={`contact${active === "contact" ? " active" : ""}`} data-page="contact">
-                        <Contact />
-                    </article>
+                            return (
+                                <motion.article
+                                    key={tab}
+                                    className={`${tab}${tab === currentTab ? " active" : ""}`}
+                                    data-page={tab}
+                                    aria-hidden={!isFront}
+                                    {...dragProps}
+                                >
+                                    {content}
+                                </motion.article>
+                            );
+                        })}
+                    </div>
                 </div>
             </main>
 
-            <CommandPalette onNavigate={setTab} />
+            <CommandPalette onNavigate={(tab) => startTransition(tab, "click")} />
         </>
     );
 }

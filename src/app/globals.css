@@ -243,22 +243,8 @@ article {
   stroke-width: 2.5px;
 }
 
-article {
-  display: none;
-}
-
-article.active {
-  display: block;
-  animation: fade 0.5s ease backwards;
-}
-
-@keyframes fade {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+.tab-panels {
+  position: relative;
 }
 
 .h2,
