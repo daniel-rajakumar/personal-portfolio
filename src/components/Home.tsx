@@ -222,9 +222,6 @@ export default function Home() {
         const next = new URLSearchParams(sp.toString());
         next.set("tab", tab);
         router.replace(`${pathname}?${next.toString()}`, { scroll: false });
-        if (typeof window !== "undefined") {
-            window.scrollTo(0, 0);
-        }
     };
 
     const finalizeTab = (tab: TabKey, from: TabKey, source: TransitionSource) => {
@@ -235,6 +232,9 @@ export default function Home() {
         dragX.set(0);
         isTransitioningRef.current = false;
         updateUrl(tab);
+        if (typeof window !== "undefined" && source !== "drag") {
+            window.scrollTo(0, 0);
+        }
         if (source === "drag") {
             trackEvent("tab_swipe", { from, to: tab });
         }
