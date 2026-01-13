@@ -52,16 +52,9 @@ type TransitionSource = "click" | "drag";
 
 const shouldIgnoreSwipeTarget = (target: EventTarget | null) => {
     if (!(target instanceof Element)) {
-        return true;
-    }
-    if (target.closest("[data-allow-swipe]")) {
         return false;
     }
-    return Boolean(
-        target.closest(
-            "a, button, input, textarea, select, iframe, [data-no-swipe], .navbar, .has-scrollbar, .project-modal, .project-modal-overlay"
-        )
-    );
+    return Boolean(target.closest("[data-no-swipe]"));
 };
 
 export default function Home() {
@@ -275,9 +268,6 @@ export default function Home() {
         if (!isMobile) {
             return;
         }
-        if (event.pointerType === "mouse") {
-            return;
-        }
         if (shouldIgnoreSwipeTarget(event.target)) {
             return;
         }
@@ -291,11 +281,14 @@ export default function Home() {
             clearTimeout(suppressClickTimeoutRef.current);
         }
         suppressClickRef.current = false;
-        updateDragDirection(0);
+        dragControls.start(event.nativeEvent);
+    };
+
+    const handleDragStart = () => {
         dragActiveRef.current = true;
+        updateDragDirection(0);
         setDragTab(currentTab);
         setBackTab(null);
-        dragControls.start(event.nativeEvent);
     };
 
     const handleDrag = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
@@ -385,7 +378,12 @@ export default function Home() {
                 <div className="main-content">
                     <Tabs active={currentTab} onChange={(tab) => startTransition(tab, "click")} />
 
-                    <div className="tab-panels" ref={panelsRef} onClickCapture={handleClickCapture}>
+                    <div
+                        className="tab-panels"
+                        ref={panelsRef}
+                        onPointerDownCapture={handlePointerDown}
+                        onClickCapture={handleClickCapture}
+                    >
                         <motion.div
                             aria-hidden="true"
                             drag={isMobile ? "x" : false}
@@ -397,6 +395,7 @@ export default function Home() {
                             }}
                             dragElastic={0.12}
                             dragMomentum={false}
+                            onDragStart={handleDragStart}
                             onDrag={handleDrag}
                             onDragEnd={handleDragEnd}
                             style={{
@@ -434,7 +433,6 @@ export default function Home() {
                             };
                             const motionProps = isFront
                                 ? {
-                                      onPointerDown: handlePointerDown,
                                       style: {
                                           ...baseStyle,
                                           x: frontX,

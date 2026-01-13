@@ -2424,6 +2424,24 @@ main {
   filter: grayscale(1) invert(1);
 }
 
+@media (hover: none) and (pointer: coarse) {
+  .mapbox {
+    touch-action: pan-y;
+  }
+
+  .mapbox::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: transparent;
+  }
+
+  .mapbox iframe {
+    pointer-events: none;
+  }
+}
+
 .contact-form {
   margin-bottom: 10px;
 }
@@ -2484,6 +2502,12 @@ textarea.form-input::-webkit-resizer {
 
 .form-input:focus:invalid {
   border-color: var(--bittersweet-shimmer);
+}
+
+@media (hover: none) and (pointer: coarse) {
+  textarea.form-input {
+    touch-action: pan-y;
+  }
 }
 
 .form-btn {
