@@ -1625,6 +1625,35 @@ main {
   border-radius: 18px;
 }
 
+@media (hover: none) and (pointer: coarse) {
+  .project-card .project-img::before,
+  .project-card:hover .project-img::before,
+  .project-card:active .project-img::before,
+  .project-card:focus .project-img::before {
+    background: transparent;
+  }
+
+  .project-card .project-item-icon-box,
+  .project-card:hover .project-item-icon-box,
+  .project-card:active .project-item-icon-box,
+  .project-card:focus .project-item-icon-box {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+
+  .project-card img,
+  .project-card:hover img,
+  .project-card:active img,
+  .project-card:focus img {
+    transform: none;
+  }
+
+  .project-card:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
 .project-title,
 .project-category {
   margin-left: 10px;
@@ -1963,7 +1992,7 @@ main {
   overflow: hidden;
   border: 1px solid var(--jet);
   background: var(--eerie-black-2);
-  cursor: zoom-in;
+  cursor: default;
 }
 
 .project-modal__shot:focus-visible {
