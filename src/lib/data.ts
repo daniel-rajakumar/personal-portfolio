@@ -145,14 +145,12 @@ export const projects: Project[] = [
     description:
       'Built a VC407 assembler/emulator in C++ with a two-pass assembly process and modular design.',
     caseStudyPath: '/case-study/assembler-emulator.md',
-    // caseStudyPath: '/case-study/markdown-playground.md',
     tech: ['C++', 'Assembler', 'Agile'],
     image: '/assets/images/projects/VC370Assem/thumbnail.png',
-    // image: "/assets/images/projects/VC370Assem/one.png",
     links: [
       {
         label: 'Source code',
-        href: 'https://github.com/daniel-rajakumar/VC407',
+        href: 'https://github.com/daniel-rajakumar/VC307',
       },
     ],
     screenshots: [
