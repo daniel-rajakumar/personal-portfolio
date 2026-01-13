@@ -4,6 +4,7 @@ import Image from "next/image";
 import MarkdownIt from "markdown-it";
 import { ChevronDown, ChevronLeft, ChevronRight, Eye, Link as LinkIcon, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
     IconAssembly,
     IconBoxModel,
@@ -64,8 +65,16 @@ export default function Portfolio() {
     const [caseStudyHtml, setCaseStudyHtml] = useState("");
     const [caseStudyStatus, setCaseStudyStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
     const [caseStudyOpen, setCaseStudyOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
     const touchStartRef = useRef<{ x: number; y: number } | null>(null);
     const touchDeltaRef = useRef(0);
+    const scrollLockRef = useRef<{
+        scrollY: number;
+        position: string;
+        top: string;
+        width: string;
+        overflow: string;
+    } | null>(null);
     const shots = useMemo(() => {
         if (!selected) return [];
         return selected.screenshots?.length ? selected.screenshots : [{ src: selected.image }];
@@ -103,6 +112,10 @@ export default function Portfolio() {
     };
 
     useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
         if (!selected) return;
         const handleKey = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
@@ -122,8 +135,31 @@ export default function Portfolio() {
     useEffect(() => {
         if (!selected) return;
         const { body } = document;
+        const scrollY = window.scrollY;
+        scrollLockRef.current = {
+            scrollY,
+            position: body.style.position,
+            top: body.style.top,
+            width: body.style.width,
+            overflow: body.style.overflow,
+        };
         body.classList.add("is-project-modal-open");
-        return () => body.classList.remove("is-project-modal-open");
+        body.style.position = "fixed";
+        body.style.top = `-${scrollY}px`;
+        body.style.width = "100%";
+        body.style.overflow = "hidden";
+        return () => {
+            body.classList.remove("is-project-modal-open");
+            const snapshot = scrollLockRef.current;
+            if (!snapshot) {
+                return;
+            }
+            body.style.position = snapshot.position;
+            body.style.top = snapshot.top;
+            body.style.width = snapshot.width;
+            body.style.overflow = snapshot.overflow;
+            window.scrollTo(0, snapshot.scrollY);
+        };
     }, [selected]);
 
     useEffect(() => {
@@ -275,7 +311,7 @@ export default function Portfolio() {
                 </ul>
             </section>
 
-            {selected ? (
+            {mounted && selected ? createPortal(
                 <div className="project-modal-overlay" role="dialog" aria-modal="true">
                     <div className="project-modal-backdrop" onClick={closeProject} />
                     <div className={`project-modal${selected.caseStudyPath ? " has-case-study" : ""}`}>
@@ -531,6 +567,8 @@ export default function Portfolio() {
                         ) : null}
                     </div>
                 </div>
+                ,
+                document.body
             ) : null}
         </>
     );

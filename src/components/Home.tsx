@@ -57,6 +57,10 @@ const MemoPortfolio = memo(Portfolio);
 const MemoBlog = memo(Blog);
 const MemoContact = memo(Contact);
 
+const isProjectModalOpen = () =>
+    typeof document !== "undefined" &&
+    document.body.classList.contains("is-project-modal-open");
+
 const shouldIgnoreSwipeTarget = (target: EventTarget | null) => {
     if (!(target instanceof Element)) {
         return false;
@@ -244,6 +248,9 @@ export default function Home() {
         if (tab === currentTab) {
             return;
         }
+        if (isProjectModalOpen()) {
+            return;
+        }
         if (isTransitioningRef.current) {
             return;
         }
@@ -270,6 +277,9 @@ export default function Home() {
 
     const handlePointerDown = (event: ReactPointerEvent<HTMLElement>) => {
         if (!isMobile) {
+            return;
+        }
+        if (isProjectModalOpen()) {
             return;
         }
         if (shouldIgnoreSwipeTarget(event.target)) {
