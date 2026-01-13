@@ -192,6 +192,37 @@ export default function Home() {
     }, [currentTab]);
 
     useEffect(() => {
+        if (typeof window === "undefined") {
+            return;
+        }
+        if (isProjectModalOpen()) {
+            return;
+        }
+        let raf1 = 0;
+        let raf2 = 0;
+        raf1 = window.requestAnimationFrame(() => {
+            raf2 = window.requestAnimationFrame(() => {
+                const doc = document.documentElement;
+                const max = doc.scrollHeight - window.innerHeight;
+                if (max <= 0) {
+                    return;
+                }
+                if (window.scrollY > max) {
+                    window.scrollTo({ top: max, left: 0, behavior: "smooth" });
+                }
+            });
+        });
+        return () => {
+            if (raf1) {
+                window.cancelAnimationFrame(raf1);
+            }
+            if (raf2) {
+                window.cancelAnimationFrame(raf2);
+            }
+        };
+    }, [currentTab]);
+
+    useEffect(() => {
         return () => {
             if (suppressClickTimeoutRef.current) {
                 clearTimeout(suppressClickTimeoutRef.current);
