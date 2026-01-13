@@ -4,12 +4,20 @@ import {
     useEffect,
     useLayoutEffect,
     useMemo,
+    useCallback,
     useRef,
     useState,
     type CSSProperties,
     type PointerEvent as ReactPointerEvent,
 } from "react";
-import { animate, motion, type PanInfo, useDragControls, useMotionValue } from "framer-motion";
+import {
+    animate,
+    motion,
+    type PanInfo,
+    useDragControls,
+    useMotionValue,
+    useTransform,
+} from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { TabKey } from "@/lib/types";
 import { hasBlogPosts } from "@/lib/data";
@@ -28,11 +36,13 @@ const BASE_TABS: TabKey[] = ["about", "resume", "portfolio", "blog", "contact"];
 const AVAILABLE_TABS: TabKey[] = hasBlogPosts
     ? BASE_TABS
     : BASE_TABS.filter((tab) => tab !== "blog");
-const SWIPE_COMMIT_RATIO = 0.22;
-const SWIPE_VELOCITY_THRESHOLD = 700;
-const PAGE_TRANSITION = {
-    duration: 0.4,
-    ease: [0.22, 1, 0.36, 1],
+const SNAP_DISTANCE_RATIO = 0.5;
+const SNAP_VELOCITY_THRESHOLD = 900;
+const SNAP_TRANSITION = {
+    type: "spring",
+    stiffness: 320,
+    damping: 32,
+    mass: 0.7,
 };
 
 type TransitionDirection = -1 | 0 | 1;
@@ -57,6 +67,7 @@ export default function Home() {
     const dragX = useMotionValue(0);
     const dragControls = useDragControls();
     const panelsRef = useRef<HTMLDivElement | null>(null);
+    const panelWidthRef = useRef(0);
     const isTransitioningRef = useRef(false);
     const dragActiveRef = useRef(false);
     const dragDirectionRef = useRef<TransitionDirection>(0);
@@ -72,11 +83,25 @@ export default function Home() {
     const [dragTab, setDragTab] = useState<TabKey | null>(null);
     const [panelWidth, setPanelWidth] = useState(0);
     const [isMobile, setIsMobile] = useState(false);
+    const [dragDirection, setDragDirection] = useState<TransitionDirection>(0);
 
     const currentIndex = AVAILABLE_TABS.indexOf(currentTab);
     const prevTab = currentIndex > 0 ? AVAILABLE_TABS[currentIndex - 1] : null;
     const nextTab = currentIndex < AVAILABLE_TABS.length - 1 ? AVAILABLE_TABS[currentIndex + 1] : null;
     const frontTab = dragTab ?? currentTab;
+    const updateDragDirection = useCallback((direction: TransitionDirection) => {
+        if (dragDirectionRef.current === direction) {
+            return;
+        }
+        dragDirectionRef.current = direction;
+        setDragDirection(direction);
+    }, []);
+    const frontX = useTransform(dragX, (x) =>
+        dragDirectionRef.current === 1 ? x : 0
+    );
+    const backX = useTransform(dragX, (x) =>
+        dragDirectionRef.current === -1 ? x - panelWidthRef.current : 0
+    );
 
     useLayoutEffect(() => {
         if (!panelsRef.current) {
@@ -87,6 +112,7 @@ export default function Home() {
                 return;
             }
             const nextWidth = panelsRef.current.getBoundingClientRect().width;
+            panelWidthRef.current = nextWidth;
             setPanelWidth(nextWidth);
         };
         updateWidth();
@@ -124,8 +150,8 @@ export default function Home() {
         setBackTab(null);
         setDragTab(null);
         dragActiveRef.current = false;
-        dragDirectionRef.current = 0;
-    }, [isMobile, dragX]);
+        updateDragDirection(0);
+    }, [isMobile, dragX, updateDragDirection]);
 
     useEffect(() => {
         const pending = pendingUrlTabRef.current;
@@ -147,8 +173,9 @@ export default function Home() {
             setDragTab(null);
             dragX.set(0);
             dragActiveRef.current = false;
+            updateDragDirection(0);
         }
-    }, [urlTab, currentTab, dragX]);
+    }, [urlTab, currentTab, dragX, updateDragDirection]);
 
     useEffect(() => {
         trackEvent("tab_view", { tab: currentTab });
@@ -190,7 +217,7 @@ export default function Home() {
         setCurrentTab(tab);
         setBackTab(null);
         setDragTab(null);
-        dragDirectionRef.current = 0;
+        updateDragDirection(0);
         dragX.set(0);
         isTransitioningRef.current = false;
         updateUrl(tab);
@@ -223,10 +250,10 @@ export default function Home() {
         }
         setDragTab(from);
         setBackTab(tab);
-        dragDirectionRef.current = direction;
+        updateDragDirection(direction);
         isTransitioningRef.current = true;
         const targetX = direction > 0 ? -panelWidth : panelWidth;
-        const controls = animate(dragX, targetX, PAGE_TRANSITION);
+        const controls = animate(dragX, targetX, SNAP_TRANSITION);
         controls.then(() => finalizeTab(tab, from, source));
     };
 
@@ -246,7 +273,7 @@ export default function Home() {
         if (isTransitioningRef.current) {
             return;
         }
-        dragDirectionRef.current = 0;
+        updateDragDirection(0);
         dragActiveRef.current = true;
         setDragTab(currentTab);
         setBackTab(null);
@@ -268,7 +295,7 @@ export default function Home() {
         if (nextDirection === dragDirectionRef.current) {
             return;
         }
-        dragDirectionRef.current = nextDirection;
+        updateDragDirection(nextDirection);
         if (nextDirection === 1) {
             setBackTab(nextTab ?? null);
         } else if (nextDirection === -1) {
@@ -287,26 +314,26 @@ export default function Home() {
         const velocityX = info.velocity.x;
         const direction = offsetX < 0 ? 1 : offsetX > 0 ? -1 : 0;
         const targetTab = direction === 1 ? nextTab : direction === -1 ? prevTab : null;
-        const threshold = panelWidth * SWIPE_COMMIT_RATIO;
+        const threshold = panelWidth * SNAP_DISTANCE_RATIO;
         const shouldCommit =
             Boolean(targetTab) &&
-            (Math.abs(offsetX) > threshold || Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD);
+            (Math.abs(offsetX) > threshold || Math.abs(velocityX) > SNAP_VELOCITY_THRESHOLD);
 
         if (shouldCommit && targetTab) {
             isTransitioningRef.current = true;
             setBackTab(targetTab);
             const targetX = direction > 0 ? -panelWidth : panelWidth;
             const from = currentTab;
-            const controls = animate(dragX, targetX, PAGE_TRANSITION);
+            const controls = animate(dragX, targetX, SNAP_TRANSITION);
             controls.then(() => finalizeTab(targetTab, from, "drag"));
             return;
         }
 
-        const controls = animate(dragX, 0, PAGE_TRANSITION);
+        const controls = animate(dragX, 0, SNAP_TRANSITION);
         controls.then(() => {
             setBackTab(null);
             setDragTab(null);
-            dragDirectionRef.current = 0;
+            updateDragDirection(0);
         });
     };
 
@@ -319,10 +346,33 @@ export default function Home() {
                     <Tabs active={currentTab} onChange={(tab) => startTransition(tab, "click")} />
 
                     <div className="tab-panels" ref={panelsRef}>
+                        <motion.div
+                            aria-hidden="true"
+                            drag={isMobile ? "x" : false}
+                            dragControls={dragControls}
+                            dragListener={false}
+                            dragConstraints={{
+                                left: nextTab ? -panelWidth : 0,
+                                right: prevTab ? panelWidth : 0,
+                            }}
+                            dragElastic={0.12}
+                            dragMomentum={false}
+                            onDrag={handleDrag}
+                            onDragEnd={handleDragEnd}
+                            style={{
+                                position: "absolute",
+                                inset: 0,
+                                opacity: 0,
+                                pointerEvents: "none",
+                                x: dragX,
+                            }}
+                        />
                         {AVAILABLE_TABS.map((tab) => {
                             const isFront = tab === frontTab;
                             const isBack = tab === backTab;
                             const isVisible = isFront || isBack;
+                            const frontZ = dragDirection === -1 ? 1 : 2;
+                            const backZ = dragDirection === -1 ? 2 : 1;
                             const content =
                                 tab === "about" ? (
                                     <About />
@@ -340,29 +390,25 @@ export default function Home() {
                                 position: isFront ? "relative" : "absolute",
                                 inset: isFront ? undefined : 0,
                                 pointerEvents: isFront ? "auto" : "none",
-                                zIndex: isFront ? 1 : 0,
+                                zIndex: isFront ? frontZ : isBack ? backZ : 0,
                             };
-                            const dragProps = isFront
+                            const motionProps = isFront
                                 ? {
-                                      drag: isMobile ? "x" : false,
-                                      dragControls,
-                                      dragListener: false,
-                                      dragConstraints: {
-                                          left: nextTab ? -panelWidth : 0,
-                                          right: prevTab ? panelWidth : 0,
-                                      },
-                                      dragElastic: 0.12,
-                                      dragMomentum: false,
                                       onPointerDown: handlePointerDown,
-                                      onDrag: handleDrag,
-                                      onDragEnd: handleDragEnd,
                                       style: {
                                           ...baseStyle,
-                                          x: dragX,
+                                          x: frontX,
                                           touchAction: "pan-y",
                                       } as CSSProperties,
                                   }
-                                : { style: baseStyle };
+                                : isBack
+                                  ? {
+                                        style: {
+                                            ...baseStyle,
+                                            x: backX,
+                                        } as CSSProperties,
+                                    }
+                                  : { style: baseStyle };
 
                             return (
                                 <motion.article
@@ -370,7 +416,7 @@ export default function Home() {
                                     className={`${tab}${tab === currentTab ? " active" : ""}`}
                                     data-page={tab}
                                     aria-hidden={!isFront}
-                                    {...dragProps}
+                                    {...motionProps}
                                 >
                                     {content}
                                 </motion.article>
