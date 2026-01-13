@@ -8,6 +8,7 @@ import {
     useRef,
     useState,
     type CSSProperties,
+    type MouseEvent as ReactMouseEvent,
     type PointerEvent as ReactPointerEvent,
 } from "react";
 import {
@@ -53,6 +54,9 @@ const shouldIgnoreSwipeTarget = (target: EventTarget | null) => {
     if (!(target instanceof Element)) {
         return true;
     }
+    if (target.closest("[data-allow-swipe]")) {
+        return false;
+    }
     return Boolean(
         target.closest(
             "a, button, input, textarea, select, iframe, [data-no-swipe], .navbar, .has-scrollbar, .project-modal, .project-modal-overlay"
@@ -72,6 +76,8 @@ export default function Home() {
     const dragActiveRef = useRef(false);
     const dragDirectionRef = useRef<TransitionDirection>(0);
     const pendingUrlTabRef = useRef<TabKey | null>(null);
+    const suppressClickRef = useRef(false);
+    const suppressClickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const urlTab = useMemo<TabKey>(() => {
         const t = sp.get("tab") as TabKey | null;
@@ -182,6 +188,14 @@ export default function Home() {
     }, [currentTab]);
 
     useEffect(() => {
+        return () => {
+            if (suppressClickTimeoutRef.current) {
+                clearTimeout(suppressClickTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    useEffect(() => {
         const thresholds = [25, 50, 75, 100];
         const fired = new Set<number>();
 
@@ -273,6 +287,10 @@ export default function Home() {
         if (isTransitioningRef.current) {
             return;
         }
+        if (suppressClickTimeoutRef.current) {
+            clearTimeout(suppressClickTimeoutRef.current);
+        }
+        suppressClickRef.current = false;
         updateDragDirection(0);
         dragActiveRef.current = true;
         setDragTab(currentTab);
@@ -285,6 +303,12 @@ export default function Home() {
             return;
         }
         const offsetX = info.offset.x;
+        if (!suppressClickRef.current) {
+            const offsetY = info.offset.y;
+            if (Math.abs(offsetX) > 6 && Math.abs(offsetX) > Math.abs(offsetY)) {
+                suppressClickRef.current = true;
+            }
+        }
         const direction = offsetX < 0 ? 1 : offsetX > 0 ? -1 : 0;
         const nextDirection: TransitionDirection =
             direction === 1 && nextTab
@@ -310,6 +334,14 @@ export default function Home() {
             return;
         }
         dragActiveRef.current = false;
+        if (suppressClickRef.current) {
+            if (suppressClickTimeoutRef.current) {
+                clearTimeout(suppressClickTimeoutRef.current);
+            }
+            suppressClickTimeoutRef.current = window.setTimeout(() => {
+                suppressClickRef.current = false;
+            }, 120);
+        }
         const offsetX = info.offset.x;
         const velocityX = info.velocity.x;
         const direction = offsetX < 0 ? 1 : offsetX > 0 ? -1 : 0;
@@ -337,6 +369,14 @@ export default function Home() {
         });
     };
 
+    const handleClickCapture = (event: ReactMouseEvent<HTMLDivElement>) => {
+        if (!suppressClickRef.current) {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+    };
+
     return (
         <>
             <main>
@@ -345,7 +385,7 @@ export default function Home() {
                 <div className="main-content">
                     <Tabs active={currentTab} onChange={(tab) => startTransition(tab, "click")} />
 
-                    <div className="tab-panels" ref={panelsRef}>
+                    <div className="tab-panels" ref={panelsRef} onClickCapture={handleClickCapture}>
                         <motion.div
                             aria-hidden="true"
                             drag={isMobile ? "x" : false}

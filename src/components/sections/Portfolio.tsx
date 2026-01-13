@@ -235,6 +235,7 @@ export default function Portfolio() {
                                 <button
                                     type="button"
                                     className="project-card"
+                                    data-allow-swipe
                                     onClick={() => openProject(p)}
                                     aria-label={`Open project details for ${p.title}`}
                                 >
