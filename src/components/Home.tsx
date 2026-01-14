@@ -19,6 +19,7 @@ import {
     type ValueAnimationTransition,
     useDragControls,
     useMotionValue,
+    useSpring,
     useTransform,
 } from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -74,12 +75,14 @@ export default function Home() {
     const router = useRouter();
     const pathname = usePathname();
     const dragX = useMotionValue(0);
+    const smoothX = useSpring(dragX, { stiffness: 420, damping: 48, mass: 0.8 });
     const dragControls = useDragControls();
     const panelsRef = useRef<HTMLDivElement | null>(null);
     const panelWidthRef = useRef(0);
     const isTransitioningRef = useRef(false);
     const dragActiveRef = useRef(false);
     const dragDirectionRef = useRef<TransitionDirection>(0);
+    const pendingResetRef = useRef(false);
     const pendingUrlTabRef = useRef<TabKey | null>(null);
     const suppressClickRef = useRef(false);
     const suppressClickTimeoutRef = useRef<ReturnType<typeof setTimeout> | number | null>(null);
@@ -107,11 +110,9 @@ export default function Home() {
         dragDirectionRef.current = direction;
         setDragDirection(direction);
     }, []);
-    const frontX = useTransform(dragX, (x) =>
-        dragDirectionRef.current === 1 ? x : 0
-    );
-    const backX = useTransform(dragX, (x) =>
-        dragDirectionRef.current === -1 ? x - panelWidthRef.current : 0
+    const frontX = useTransform(smoothX, (x) => (dragDirection === 1 ? x : 0));
+    const backX = useTransform(smoothX, (x) =>
+        dragDirection === -1 ? x - panelWidthRef.current : 0
     );
 
     useLayoutEffect(() => {
@@ -163,6 +164,14 @@ export default function Home() {
         dragActiveRef.current = false;
         updateDragDirection(0);
     }, [isMobile, dragX, updateDragDirection]);
+
+    useLayoutEffect(() => {
+        if (!pendingResetRef.current) {
+            return;
+        }
+        pendingResetRef.current = false;
+        dragX.set(0);
+    }, [currentTab, dragX]);
 
     useEffect(() => {
         const pending = pendingUrlTabRef.current;
@@ -265,7 +274,7 @@ export default function Home() {
         setBackTab(null);
         setDragTab(null);
         updateDragDirection(0);
-        dragX.set(0);
+        pendingResetRef.current = true;
         isTransitioningRef.current = false;
         updateUrl(tab);
         if (source === "drag") {
