@@ -3,7 +3,8 @@
 import Image from "next/image";
 import MarkdownIt from "markdown-it";
 import { ChevronDown, ChevronLeft, ChevronRight, Eye, Link as LinkIcon, X } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
     IconAssembly,
     IconBoxModel,
@@ -61,32 +62,30 @@ export default function Portfolio() {
     const [selected, setSelected] = useState<Project | null>(null);
     const [loadedShots, setLoadedShots] = useState<Record<string, boolean>>({});
     const [shotIndex, setShotIndex] = useState(0);
-    const [zoomedShotIndex, setZoomedShotIndex] = useState<number | null>(null);
-    const [zoomVisible, setZoomVisible] = useState(false);
     const [caseStudyHtml, setCaseStudyHtml] = useState("");
     const [caseStudyStatus, setCaseStudyStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
     const [caseStudyOpen, setCaseStudyOpen] = useState(false);
-    const zoomCloseTimerRef = useRef<number | null>(null);
+    const [mounted, setMounted] = useState(false);
     const touchStartRef = useRef<{ x: number; y: number } | null>(null);
     const touchDeltaRef = useRef(0);
-    const swipeClickSuppressRef = useRef(false);
+    const scrollLockRef = useRef<{
+        scrollY: number;
+        position: string;
+        top: string;
+        width: string;
+        overflow: string;
+    } | null>(null);
     const shots = useMemo(() => {
         if (!selected) return [];
         return selected.screenshots?.length ? selected.screenshots : [{ src: selected.image }];
     }, [selected]);
     const singleShot = shots.length <= 1;
     const activeShot = shots[shotIndex];
-    const advanceShot = (direction: -1 | 1, syncZoom = false) => {
+    const advanceShot = (direction: -1 | 1) => {
         if (shots.length <= 1) {
             return;
         }
-        setShotIndex((prev) => {
-            const next = (prev + direction + shots.length) % shots.length;
-            if (syncZoom) {
-                setZoomedShotIndex(next);
-            }
-            return next;
-        });
+        setShotIndex((prev) => (prev + direction + shots.length) % shots.length);
     };
 
     const handleCategory = (next: (typeof categories)[number]) => {
@@ -100,8 +99,6 @@ export default function Portfolio() {
         trackEvent("project_modal_open", { project: project.title, category: project.category });
         setLoadedShots({});
         setShotIndex(0);
-        setZoomedShotIndex(null);
-        setZoomVisible(false);
         setCaseStudyOpen(false);
         setSelected(project);
     };
@@ -110,71 +107,59 @@ export default function Portfolio() {
         if (selected) {
             trackEvent("project_modal_close", { project: selected.title });
         }
-        setZoomedShotIndex(null);
-        setZoomVisible(false);
         setCaseStudyOpen(false);
         setSelected(null);
     };
 
-    const closeZoom = useCallback(() => {
-        if (zoomedShotIndex === null) {
-            return;
-        }
-        setZoomVisible(false);
-        if (zoomCloseTimerRef.current) {
-            window.clearTimeout(zoomCloseTimerRef.current);
-        }
-        zoomCloseTimerRef.current = window.setTimeout(() => {
-            setZoomedShotIndex(null);
-            setZoomVisible(false);
-        }, 560);
-    }, [zoomedShotIndex]);
-
-    const openZoom = useCallback((index: number) => {
-        if (zoomCloseTimerRef.current) {
-            window.clearTimeout(zoomCloseTimerRef.current);
-        }
-        setZoomedShotIndex(index);
-        setZoomVisible(false);
-        window.requestAnimationFrame(() => {
-            setZoomVisible(true);
-        });
+    useEffect(() => {
+        setMounted(true);
     }, []);
 
     useEffect(() => {
         if (!selected) return;
         const handleKey = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
-                if (zoomedShotIndex !== null) {
-                    closeZoom();
-                    return;
-                }
                 closeProject();
             }
             if (event.key === "ArrowRight" && shots.length > 1) {
-                if (zoomedShotIndex !== null) {
-                    advanceShot(1, true);
-                    return;
-                }
                 advanceShot(1);
             }
             if (event.key === "ArrowLeft" && shots.length > 1) {
-                if (zoomedShotIndex !== null) {
-                    advanceShot(-1, true);
-                    return;
-                }
                 advanceShot(-1);
             }
         };
         window.addEventListener("keydown", handleKey);
         return () => window.removeEventListener("keydown", handleKey);
-    }, [selected, shots.length, zoomedShotIndex, closeZoom]);
+    }, [selected, shots.length]);
 
     useEffect(() => {
         if (!selected) return;
         const { body } = document;
+        const scrollY = window.scrollY;
+        scrollLockRef.current = {
+            scrollY,
+            position: body.style.position,
+            top: body.style.top,
+            width: body.style.width,
+            overflow: body.style.overflow,
+        };
         body.classList.add("is-project-modal-open");
-        return () => body.classList.remove("is-project-modal-open");
+        body.style.position = "fixed";
+        body.style.top = `-${scrollY}px`;
+        body.style.width = "100%";
+        body.style.overflow = "hidden";
+        return () => {
+            body.classList.remove("is-project-modal-open");
+            const snapshot = scrollLockRef.current;
+            if (!snapshot) {
+                return;
+            }
+            body.style.position = snapshot.position;
+            body.style.top = snapshot.top;
+            body.style.width = snapshot.width;
+            body.style.overflow = snapshot.overflow;
+            window.scrollTo(0, snapshot.scrollY);
+        };
     }, [selected]);
 
     useEffect(() => {
@@ -216,14 +201,6 @@ export default function Portfolio() {
             setShotIndex(0);
         }
     }, [shots.length, shotIndex]);
-
-    useEffect(() => {
-        return () => {
-            if (zoomCloseTimerRef.current) {
-                window.clearTimeout(zoomCloseTimerRef.current);
-            }
-        };
-    }, []);
 
     return (
         <>
@@ -294,6 +271,7 @@ export default function Portfolio() {
                                 <button
                                     type="button"
                                     className="project-card"
+                                    data-allow-swipe
                                     onClick={() => openProject(p)}
                                     aria-label={`Open project details for ${p.title}`}
                                 >
@@ -333,7 +311,7 @@ export default function Portfolio() {
                 </ul>
             </section>
 
-            {selected ? (
+            {mounted && selected ? createPortal(
                 <div className="project-modal-overlay" role="dialog" aria-modal="true">
                     <div className="project-modal-backdrop" onClick={closeProject} />
                     <div className={`project-modal${selected.caseStudyPath ? " has-case-study" : ""}`}>
@@ -366,7 +344,6 @@ export default function Portfolio() {
                                         const touch = event.touches[0];
                                         touchStartRef.current = { x: touch.clientX, y: touch.clientY };
                                         touchDeltaRef.current = 0;
-                                        swipeClickSuppressRef.current = false;
                                     }}
                                     onTouchMove={(event) => {
                                         if (!touchStartRef.current || shots.length <= 1) {
@@ -376,9 +353,6 @@ export default function Portfolio() {
                                         const deltaX = touch.clientX - touchStartRef.current.x;
                                         const deltaY = touch.clientY - touchStartRef.current.y;
                                         touchDeltaRef.current = deltaX;
-                                        if (Math.abs(deltaX) > 10) {
-                                            swipeClickSuppressRef.current = true;
-                                        }
                                         if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 8) {
                                             event.preventDefault();
                                         }
@@ -418,21 +392,6 @@ export default function Portfolio() {
                                                         className={`project-modal__shot${
                                                             isLoaded ? " is-loaded" : " is-loading"
                                                         }`}
-                                                        role="button"
-                                                        tabIndex={0}
-                                                        onClick={() => {
-                                                            if (swipeClickSuppressRef.current) {
-                                                                swipeClickSuppressRef.current = false;
-                                                                return;
-                                                            }
-                                                            openZoom(index);
-                                                        }}
-                                                        onKeyDown={(event) => {
-                                                            if (event.key === "Enter" || event.key === " ") {
-                                                                event.preventDefault();
-                                                                openZoom(index);
-                                                            }
-                                                        }}
                                                     >
                                                         <Image
                                                             src={shot.src}
@@ -607,36 +566,9 @@ export default function Portfolio() {
                             </div>
                         ) : null}
                     </div>
-                    {zoomedShotIndex !== null && shots[zoomedShotIndex] ? (
-                        <div
-                            className={`project-modal__zoom-overlay${zoomVisible ? " is-open" : ""}`}
-                            role="dialog"
-                            aria-modal="true"
-                            onClick={() => closeZoom()}
-                        >
-                            <div className="project-modal__zoom-backdrop" />
-                            <div
-                                className="project-modal__zoom"
-                                onClick={() => closeZoom()}
-                            >
-                                <div className="project-modal__zoom-media">
-                                    <Image
-                                        src={shots[zoomedShotIndex].src}
-                                        alt={`${selected.title} screenshot ${zoomedShotIndex + 1}`}
-                                        fill
-                                        sizes="(max-width: 768px) 92vw, 80vw"
-                                        className="project-modal__zoom-img"
-                                    />
-                                </div>
-                                {shots[zoomedShotIndex].caption ? (
-                                    <p className="project-modal__caption">
-                                        {shots[zoomedShotIndex].caption}
-                                    </p>
-                                ) : null}
-                            </div>
-                        </div>
-                    ) : null}
                 </div>
+                ,
+                document.body
             ) : null}
         </>
     );
