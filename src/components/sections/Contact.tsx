@@ -13,6 +13,8 @@ export default function Contact() {
     const [isValid, setIsValid] = useState(false);
     const [status, setStatus] = useState<FormStatus>("idle");
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
+    const [isCoarsePointer, setIsCoarsePointer] = useState(false);
+    const [mapInteractive, setMapInteractive] = useState(false);
     const toastTimerRef = useRef<number | null>(null);
 
     const handleInput = () => {
@@ -85,6 +87,21 @@ export default function Contact() {
     };
 
     useEffect(() => {
+        if (typeof window === "undefined") {
+            return;
+        }
+        const media = window.matchMedia("(hover: none) and (pointer: coarse)");
+        const updatePointer = () => {
+            const coarse = media.matches;
+            setIsCoarsePointer(coarse);
+            setMapInteractive(!coarse);
+        };
+        updatePointer();
+        media.addEventListener("change", updatePointer);
+        return () => media.removeEventListener("change", updatePointer);
+    }, []);
+
+    useEffect(() => {
         if (status !== "success" && status !== "error") return;
         if (toastTimerRef.current) {
             window.clearTimeout(toastTimerRef.current);
@@ -101,13 +118,19 @@ export default function Contact() {
         };
     }, [status]);
 
+    const mapIsInteractive = !isCoarsePointer || mapInteractive;
+
     return (
         <>
             <header>
                 <h2 className="h2 article-title">Contact</h2>
             </header>
 
-            <section className="mapbox" data-mapbox>
+            <section
+                className="mapbox"
+                data-mapbox
+                data-map-interactive={mapIsInteractive ? "true" : "false"}
+            >
                 <figure>
                     <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d199666.5651251294!2d-121.58334177520186!3d38.56165006739519!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x809ac672b28397f9%3A0x921f6aaa74197fdb!2sSacramento%2C%20CA%2C%20USA!5e0!3m2!1sen!2sbd!4v1647608789441!5m2!1sen!2sbd"
@@ -117,6 +140,27 @@ export default function Contact() {
                         title="Location map"
                     ></iframe>
                 </figure>
+                {isCoarsePointer ? (
+                    mapIsInteractive ? (
+                        <button
+                            type="button"
+                            className="mapbox__toggle"
+                            onClick={() => setMapInteractive(false)}
+                            aria-label="Disable map interactions"
+                        >
+                            Disable map
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            className="mapbox__overlay"
+                            onClick={() => setMapInteractive(true)}
+                            aria-label="Enable map interactions"
+                        >
+                            Tap to enable map
+                        </button>
+                    )
+                ) : null}
             </section>
 
             <section className="contact-form">
