@@ -8,7 +8,6 @@ import {
     memo,
     useRef,
     useState,
-    type CSSProperties,
     type MouseEvent as ReactMouseEvent,
     type PointerEvent as ReactPointerEvent,
 } from "react";
@@ -16,6 +15,8 @@ import {
     animate,
     motion,
     type PanInfo,
+    type MotionStyle,
+    type ValueAnimationTransition,
     useDragControls,
     useMotionValue,
     useTransform,
@@ -45,7 +46,7 @@ const SNAP_TRANSITION = {
     stiffness: 320,
     damping: 32,
     mass: 0.7,
-};
+} satisfies ValueAnimationTransition<number>;
 
 type TransitionDirection = -1 | 0 | 1;
 
@@ -81,7 +82,7 @@ export default function Home() {
     const dragDirectionRef = useRef<TransitionDirection>(0);
     const pendingUrlTabRef = useRef<TabKey | null>(null);
     const suppressClickRef = useRef(false);
-    const suppressClickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const suppressClickTimeoutRef = useRef<ReturnType<typeof setTimeout> | number | null>(null);
 
     const urlTab = useMemo<TabKey>(() => {
         const t = sp.get("tab") as TabKey | null;
@@ -469,7 +470,7 @@ export default function Home() {
                                 ) : (
                                     <MemoContact />
                                 );
-                            const baseStyle: CSSProperties = {
+                            const baseStyle: MotionStyle = {
                                 display: isVisible ? "block" : "none",
                                 position: isFront ? "relative" : "absolute",
                                 inset: isFront ? undefined : 0,
@@ -483,14 +484,14 @@ export default function Home() {
                                           ...baseStyle,
                                           x: frontX,
                                           touchAction: "pan-y",
-                                      } as CSSProperties,
+                                      },
                                   }
                                 : isBack
                                   ? {
                                         style: {
                                             ...baseStyle,
                                             x: backX,
-                                        } as CSSProperties,
+                                        },
                                     }
                                   : { style: baseStyle };
 
