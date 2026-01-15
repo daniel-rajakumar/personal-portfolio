@@ -144,7 +144,7 @@ export const projects: Project[] = [
     category: 'Applications',
     description:
       'Built a VC407 assembler/emulator in C++ with a two-pass assembly process and modular design.',
-    caseStudyPath: '/case-study/assembler-emulator.md',
+    // caseStudyPath: '/case-study/assembler-emulator.md',
     tech: ['C++', 'Assembler', 'Agile'],
     image: '/assets/images/projects/VC370Assem/thumbnail.png',
     links: [
