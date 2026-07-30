@@ -1,6 +1,6 @@
 "use client";
 
-import { Brush, Camera, Code, Database, Smartphone, Users } from "lucide-react";
+import { Brush, Camera, Code, Database, ShieldCheck, Smartphone, Users } from "lucide-react";
 import Clients from "@/components/Clients";
 import Testimonials from "@/components/Testimonials";
 import { profile, services } from "@/lib/data";
@@ -13,6 +13,7 @@ export default function About() {
         photo: Camera,
         data: Database,
         leadership: Users,
+        systems: ShieldCheck,
     } as const;
 
     return (
@@ -28,7 +29,7 @@ export default function About() {
             </section>
 
             <section className="service">
-                <h3 className="h3 service-title">What i'm doing</h3>
+                <h3 className="h3 service-title">What I’m doing</h3>
 
                 <ul className="service-list">
                     {services.map((service) => {

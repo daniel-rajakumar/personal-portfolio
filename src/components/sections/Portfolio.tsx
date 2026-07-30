@@ -10,20 +10,30 @@ import {
     IconBoxModel,
     IconBrain,
     IconBrandCpp,
+    IconBrandBootstrap,
     IconBrandCss3,
+    IconBrandDocker,
     IconBrandHtml5,
     IconBrandJavascript,
+    IconBrandNextjs,
     IconBrandOpenai,
     IconBrandPython,
     IconBrandReact,
+    IconBrandTypescript,
     IconChartBar,
     IconCloudUpload,
     IconCoffee,
     IconCode,
+    IconCube3dSphere,
+    IconDatabase,
     IconDeviceGamepad2,
+    IconEye,
+    IconPlugConnected,
     IconRefresh,
     IconSql,
     IconTable,
+    IconTerminal2,
+    IconTools,
     type TablerIcon,
 } from "@tabler/icons-react";
 import { projects } from "@/lib/data";
@@ -33,18 +43,28 @@ import { trackEvent } from "@/lib/analytics";
 const categories = ["All", "Web development", "Web design", "Applications", "Other"] as const;
 const markdown = new MarkdownIt({ html: true, linkify: true, typographer: true });
 const techIconRules: Array<{ test: RegExp; Icon: TablerIcon }> = [
+    { test: /next\.?js/i, Icon: IconBrandNextjs },
+    { test: /typescript/i, Icon: IconBrandTypescript },
     { test: /react/i, Icon: IconBrandReact },
     { test: /javascript|js\b/i, Icon: IconBrandJavascript },
     { test: /html\/css|html/i, Icon: IconBrandHtml5 },
     { test: /\bcss\b/i, Icon: IconBrandCss3 },
+    { test: /bootstrap/i, Icon: IconBrandBootstrap },
     { test: /\bjava\b/i, Icon: IconCoffee },
     { test: /c\+\+|cplusplus/i, Icon: IconBrandCpp },
     { test: /python/i, Icon: IconBrandPython },
     { test: /pandas/i, Icon: IconTable },
     { test: /scikit|sklearn/i, Icon: IconBrain },
+    { test: /postgres|pgvector|redis/i, Icon: IconDatabase },
     { test: /openai|gpt/i, Icon: IconBrandOpenai },
     { test: /netlify/i, Icon: IconCloudUpload },
     { test: /sql/i, Icon: IconSql },
+    { test: /docker/i, Icon: IconBrandDocker },
+    { test: /socket|websocket/i, Icon: IconPlugConnected },
+    { test: /three/i, Icon: IconCube3dSphere },
+    { test: /mediapipe|computer vision/i, Icon: IconEye },
+    { test: /systems|assembly/i, Icon: IconTerminal2 },
+    { test: /\bmake\b/i, Icon: IconTools },
     { test: /assembler/i, Icon: IconAssembly },
     { test: /agile/i, Icon: IconRefresh },
     { test: /oop|object/i, Icon: IconBoxModel },
@@ -303,7 +323,10 @@ export default function Portfolio() {
                                     </figure>
 
                                     <h3 className="project-title">{p.title}</h3>
-                                    <p className="project-category">{p.category}</p>
+                                    <p className="project-category">
+                                        {p.category}
+                                        {p.period ? ` · ${p.period}` : ""}
+                                    </p>
                                 </button>
                             </li>
                         );
@@ -319,7 +342,10 @@ export default function Portfolio() {
                             <header className="project-modal__header">
                                 <div>
                                     <h3 className="h3">{selected.title}</h3>
-                                    <p className="project-modal__meta">{selected.category}</p>
+                                    <p className="project-modal__meta">
+                                        {selected.category}
+                                        {selected.period ? ` · ${selected.period}` : ""}
+                                    </p>
                                 </div>
                                 <button
                                     type="button"
