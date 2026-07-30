@@ -17,8 +17,8 @@ const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
 const umamiSrc = process.env.NEXT_PUBLIC_UMAMI_SRC ?? "https://us.umami.is/script.js";
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "G-59Y72241LD";
 const gaDebug = process.env.NEXT_PUBLIC_GA_DEBUG === "true" || process.env.NODE_ENV !== "production";
-const title = `${profile.name} | Portfolio`;
-const description = "Personal portfolio with projects, resume, and contact details.";
+const title = `${profile.name} | ${profile.role}`;
+const description = profile.tagline;
 
 export const metadata: Metadata = {
     metadataBase: new URL(siteUrl),

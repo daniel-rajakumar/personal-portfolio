@@ -1,32 +1,131 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
-import { BookOpen, ChevronDown } from "lucide-react";
-import { education, experience, profile, skills } from "@/lib/data";
+import {
+    BookOpen,
+    BriefcaseBusiness,
+    ChevronDown,
+    Code2,
+    Users,
+    Wrench,
+    type LucideIcon,
+} from "lucide-react";
+import {
+    IconApi,
+    IconAuth2fa,
+    IconBrandAws,
+    IconBrandCpp,
+    IconBrandGithub,
+    IconBrandHtml5,
+    IconBrandJavascript,
+    IconBrandNextjs,
+    IconBrandNodejs,
+    IconBrandOpenai,
+    IconBrandPython,
+    IconBrandReact,
+    IconBrandTailwind,
+    IconBrandTypescript,
+    IconCoffee,
+    IconDatabase,
+    IconFileSpreadsheet,
+    IconShieldLock,
+    IconSparkles,
+    IconSql,
+    IconTestPipe2,
+    IconVector,
+    type TablerIcon,
+} from "@tabler/icons-react";
+import {
+    education,
+    leadership,
+    professionalExperience,
+    profile,
+    resumeProjects,
+    resumeSkillGroups,
+} from "@/lib/data";
 import { trackEvent } from "@/lib/analytics";
+import type { TimelineItem } from "@/lib/types";
 
-type SectionKey = "education" | "experience";
+type SectionKey = "experience" | "projects" | "education" | "leadership";
+type ResumeAnchor = SectionKey | "skills";
 
-const sections: Array<{
+type TimelineSection = {
     key: SectionKey;
     title: string;
-    items: typeof education;
-}> = [
-    { key: "education", title: "Education", items: education },
-    { key: "experience", title: "Leadership & Activities", items: experience },
+    items: TimelineItem[];
+    Icon: LucideIcon;
+};
+
+const sections: TimelineSection[] = [
+    {
+        key: "experience",
+        title: "Experience",
+        items: professionalExperience,
+        Icon: BriefcaseBusiness,
+    },
+    {
+        key: "projects",
+        title: "Projects",
+        items: resumeProjects,
+        Icon: Code2,
+    },
+    {
+        key: "leadership",
+        title: "Leadership",
+        items: leadership,
+        Icon: Users,
+    },
+    { key: "education", title: "Education", items: education, Icon: BookOpen },
 ];
+
+const resumeSkills = resumeSkillGroups.flatMap((group) => group.items);
+
+const resumeAnchors: ResumeAnchor[] = [
+    "experience",
+    "projects",
+    "leadership",
+    "education",
+    "skills",
+];
+
+const skillIcons: Record<string, TablerIcon> = {
+    TypeScript: IconBrandTypescript,
+    JavaScript: IconBrandJavascript,
+    Python: IconBrandPython,
+    "C++": IconBrandCpp,
+    Java: IconCoffee,
+    SQL: IconSql,
+    "HTML/CSS": IconBrandHtml5,
+    "Next.js": IconBrandNextjs,
+    React: IconBrandReact,
+    "Node.js": IconBrandNodejs,
+    NextAuth: IconAuth2fa,
+    "Tailwind CSS": IconBrandTailwind,
+    Playwright: IconTestPipe2,
+    ExcelJS: IconFileSpreadsheet,
+    PostgreSQL: IconDatabase,
+    pgvector: IconVector,
+    Redis: IconDatabase,
+    "AWS S3": IconBrandAws,
+    "Microsoft Entra ID": IconShieldLock,
+    "Git/GitHub": IconBrandGithub,
+    "OpenAI API": IconBrandOpenai,
+    "REST APIs": IconApi,
+    "embeddings/RAG": IconSparkles,
+};
 
 function Timeline({
     sectionKey,
     title,
     items,
+    Icon,
     open,
     onToggle,
 }: {
     sectionKey: SectionKey;
     title: string;
-    items: typeof education;
+    items: TimelineItem[];
+    Icon: LucideIcon;
     open: boolean;
     onToggle: (key: SectionKey) => void;
 }) {
@@ -43,7 +142,7 @@ function Timeline({
                     aria-controls={panelId}
                 >
                     <div className="icon-box">
-                        <BookOpen aria-hidden="true" />
+                        <Icon aria-hidden="true" />
                     </div>
                     <h3 className="h3">{title}</h3>
                     <ChevronDown
@@ -90,23 +189,27 @@ function Timeline({
 
 export default function Resume() {
     const [openSections, setOpenSections] = useState<Record<SectionKey, boolean>>({
-        education: true,
         experience: true,
+        projects: true,
+        education: true,
+        leadership: true,
     });
 
     useEffect(() => {
-            const applyHash = () => {
-                const hash = window.location.hash.replace("#", "");
-                if (hash === "education" || hash === "experience") {
-                    setOpenSections((prev) => ({ ...prev, [hash]: true }));
-                    const el = document.getElementById(hash);
-                    if (el) {
-                        el.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }
+        const applyHash = () => {
+            const hash = window.location.hash.replace("#", "");
+            if (resumeAnchors.includes(hash as ResumeAnchor)) {
+                if (hash !== "skills") {
+                    setOpenSections((prev) => ({ ...prev, [hash as SectionKey]: true }));
                 }
-            };
+                const el = document.getElementById(hash);
+                if (el) {
+                    el.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            }
+        };
 
-            applyHash();
+        applyHash();
         window.addEventListener("hashchange", applyHash);
         return () => window.removeEventListener("hashchange", applyHash);
     }, []);
@@ -146,22 +249,32 @@ export default function Resume() {
                     sectionKey={section.key}
                     title={section.title}
                     items={section.items}
+                    Icon={section.Icon}
                     open={openSections[section.key]}
                     onToggle={toggleSection}
                 />
             ))}
 
-            <section className="skill">
-                <h3 className="h3 skills-title">My skills</h3>
+            <section className="resume-skills" id="skills">
+                <div className="title-wrapper">
+                    <div className="icon-box">
+                        <Wrench aria-hidden="true" />
+                    </div>
+                    <h3 className="h3">Skills</h3>
+                </div>
+
                 <ul className="skills-list content-card">
-                    {skills.map((s) => (
-                        <li key={s.name} className="skills-item">
-                            <div className="skills-logo">
-                                <Image src={s.logo} alt={`${s.name} logo`} width={36} height={36} />
-                            </div>
-                            <span className="skills-name">{s.name}</span>
-                        </li>
-                    ))}
+                    {resumeSkills.map((name) => {
+                        const SkillIcon = skillIcons[name] ?? IconDatabase;
+                        return (
+                            <li key={name} className="skills-item">
+                                <div className="skills-logo">
+                                    <SkillIcon aria-hidden="true" size={24} />
+                                </div>
+                                <span className="skills-name">{name}</span>
+                            </li>
+                        );
+                    })}
                 </ul>
             </section>
         </>

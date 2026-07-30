@@ -3,7 +3,6 @@ import type {
   Client,
   Project,
   Service,
-  Skill,
   SocialLink,
   Testimonial,
   TimelineItem,
@@ -12,24 +11,27 @@ import type {
 export const profile = {
   name: 'Daniel Rajakumar',
   role: 'Software Engineer',
+  tagline:
+    'Full-stack software engineer building reliable applications, retrieval systems, and evaluation tooling with Next.js, TypeScript, and PostgreSQL.',
   location: 'Mahwah, NJ',
   email: 'contact@danielrajakumar.com',
   phone: '+1 (609) 388-1811',
   resumeUrl: '/resume.pdf',
   status: {
-    label: 'Open to New Grad Roles',
+    label: 'Open to New Grad SWE Roles',
     available: true,
   },
-  graduation: {
-    label: 'Graduated June 2026',
-    datetime: '2026-06',
+  currentRole: {
+    title: 'Software Engineering Intern',
+    organization: 'dsm-firmenich',
   },
   avatar: '/assets/images/profile-picture-11.png',
   ogAvatar: '/assets/images/profile-picture-11-og.png',
   about: [
-    'Hi there! I am a software engineer who builds practical, real-world applications. I graduated from Ramapo College in June 2026 with a B.S. in Computer Science.',
-    "I have experience working on full-stack applications, software and mobile projects, and data-focused work through hackathons and coursework. As the founder of my college's Google Developer Student Club and a leader in the Computer Science Club, I organized workshops. I led teams that helped students complete hands-on development projects.",
-    'I am looking for software developer opportunities that will let me work with teams that practice strong technical principles while building real-world products.',
+    "I'm a software engineer and a 2026 Computer Science graduate of Ramapo College of New Jersey. Right now I'm a software engineering intern at dsm-firmenich, where I build an internal assessment platform used across the company's manufacturing network.",
+    'At dsm-firmenich, I replaced 22 tracking spreadsheets with a Next.js and TypeScript application for 50+ employees across 8 manufacturing sites. I also built an Excel import pipeline for 500+ records per upload and integrated company single sign-on with Microsoft Entra ID and NextAuth.',
+    'Outside of work, I build and maintain RockyGPT, a source-grounded campus assistant. Most of my time goes into its PostgreSQL and pgvector retrieval pipeline, validation layers, and an evaluation harness with 2,200+ scored queries and 43 automated test suites.',
+    "I'm looking for full-time software engineering roles where I can build reliable products with teams that care about strong technical fundamentals.",
   ],
 }
 
@@ -40,84 +42,120 @@ export const socials: SocialLink[] = [
 
 export const education: TimelineItem[] = [
   {
-    title: 'B.S. Computer Science',
-    org: 'Ramapo College of New Jersey, Mahwah, NJ',
-    range: 'Aug 2022 — Jun 2026',
+    title: 'B.S. in Computer Science',
+    org: 'Ramapo College of New Jersey',
+    range: 'Jun 2026',
     details: [
-      'Presidential Scholarship (full-tuition merit award).',
+      'Presidential Scholarship Recipient (full-tuition merit award)',
     ],
     coursework: [
-      'Software Design',
-      'Data Structures & Algorithms',
-      'Machine Learning',
-      'Web Application Development',
+      'Computer Vision',
       'Data Analysis & Visualization',
+      'Machine Learning',
+      'Web App Development',
     ],
   },
 ]
 
-export const experience: TimelineItem[] = [
+export const professionalExperience: TimelineItem[] = [
   {
-    title: 'Lead',
-    org: 'Google Developer Student Club, Ramapo College',
+    title: 'Manufacturing Excellence Intern, Software Engineering',
+    org: 'dsm-firmenich – Princeton, NJ',
+    range: 'Jun 2026 — Present',
+    details: [
+      'Replaced 22 tracking spreadsheets with a Next.js and TypeScript application for 50+ employees across 7 business units and 8 manufacturing sites, centralizing assessment rubrics, element scoring, and reviewer submissions.',
+      'Cut data-entry time by 2 hours per assessment cycle and reduced invalid records by 40% by designing an Excel import pipeline with ExcelJS that validates and migrates 500+ records per upload.',
+      'Secured the app with company single sign-on and no separate user store by integrating Microsoft Entra ID through NextAuth v5, resolving an Edge-runtime failure by splitting provider config out of the auth middleware, and enforcing email-driven manager/reviewer role gating on every protected route.',
+    ],
+  },
+]
+
+export const resumeProjects: TimelineItem[] = [
+  {
+    title: 'RockyGPT – Campus AI Chatbot',
+    org: 'rockygpt.danielrajakumar.com',
+    range: 'Jan 2026 — Present',
+    details: [
+      'Built a full-stack campus assistant with Next.js 16, React 19, and TypeScript that answers questions on dining, events, directories, transit, housing, and safety, returning every answer with linked sources at a 2.1s median response time.',
+      'Eliminated redundant embedding cost across releases by engineering a source-grounded retrieval pipeline on PostgreSQL/pgvector using 1,536-dimension embeddings with content-addressed chunk storage that re-embeds only when source text or model changes.',
+      'Raised intent-classification accuracy from 72.6% to 83.9% and outcome accuracy to 100% by building an eval harness spanning 2,200+ scored queries and 43 automated test suites covering retrieval safety, privacy, and rate limiting.',
+    ],
+  },
+  {
+    title: 'VC370 Assembler and Emulator',
+    org: 'github.com/daniel-rajakumar/VC370',
+    range: 'Oct 2024 — Dec 2024',
+    details: [
+      'Built a two-pass assembler and emulator in C++17 for the VC370, a 13-opcode accumulator architecture, translating symbolic assembly into 6-digit machine words executed across a 10,000-word memory space.',
+      'Implemented a symbol table resolving forward references on the second pass, with four assembler directives (ORG, DC, DS, END) handling program origin, constants, and storage reservation.',
+      'Structured the toolchain into 7 components with assemble-time and runtime error detection spanning illegal opcodes, undefined and multiply-defined labels, reserved-word collisions, memory-bound violations, and division by zero.',
+    ],
+  },
+]
+
+export const leadership: TimelineItem[] = [
+  {
+    title: 'Lead, Google Developer Student Club',
+    org: 'Ramapo College',
     range: 'Aug 2023 — May 2025',
     details: [
-      'Organized first DevFest Event on campus, bringing together over 50 students for keynote and hands-on technical workshops.',
-      'Led a hands-on Android development workshop leveraging Java, teaching students how to develop and deploy apps using Android Studio',
-      'Directed a team of 8 to deliver diverse workshops and coding events, fostering a vibrant developer community',
+      "Organized the college's first DevFest for 50+ students, coordinating a keynote and hands-on technical workshops.",
+      'Directed a team of 8 to deliver 4+ coding events reaching 100+ total attendees, including a Java workshop.',
     ],
   },
   {
-    title: 'Founding President',
-    org: 'Computer Science Club',
+    title: 'Founding President, Computer Science Club',
+    org: 'Ramapo College',
     range: 'Apr 2023 — May 2024',
     details: [
-      'Initiated and established the Computer Science Club, creating a student-led hub for campus tech community.',
-      'Organized and oversaw over 10 workshops on React.js, portfolio building, and collaborative software development practices.',
-      "Built and maintained club's website using HTML, CSS, and JS to showcase events and provide resources to over 200 students.",
+      'Founded the club and organized 10+ workshops on React, portfolio development, and collaborative software practices.',
+      'Built and maintained the club website in HTML, CSS, and JavaScript, serving events and resources to 200+ students.',
     ],
   },
 ]
 
-export const skills: Skill[] = [
-  { name: 'Java', logo: '/assets/images/skills/java.svg' },
-  { name: 'C++', logo: '/assets/images/skills/cpp.svg' },
-  { name: 'JavaScript', logo: '/assets/images/skills/javascript.svg' },
-  { name: 'TypeScript', logo: '/assets/images/skills/typescript.svg' },
-  { name: 'HTML/CSS', logo: '/assets/images/skills/html-css.svg' },
-  { name: 'Python', logo: '/assets/images/skills/python.svg' },
-  { name: 'Pandas', logo: '/assets/images/skills/pandas.svg' },
-  { name: 'Scikit-learn', logo: '/assets/images/skills/scikit-learn.svg' },
-  { name: 'React.js', logo: '/assets/images/skills/react.svg' },
-  { name: 'OpenAI API', logo: '/assets/images/skills/openai.svg' },
-  { name: 'Netlify', logo: '/assets/images/skills/netlify.svg' },
-  { name: 'SQL', logo: '/assets/images/skills/sql.svg' },
-  { name: 'Google Cloud', logo: '/assets/images/skills/google-cloud.svg' },
+export const resumeSkillGroups = [
+  {
+    label: 'Languages',
+    items: ['TypeScript', 'JavaScript', 'Python', 'C++', 'Java', 'SQL', 'HTML/CSS'],
+  },
+  {
+    label: 'Frameworks & Libraries',
+    items: ['Next.js', 'React', 'Node.js', 'NextAuth', 'Tailwind CSS', 'Playwright', 'ExcelJS'],
+  },
+  {
+    label: 'Databases & Cloud',
+    items: ['PostgreSQL', 'pgvector', 'Redis', 'AWS S3', 'Microsoft Entra ID'],
+  },
+  {
+    label: 'Tools & APIs',
+    items: ['Git/GitHub', 'OpenAI API', 'REST APIs', 'embeddings/RAG'],
+  },
 ]
 
 export const services: Service[] = [
   {
-    title: 'Full-stack engineering',
+    title: 'Full-stack applications',
     description:
-      'Design and build web apps end-to-end with clean architecture, tested code, and reliable deployments.',
+      'Build end-to-end products with Next.js, React, TypeScript, Node.js, and PostgreSQL.',
     icon: 'dev',
   },
   {
-    title: 'Mobile development',
+    title: 'Retrieval & evaluation systems',
     description:
-      'Android development in Java with Gradle, from prototypes to working features.',
-    icon: 'app',
+      'Create source-grounded AI workflows with pgvector, OpenAI APIs, automated evaluations, and regression testing.',
+    icon: 'data',
   },
   {
-    title: 'Data-driven systems',
+    title: 'Secure internal platforms',
     description:
-      'ETL, analytics, and ML prototypes using Python, SQL, Pandas, and scikit-learn.',
-    icon: 'data',
+      'Integrate SSO, role-based access, data imports, SharePoint, and AWS into dependable business tools.',
+    icon: 'systems',
   },
   {
     title: 'Technical leadership',
     description:
-      'Workshops, mentoring, and leading student dev teams with clear communication and collaboration.',
+      'Lead teams, organize developer events, and make complex technical work clear and collaborative.',
     icon: 'leadership',
   },
 ]
@@ -140,11 +178,43 @@ export const clients: Client[] = [
 
 export const projects: Project[] = [
   {
-    title: 'Bubble-PoppAR',
-    category: 'Applications',
+    title: 'RockyGPT: Campus AI Chatbot',
+    category: 'Web development',
+    period: 'Jan 2026 — Present',
     description:
-      'Won 2nd place at Hack Ramapo! Built a 2-player webcam shooter with hand/eye gesture controls in just 6 hours.',
-    tech: ['Next.js', 'Socket.IO', 'Three.js', 'MediaPipe'],
+      'Built a source-grounded campus assistant with Next.js 16, React 19, and TypeScript that answers questions on dining, events, directories, transit, housing, and safety, returning every answer with linked sources at a 2.1s median response time. Its PostgreSQL and pgvector retrieval pipeline uses 1,536-dimension embeddings and content-addressed chunk storage, while an evaluation harness spanning 2,200+ scored queries and 43 automated test suites raised intent-classification accuracy from 72.6% to 83.9% and outcome accuracy to 100%.',
+    tech: [
+      'Next.js 16',
+      'TypeScript',
+      'PostgreSQL',
+      'pgvector',
+      'OpenAI API',
+      'Redis',
+    ],
+    image: '/assets/images/projects/RockyGPT/thumbnail.png',
+    status: 'In Progress',
+    links: [
+      {
+        label: 'Live site',
+        href: 'https://rockygpt.danielrajakumar.com/',
+      },
+    ],
+  },
+  {
+    title: 'Bubble PoppAR',
+    category: 'Applications',
+    period: 'Feb 2026',
+    description:
+      'Finished runner-up at HackRamapo 2026, an MLH Official 2026 Season event, with a six-hour prototype built with one teammate, then rebuilt and expanded it solo. This two-player webcam game uses MediaPipe for hand and eye gesture tracking, Three.js for rendering, and Socket.IO for real-time multiplayer with server-authoritative scoring.',
+    tech: [
+      'TypeScript',
+      'Next.js',
+      'React',
+      'MediaPipe',
+      'Three.js',
+      'Socket.IO',
+      'Docker',
+    ],
     image: '/assets/images/projects/BubblePoppAR/thumbnail_v16.png',
     links: [
       {
@@ -172,12 +242,13 @@ export const projects: Project[] = [
     ],
   },
   {
-    title: 'Assembler & Emulator (VC370)',
+    title: 'VC370 Assembler and Emulator',
     category: 'Applications',
+    period: 'Oct 2024 — Dec 2024',
     description:
-      'Built a VC370 assembler/emulator in C++ with a two-pass assembly process and modular design.',
-    // caseStudyPath: '/case-study/assembler-emulator.md',
-    tech: ['C++', 'Assembler', 'Agile'],
+      'Built a two-pass assembler and emulator in C++17 for the VC370, a 13-opcode accumulator architecture, translating symbolic assembly into 6-digit machine words across a 10,000-word memory space. The seven-component toolchain resolves forward references and detects illegal opcodes, undefined and multiply-defined labels, memory-bound violations, and division by zero.',
+    caseStudyPath: '/case-study/assembler-emulator.md',
+    tech: ['C++17', 'Assembly', 'Systems Programming', 'Make'],
     image: '/assets/images/projects/VC370Assem/thumbnail.png',
     links: [
       {
@@ -205,49 +276,12 @@ export const projects: Project[] = [
     ],
   },
   {
-    title: 'Social Media Engagement Analysis',
-    category: 'Other',
-    description:
-      'Analyzed 250+ Instagram posts with ML models, reaching up to 88% classification accuracy.',
-    tech: ['Python', 'Pandas', 'Scikit-learn'],
-    image:
-      '/assets/images/projects/SocialMediaEngagementAnalysis/thumbnail.png',
-
-    links: [
-      {
-        label: 'Jupyter Notebook',
-        href: 'https://colab.research.google.com/drive/1hl8U_H2wvaPor3S9I9ANfC1QrbbEEJK-?usp=sharing'
-      }
-    ],
-    screenshots: [
-      {
-        src: '/assets/images/projects/SocialMediaEngagementAnalysis/one.png',
-        caption: 'Project screenshot',
-      },
-      {
-        src: '/assets/images/projects/SocialMediaEngagementAnalysis/two.png',
-        caption: 'Data visualization example',
-      },
-      {
-        src: '/assets/images/projects/SocialMediaEngagementAnalysis/three.png',
-        caption: 'Model accuracy results',
-      },
-      {
-        src: '/assets/images/projects/SocialMediaEngagementAnalysis/four.png',
-        caption: 'Feature importance analysis',
-      },
-      {
-        src: '/assets/images/projects/SocialMediaEngagementAnalysis/five.png',
-        caption: 'Engagement prediction results',
-      },
-    ],
-  },
-  {
     title: 'Canoga Game',
     category: 'Applications',
+    period: 'Feb 2025 — May 2025',
     description:
-      'Developed a 2D Canoga game in Java with multiplayer support and AI opponent.',
-    tech: ['Java', 'OOP', 'Game Development'],
+      'Built a multi-platform implementation of the Canoga dice and strategy game with three clients: a browser UI in JavaScript, a command-line version in C++, and a native Android app in Java. Supports multiplayer and a computer opponent.',
+    tech: ['Java', 'C++', 'JavaScript', 'Android'],
     image: '/assets/images/projects/CanogaGame/thumbnail.png',
     links: [
       {
@@ -289,9 +323,10 @@ export const projects: Project[] = [
   {
     title: 'Ramapo International Street Food Festival 2025 Website',
     category: 'Web development',
+    period: 'Apr 2025',
     description:
-      'Created a responsive website for the Ramapo International Street Food Festival 2025 using React.js and hosted on Netlify.',
-    tech: ['React.js', 'CSS', 'Netlify'],
+      'Built a static single-page event site in HTML, CSS, and JavaScript with Bootstrap 4. The site covers the agenda, check-in and token system, food booths, activities, sponsors, and a live countdown banner, and is hosted on Netlify.',
+    tech: ['HTML/CSS', 'JavaScript', 'Bootstrap', 'jQuery', 'Netlify'],
     image: '/assets/images/projects/ISFF25/thumbnail.png',
     links: [
       {
@@ -327,36 +362,41 @@ export const projects: Project[] = [
     ],
   },
   {
-    title: 'RockyGPT: Ramapo College Chatbot',
-    category: 'Web development',
+    title: 'Social Media Engagement Analysis',
+    category: 'Other',
+    period: 'Fall 2024',
     description:
-      "Developed RockyGPT, a chatbot for Ramapo College using OpenAI's GPT-3.5 API to assist students with campus-related queries.",
-    tech: ['JavaScript', 'OpenAI API', 'HTML/CSS'],
-    image: '/assets/images/projects/RockyGPT/thumbnail.png',
-    status: 'In Progress',
+      'Analyzed 250+ Instagram posts with Random Forest, Gradient Boosting, and KNN models, reaching up to 88% classification accuracy and visualizing the posting patterns that most influenced engagement.',
+    tech: ['Python', 'Pandas', 'Scikit-learn'],
+    image:
+      '/assets/images/projects/SocialMediaEngagementAnalysis/thumbnail.png',
     links: [
       {
-        label: 'Live site',
-        href: 'https://rockygpt.danielrajakumar.com/',
-      },
-      {
-        label: 'Source code',
-        href: 'https://github.com/daniel-rajakumar/RockyGPT',
+        label: 'Jupyter Notebook',
+        href: 'https://colab.research.google.com/drive/1hl8U_H2wvaPor3S9I9ANfC1QrbbEEJK-?usp=sharing',
       },
     ],
     screenshots: [
-      // {
-      //     src: '/assets/images/projects/RockyGPT/thumbnail.png',
-      //     caption: "Chat interface",
-      // },
-      // {
-      //     src: "/assets/images/projects/RockyGPT/two.png",
-      //     caption: "Sample conversation",
-      // },
-      // {
-      //     src: "/assets/images/projects/RockyGPT/three.png",
-      //     caption: "Mobile view",
-      // }
+      {
+        src: '/assets/images/projects/SocialMediaEngagementAnalysis/one.png',
+        caption: 'Project screenshot',
+      },
+      {
+        src: '/assets/images/projects/SocialMediaEngagementAnalysis/two.png',
+        caption: 'Data visualization example',
+      },
+      {
+        src: '/assets/images/projects/SocialMediaEngagementAnalysis/three.png',
+        caption: 'Model accuracy results',
+      },
+      {
+        src: '/assets/images/projects/SocialMediaEngagementAnalysis/four.png',
+        caption: 'Feature importance analysis',
+      },
+      {
+        src: '/assets/images/projects/SocialMediaEngagementAnalysis/five.png',
+        caption: 'Engagement prediction results',
+      },
     ],
   },
 ]
