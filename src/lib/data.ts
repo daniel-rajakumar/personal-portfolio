@@ -11,23 +11,23 @@ import type {
 
 export const profile = {
   name: 'Daniel Rajakumar',
-  role: 'Computer Science Student',
+  role: 'Software Engineer',
   location: 'Mahwah, NJ',
-  email: 'hello@danielrajakumar.com',
+  email: 'contact@danielrajakumar.com',
   phone: '+1 (609) 388-1811',
   resumeUrl: '/resume.pdf',
   status: {
-    label: 'Software Developer',
+    label: 'Open to New Grad Roles',
     available: true,
   },
   graduation: {
-    label: 'Expected May 2026',
-    datetime: '2026-05',
+    label: 'Graduated June 2026',
+    datetime: '2026-06',
   },
   avatar: '/assets/images/profile-picture-11.png',
   ogAvatar: '/assets/images/profile-picture-11-og.png',
   about: [
-    'Hi there! I am a Computer Science undergraduate with 7 years of programming experience, building practical and real-world applications.',
+    'Hi there! I am a software engineer who builds practical, real-world applications. I graduated from Ramapo College in June 2026 with a B.S. in Computer Science.',
     "I have experience working on full-stack applications, software and mobile projects, and data-focused work through hackathons and coursework. As the founder of my college's Google Developer Student Club and a leader in the Computer Science Club, I organized workshops. I led teams that helped students complete hands-on development projects.",
     'I am looking for software developer opportunities that will let me work with teams that practice strong technical principles while building real-world products.',
   ],
@@ -42,7 +42,7 @@ export const education: TimelineItem[] = [
   {
     title: 'B.S. Computer Science',
     org: 'Ramapo College of New Jersey, Mahwah, NJ',
-    range: 'Aug 2022 — May 2026',
+    range: 'Aug 2022 — Jun 2026',
     details: [
       'Presidential Scholarship (full-tuition merit award).',
     ],
@@ -105,7 +105,7 @@ export const services: Service[] = [
   {
     title: 'Mobile development',
     description:
-      'Android-first development in Kotlin/Java, from prototypes to production features.',
+      'Android development in Java with Gradle, from prototypes to working features.',
     icon: 'app',
   },
   {
