@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import {
-    CalendarDays,
+    BriefcaseBusiness,
     Github,
     Instagram,
     Linkedin,
@@ -208,11 +208,14 @@ export default function Sidebar() {
 
                         <li className="contact-item">
                             <div className="icon-box">
-                                <CalendarDays aria-hidden="true" />
+                                <BriefcaseBusiness aria-hidden="true" />
                             </div>
                             <div className="contact-info">
-                                <p className="contact-title">Graduation</p>
-                                <time dateTime={profile.graduation.datetime}>{profile.graduation.label}</time>
+                                <p className="contact-title">Current role</p>
+                                <span className="contact-link contact-link--stacked">
+                                    <span>{profile.currentRole.title}</span>
+                                    <span>{profile.currentRole.organization}</span>
+                                </span>
                             </div>
                         </li>
 
