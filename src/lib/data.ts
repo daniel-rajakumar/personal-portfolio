@@ -143,7 +143,7 @@ export const projects: Project[] = [
     title: 'Bubble-PoppAR',
     category: 'Applications',
     description:
-      '2-player webcam shooter with hand/eye gesture controls, real-time multiplayer, and server-authoritative scoring.',
+      'Won 2nd place at Hack Ramapo! Built a 2-player webcam shooter with hand/eye gesture controls in just 6 hours.',
     tech: ['Next.js', 'Socket.IO', 'Three.js', 'MediaPipe'],
     image: '/assets/images/projects/BubblePoppAR/thumbnail_v16.png',
     links: [
@@ -334,6 +334,16 @@ export const projects: Project[] = [
     tech: ['JavaScript', 'OpenAI API', 'HTML/CSS'],
     image: '/assets/images/projects/RockyGPT/thumbnail.png',
     status: 'In Progress',
+    links: [
+      {
+        label: 'Live site',
+        href: 'https://rockygpt.danielrajakumar.com/',
+      },
+      {
+        label: 'Source code',
+        href: 'https://github.com/daniel-rajakumar/RockyGPT',
+      },
+    ],
     screenshots: [
       // {
       //     src: '/assets/images/projects/RockyGPT/thumbnail.png',
