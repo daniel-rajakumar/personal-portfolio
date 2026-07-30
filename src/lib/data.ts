@@ -70,11 +70,11 @@ export const experience: TimelineItem[] = [
   {
     title: 'Founding President',
     org: 'Computer Science Club',
-    range: 'Apr 2022 — Jun 2024',
+    range: 'Apr 2023 — May 2024',
     details: [
       'Initiated and established the Computer Science Club, creating a student-led hub for campus tech community.',
       'Organized and oversaw over 10 workshops on React.js, portfolio building, and collaborative software development practices.',
-      "Built and maintained club's website using HTML, CSS, and JS to showcase events and provide resources to over 150 students.",
+      "Built and maintained club's website using HTML, CSS, and JS to showcase events and provide resources to over 200 students.",
     ],
   },
 ]
@@ -172,17 +172,17 @@ export const projects: Project[] = [
     ],
   },
   {
-    title: 'Assembler & Emulator (VC407)',
+    title: 'Assembler & Emulator (VC370)',
     category: 'Applications',
     description:
-      'Built a VC407 assembler/emulator in C++ with a two-pass assembly process and modular design.',
+      'Built a VC370 assembler/emulator in C++ with a two-pass assembly process and modular design.',
     // caseStudyPath: '/case-study/assembler-emulator.md',
     tech: ['C++', 'Assembler', 'Agile'],
     image: '/assets/images/projects/VC370Assem/thumbnail.png',
     links: [
       {
         label: 'Source code',
-        href: 'https://github.com/daniel-rajakumar/VC307',
+        href: 'https://github.com/daniel-rajakumar/VC370',
       },
     ],
     screenshots: [
