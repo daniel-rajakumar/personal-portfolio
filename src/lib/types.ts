@@ -8,6 +8,7 @@ export type SocialLink = {
 export type Project = {
     title: string;
     category: "Web development" | "Web design" | "Applications" | "Other";
+    period?: string;
     description: string;
     caseStudyPath?: string;
     tech: string[];
@@ -30,12 +31,12 @@ export type TimelineItem = {
     coursework?: string[];
 };
 
-export type Skill = { name: string; logo: string };
+export type Skill = { name: string };
 
 export type Service = {
     title: string;
     description: string;
-    icon: "design" | "dev" | "app" | "photo" | "data" | "leadership";
+    icon: "design" | "dev" | "app" | "photo" | "data" | "leadership" | "systems";
 };
 
 export type Testimonial = {

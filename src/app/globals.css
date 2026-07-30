@@ -564,6 +564,16 @@ main {
   font-style: normal;
 }
 
+.contact-info .contact-link--stacked {
+  display: grid;
+  gap: 1px;
+  white-space: normal;
+}
+
+.contact-link--stacked span:last-child {
+  color: var(--light-gray-70);
+}
+
 .social-list {
   display: flex;
   justify-content: flex-start;
@@ -1253,7 +1263,7 @@ main {
 
 .timeline-panel {
   overflow: hidden;
-  max-height: 1200px;
+  max-height: 5000px;
   opacity: 1;
   transform: translateY(0);
   transition: max-height 0.45s ease, opacity 0.3s ease, transform 0.3s ease;
@@ -1364,8 +1374,15 @@ main {
  * skills
  */
 
-.skills-title {
-  margin-bottom: 20px;
+.resume-skills {
+  margin-bottom: 30px;
+}
+
+.resume-skills .title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
 }
 
 .skills-list {
@@ -1395,18 +1412,23 @@ main {
   display: grid;
   place-items: center;
   flex-shrink: 0;
+  color: var(--orange-yellow-crayola);
 }
 
-.skills-logo img {
+.skills-logo img,
+.skills-logo svg {
   width: 70%;
   height: 70%;
   object-fit: contain;
 }
 
 .skills-name {
+  min-width: 0;
   color: var(--white-2);
   font-size: var(--fs-6);
   font-weight: var(--fw-400);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 /*-----------------------------------*\
@@ -3587,6 +3609,12 @@ textarea.form-input::-webkit-resizer {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .contact-info .contact-link--stacked {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
   }
 
   .contact-info :is(.contact-link, time, address) {
