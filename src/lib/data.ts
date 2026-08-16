@@ -29,7 +29,7 @@ export const profile = {
   ogAvatar: '/assets/images/profile-picture-11-og.png',
   about: [
     "I'm a software engineer and a 2026 Computer Science graduate of Ramapo College of New Jersey. Right now I'm a software engineering intern at dsm-firmenich, where I build an internal assessment platform used across the company's manufacturing network.",
-    'At dsm-firmenich, I replaced 22 tracking spreadsheets with a Next.js and TypeScript application for 50+ employees across 8 manufacturing sites. I also built an Excel import pipeline for 500+ records per upload and integrated company single sign-on with Microsoft Entra ID and NextAuth.',
+    'At dsm-firmenich, I replaced 22 tracking spreadsheets with a Next.js and TypeScript application for 50+ employees across 8 manufacturing sites. I also built an Excel import pipeline for 500+ records per upload, integrated company single sign-on, and deployed the platform to AWS on Amazon RDS for PostgreSQL.',
     'Outside of work, I build and maintain RockyGPT, a source-grounded campus assistant. Most of my time goes into its PostgreSQL and pgvector retrieval pipeline, validation layers, and an evaluation harness with 2,200+ scored queries and 43 automated test suites.',
     "I'm looking for full-time software engineering roles where I can build reliable products with teams that care about strong technical fundamentals.",
   ],
@@ -60,12 +60,13 @@ export const education: TimelineItem[] = [
 export const professionalExperience: TimelineItem[] = [
   {
     title: 'Manufacturing Excellence Intern, Software Engineering',
-    org: 'dsm-firmenich – Princeton, NJ',
+    org: 'dsm-firmenich – Plainsboro, NJ',
     range: 'Jun 2026 — Present',
     details: [
       'Replaced 22 tracking spreadsheets with a Next.js and TypeScript application for 50+ employees across 7 business units and 8 manufacturing sites, centralizing assessment rubrics, element scoring, and reviewer submissions.',
       'Cut data-entry time by 2 hours per assessment cycle and reduced invalid records by 40% by designing an Excel import pipeline with ExcelJS that validates and migrates 500+ records per upload.',
-      'Secured the app with company single sign-on and no separate user store by integrating Microsoft Entra ID through NextAuth v5, resolving an Edge-runtime failure by splitting provider config out of the auth middleware, and enforcing email-driven manager/reviewer role gating on every protected route.',
+      'Integrated Microsoft Entra ID through NextAuth v5 for company single sign-on, removing the need for a separate user store, and enforced email-driven manager/reviewer role gating on every protected route.',
+      'Resolved an Edge-runtime auth failure by splitting provider config out of the middleware, and deployed the app to an AWS sandbox on Amazon RDS for PostgreSQL, which I maintain through ongoing releases.',
     ],
   },
 ]
@@ -77,7 +78,7 @@ export const resumeProjects: TimelineItem[] = [
     range: 'Jan 2026 — Present',
     details: [
       'Built a full-stack campus assistant with Next.js 16, React 19, and TypeScript that answers questions on dining, events, directories, transit, housing, and safety, returning every answer with linked sources at a 2.1s median response time.',
-      'Eliminated redundant embedding cost across releases by engineering a source-grounded retrieval pipeline on PostgreSQL/pgvector using 1,536-dimension embeddings with content-addressed chunk storage that re-embeds only when source text or model changes.',
+      'Eliminated redundant embedding cost by engineering a PostgreSQL/pgvector retrieval pipeline with 1,536-dimension embeddings and content-addressed chunk storage that re-embeds only when source text or model changes.',
       'Raised intent-classification accuracy from 72.6% to 83.9% and outcome accuracy to 100% by building an eval harness spanning 2,200+ scored queries and 43 automated test suites covering retrieval safety, privacy, and rate limiting.',
     ],
   },
@@ -125,7 +126,7 @@ export const resumeSkillGroups = [
   },
   {
     label: 'Databases & Cloud',
-    items: ['PostgreSQL', 'pgvector', 'Redis', 'AWS S3', 'Microsoft Entra ID'],
+    items: ['PostgreSQL', 'pgvector', 'Redis', 'AWS RDS', 'Microsoft Entra ID'],
   },
   {
     label: 'Tools & APIs',
@@ -149,7 +150,7 @@ export const services: Service[] = [
   {
     title: 'Secure internal platforms',
     description:
-      'Integrate SSO, role-based access, data imports, SharePoint, and AWS into dependable business tools.',
+      'Integrate SSO, role-based access, data imports, and PostgreSQL on AWS into dependable business tools.',
     icon: 'systems',
   },
   {
