@@ -106,7 +106,7 @@ const skillIcons: Record<string, TablerIcon> = {
     PostgreSQL: IconDatabase,
     pgvector: IconVector,
     Redis: IconDatabase,
-    "AWS S3": IconBrandAws,
+    "AWS RDS": IconBrandAws,
     "Microsoft Entra ID": IconShieldLock,
     "Git/GitHub": IconBrandGithub,
     "OpenAI API": IconBrandOpenai,
